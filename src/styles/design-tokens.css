@@ -1,0 +1,27 @@
+:root {
+ 	--color-black: #000000;
+	--color-blue: #20068C;
+ 	--color-lightblue: #D1DAE5;
+ 	--color-beige: #E5DEDC;
+ 	--color-cream: #e8e3d9;
+ 	--color-white: #ffffff;
+	--color-bluey: #321b8c;
+	--color-red: #E51E56;
+ 	--font-sans: WorkSans, sans-serif;
+	--font-weight-light: 100;
+ 	--font-weight-regular: 400;
+ 	--font-weight-semi-bold: 550;
+	--font-weight-bold: 700;
+ 	--font-weight-bolder: 900;	
+ 	--line-height-loose: 1.5;
+ 	--line-height-tight: 1.125;
+ 	--measure-loose: 70ch;
+ 	--measure-tight: 50ch;
+	--space-xs: 0.5rem;
+	--space-s: 1rem;
+ 	--space-m: 1.5rem;
+	--space-l: 2.25rem;
+ 	--space-xl: 3rem;
+
+ 
+}

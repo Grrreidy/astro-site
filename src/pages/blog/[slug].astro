@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead 
+      title={post.data.title} 
+      description={post.data.description || ''} 
+    />
+  </head>
+  <body>
+    <Header />
+    <main id="main-content" class="page-main">
+      <p class="smaller"><FormattedDate date={post.data.pubDate} /></p>
+      <article class="blog-content">
+        <Content />
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>

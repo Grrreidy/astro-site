@@ -1,0 +1,57 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main id="main-content" class="page-main blog">
+      <h1>Blog</h1>
+     <section>
+      <ul>
+        {
+          posts.map((post) => (
+            <li>
+              <p class="smaller">
+                <FormattedDate date={post.data.pubDate} />
+              </p>
+              <a href={`/blog/${post.id}/`}>
+                <p class="title">{post.data.title}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <h2>External</h2>
+      <ul>
+        <li> <p class="smaller">June 2025</p>
+        <p class="title"><a href="https://medium.com/justeattakeaway-tech/how-blind-customers-experience-our-app-ce8d03ad6656">Just Eat Tech Blog: How blind customers experience our apps</a></p>
+        </li>
+                <li> <p class="smaller">June 2023</p>
+        <p class="title"><a href="https://www.supernova.io/blog/how-to-create-accessible-design-system-components">SuperNova: How to create accessible design system components</a></p>
+        </li>
+                <li> <p class="smaller">March 2019</p>
+        <p class="title"><a href="https://medium.com/design-club/meet-the-mentor-geri-b832393b4a8">Design Club: Meet the Mentor</a></p>
+        </li>
+      </ul>
+
+
+</section>
+
+    </main>
+    <Footer />
+  </body>
+</html>

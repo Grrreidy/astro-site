@@ -1,0 +1,10 @@
+---
+const { date } = Astro.props;
+const formatted = new Date(date).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<p class="smaller">{formatted}</p>

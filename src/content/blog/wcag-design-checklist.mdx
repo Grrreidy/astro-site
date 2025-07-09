@@ -1,0 +1,217 @@
+---
+title: "WCAG for designers: Updated"
+description: "A human-friendly guide to the Web Content Accessibility Guidelines (WCAG) tailored for designers."
+pubDate: "March 2024"
+author: Geri Reid
+---
+
+# WCAG for designers
+
+The Web Content Accessibility Guidelines (WCAG) are the technical standard for accessibility compliance. 
+
+WCAG is complicated! As a designer-turned-accessibility lead, I know firsthand how overwhelming it can feel. To help, I’ve simplified the WCAG criteria most relevant to design into plain, human-friendly language.
+
+Regardless of technical compliance, remember that accessibility is about people. WCAG compliance provides a baseline, but meeting the technical standard doesn’t automatically mean your product is usable. Humans are messy and complicated — just like their needs.
+
+---
+
+## Got 30 seconds? Start here
+
+WCAG has three levels of conformance:
+
+**A**: The minimum level  
+**AA**: The 'technically accessible' level most organisations aim for  
+**AAA**: A high standard of technical compliance. Many of the criteria that help people with cognitive disabilities sit within AAA so it's worth striving for
+
+Everything in WCAG hangs off [four guiding principles](https://www.w3.org/WAI/fundamentals/accessibility-principles/). Is your digital product:
+
+- Perceivable?  
+- Operable?  
+- Understandable?  
+- Robust?
+
+Your content should work for users no matter how they access it. Think:
+
+- A screen reader announcing your content audibly  
+- Someone zoomed in to 200%  
+- A user on a noisy train or standing outside in bright sunlight
+
+If you consider these principles when you design, you’re already making a huge difference. Got a little more time? Jump in here…
+
+---
+
+## Colour
+
+### Use of Colour (A)
+
+Don’t rely on colour alone to communicate meaning or to distinguish visual elements. People see colours differently, are colour blind or have difficulty telling different colours apart.
+
+**How can I use colour thoughtfully?**
+
+- Provide an additional indicator to colour – a visible border, label, underline or icon.  
+- If charts and graphics rely on colour, add distinctive, non-colour differences like hatching patterns or directly applied labels.  
+- [Learn about colour blindness](https://webaim.org/articles/visual/colorblind)  
+- Install this [colour blindness simulator](https://colororacle.org/) to check your designs.
+
+[WCAG guidelines 1.4.1](https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html)
+
+---
+
+### Contrast minimum (AA)
+
+Giving text a strong contrast colour against the background makes it easier for people to read and interact with.
+
+The contrast ratio should be at least:
+
+- **4.5:1** for text smaller than **24px**, or **19px bold**  
+- **3:1** for text larger than **24px**, or **19px bold**
+
+**How can I test colour contrast?**
+
+- Use a contrast checker like [this one from The Paciello Group](https://developer.paciellogroup.com/resources/contrastanalyser/)  
+- Or use an [online colour contrast checker](https://webaim.org/resources/contrastchecker/)  
+- If you design UI, the [Stark plugin](https://www.getstark.co/) is well worth the investment
+
+[WCAG guidelines 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum)
+
+---
+
+### Non-Text contrast (AA)
+
+All components and graphics must have a contrast ratio of at least 3:1 against adjacent colours, unless they are purely decorative.
+
+This applies to icons, charts, infographics and controls — including hover or active states.
+
+**How can I test non-text contrast?**
+
+- Use a [contrast checker](https://developer.paciellogroup.com/resources/contrastanalyser/) and look for 'non-text contrast'
+
+[WCAG guidelines 1.4.11](https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html)
+
+**Related criteria**
+
+- [Focus indicator states](https://www.w3.org/WAI/WCAG21/Techniques/general/G195)  
+- [Icons](https://www.w3.org/WAI/WCAG21/Techniques/general/G207)  
+- [Text in or over graphics](https://www.w3.org/WAI/WCAG21/Techniques/general/G18)
+
+---
+
+### Focus visible (AA)
+
+It must be easy to tell which element has keyboard focus. This helps sighted keyboard users orient themselves within the page and confidently interact with it.
+
+**How can I ensure visible focus?**
+
+- Provide a strong visible focus indicator on links, buttons, form fields  
+- Make the focus state different from the hover state  
+- Ensure the focus indicator has 3:1 contrast against the background  
+- If in doubt, use the browser default
+
+[WCAG guidelines 2.4.7](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html)
+
+---
+
+## Copy
+
+As a designer, you often write placeholder copy without thoughtful consideration. Button text, link text, headings — these small bits of microcopy often make it to development. Thoughtful copy has a big impact.
+
+### Images of text (AA)
+
+Text that is essential to the journey must not be part of an image. It can't be resized and becomes blurry when magnified.
+
+**What if there's no alternative?**
+
+If you must use it, provide thoughtful alt text for the image. Developers shouldn’t be expected to write this — it’s your job.
+
+[WCAG guidelines 1.4.5](https://www.w3.org/WAI/WCAG22/Understanding/images-of-text.html)
+
+---
+
+### Headings and labels (AA)
+
+Headings must describe the topic of the section. Labels must clearly indicate their related form field’s purpose.
+
+**What makes a good heading or label?**
+
+- Clear copy helps people with reading difficulties and screen reader users  
+- Use proper heading levels and avoid ALL CAPS  
+- Label form fields clearly and avoid ambiguity
+
+[WCAG guidelines 2.4.6](https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html)
+
+---
+
+## Layout
+
+### Meaningful Sequence (A)
+
+Order content logically to match how users read or navigate your design.
+
+**Why is this important?**
+
+- The user must access content in the correct order  
+- This affects screen reader users and users with CSS disabled  
+- Plan the semantic structure early to save dev time
+
+[WCAG guidelines 1.3.2](https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html)
+
+**Related criteria**
+
+- [Semantic structure](https://webaim.org/techniques/semanticstructure/)  
+- [Understanding parsing](https://www.w3.org/WAI/WCAG21/Understanding/parsing)
+
+---
+
+### Orientation (AA)
+
+Your design must not require a specific screen orientation — unless essential (like a VR or TV app).
+
+[WCAG guidelines 1.3.4](https://www.w3.org/WAI/WCAG22/Understanding/orientation.html)
+
+---
+
+### Resize text (AA)
+
+Users must be able to resize text up to 200%.
+
+This helps people with low vision. Ensure your layout still works at large text sizes. Avoid fixed-width containers that prevent copy from reflowing.
+
+[WCAG guidelines 1.4.4](https://www.w3.org/WAI/WCAG21/Understanding/resize-text.html)
+
+---
+
+### Consistent navigation (AA)
+
+Navigation that appears across pages should be consistent.
+
+**How?**
+
+- Menus and breadcrumbs should work and look the same everywhere
+
+[WCAG guidelines 3.2.3](https://www.w3.org/WAI/WCAG22/Understanding/consistent-navigation.html)
+
+---
+
+### Sensory characteristics (A)
+
+Instructions must not rely on visual cues alone.
+
+**What to avoid**
+
+- Instructions like “click the red button” or “see the right-hand column”
+
+[WCAG guidelines 1.3.3](https://www.w3.org/WAI/WCAG22/Understanding/sensory-characteristics.html)
+
+---
+
+### Consistent identification (AA)
+
+Features used in multiple places must be identified consistently.
+
+**Tips**
+
+- Label buttons the same way every time  
+- Label form fields consistently  
+- Use consistent icons
+
+[WCAG guidelines 3.2.4](https://www.w3.org/WAI/WCAG21/Understanding/consistent-identification.html)
