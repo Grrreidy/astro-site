@@ -6,9 +6,27 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+// Get internal and external blog posts
+const blogPosts = await getCollection('blog');
+const externalPosts = await getCollection('external');
+
+// Merge and normalize posts
+const allPosts = [
+  ...blogPosts.map((post) => ({
+    title: post.data.title,
+    description: post.data.description,
+    pubDate: post.data.pubDate,
+    slug: `/blog/${post.slug}/`,
+    external: false,
+  })),
+  ...externalPosts.map((post) => ({
+    title: post.data.title,
+    description: post.data.description,
+    pubDate: post.data.pubDate,
+    slug: post.data.url,
+    external: true,
+  })),
+].sort((a, b) => new Date(b.pubDate).valueOf() - new Date(a.pubDate).valueOf());
 ---
 
 <!DOCTYPE html>
@@ -18,39 +36,38 @@ const posts = (await getCollection('blog')).sort(
   </head>
   <body>
     <Header />
-    <main id="main-content" class="page-main blog">
+    <main id="main-content" class="container blog">
       <h1>Blog</h1>
-     <section>
-      <ul>
-        {
-          posts.map((post) => (
-            <li>
-              <p class="smaller">
-                <FormattedDate date={post.data.pubDate} />
-              </p>
-              <a href={`/blog/${post.id}/`}>
-                <p class="title">{post.data.title}</p>
-              </a>
+      <p>I write about accessibility and design systems from a UX perspective.</p>
+      <hr>
+      <section>
+        <ul>
+          {allPosts.map((post) => (
+            <li class="post-item">
+              <div class="post-date">
+                <FormattedDate date={post.pubDate} />
+              </div>
+              <div class="post-content">
+                <p class="post-title">
+                  <a
+                    href={post.slug}
+                    target={post.external ? "_blank" : "_self"}
+                    rel={post.external ? "noopener noreferrer" : undefined}
+                  >
+                    {post.title}
+                    {post.external && (
+                      <>
+                        <span aria-hidden="true"> ↗</span>
+                      </>
+                    )}
+                  </a>
+                </p>
+                <p class="post-description">{post.description}</p>
+              </div>
             </li>
-          ))
-        }
-      </ul>
-      <h2>External</h2>
-      <ul>
-        <li> <p class="smaller">June 2025</p>
-        <p class="title"><a href="https://medium.com/justeattakeaway-tech/how-blind-customers-experience-our-app-ce8d03ad6656">Just Eat Tech Blog: How blind customers experience our apps</a></p>
-        </li>
-                <li> <p class="smaller">June 2023</p>
-        <p class="title"><a href="https://www.supernova.io/blog/how-to-create-accessible-design-system-components">SuperNova: How to create accessible design system components</a></p>
-        </li>
-                <li> <p class="smaller">March 2019</p>
-        <p class="title"><a href="https://medium.com/design-club/meet-the-mentor-geri-b832393b4a8">Design Club: Meet the Mentor</a></p>
-        </li>
-      </ul>
-
-
-</section>
-
+          ))}
+        </ul>
+      </section>
     </main>
     <Footer />
   </body>
