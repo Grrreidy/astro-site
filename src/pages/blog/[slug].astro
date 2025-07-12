@@ -28,8 +28,8 @@ const { Content } = await render(post);
   </head>
   <body>
     <Header />
-    <main id="main-content" class="container blog">
-      <p class="smaller"><FormattedDate date={post.data.pubDate} /></p>
+    <main id="main-content" class="container">
+      <p class="post-date"><FormattedDate date={post.data.pubDate} /></p>
       <article class="blog-content">
         <Content />
       </article>

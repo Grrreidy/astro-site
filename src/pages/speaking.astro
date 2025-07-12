@@ -19,242 +19,210 @@ const posts = (await getCollection('blog')).sort(
 	</head>
 	<body>
 		<Header />
-		<main id="main-content" class="container blog">
+		<main id="main-content" class="container post">
 			<h1>Speaking</h1>
-			<p>For an introvert, I sure talk a lot!</p> 
-			<p>I like to speak about accessibility at tech events where it's not always on the agenda. Here are some events and podcasts where I have enjoyed speaking.</p>
-
-		<hr class="section-divider" />
-
-		<!-- article start -->
-
-		<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>London Web Standards</h2>
-				<p class="smaller">May 2025</p>
-				<p>I was delighted to present at London Web Standard's Global Accessibility Awareness Day event. I spoke about some simple ways to shift left and incorporate accessibility earlier in the product design process.</p>
-				<p><a href="https://londonwebstandards.org/talks/shift-left-on-accessibility/">Transcript and links</a></p>
+			<div class="post-intro">
+				<p>For an introvert, I sure talk a lot!</p>
+				<p>
+					I like to champion accessibility at tech events where it's not always on the agenda.
+					Here are some of the talks and podcasts I’ve been proud to take part in.
+				</p>
 			</div>
+			<section>
+				<ul>
+				<li class="post-item">
+					<div class="post-date">May 2025</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://londonwebstandards.org/talks/shift-left-on-accessibility/" target="_blank" rel="noopener noreferrer">
+						London Web Standards
+						</a>
+					</h2>
+					<p>
+						I was delighted to present at London Web Standard's Global Accessibility Awareness Day event.
+						I spoke about some simple ways to shift left and incorporate accessibility earlier in the product design process.
+					</p>
+					<iframe style="border: 2px solid var(--color-blue); border-radius: 12px;" src="https://www.youtube.com/embed/DP6GBoWNKZw?si=OkNoWsVWNROPffbQ" title="London Web Standards" width="100%" height="315px" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
+				</li>
 
-  			<div class="portfolio-media">
-				<iframe style="border: 2px solid var(--color-blue); border-radius: 12px;" src="https://www.youtube.com/embed/DP6GBoWNKZw?si=OkNoWsVWNROPffbQ" title="London Web Standards" width="100%" height="315px" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-			</div>
-		</article>
-
-		<hr class="section-divider" />
-
-		<!-- spotify start -->
-
-		<article class="portfolio">
-			<div>
-			<h2>Accessible Numbers Podcast</h2>
-			<p class="smaller">February 2025</p>
-			</div>
-  				<div class="portfolio-spotify">
-				    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/0Rnv4eTmhmYujWFFPeRSUC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-				</div>
-			
-			<div class="portfolio-text">
-				<p>I joined Laura Parker on the Accessible Numbers Podcast to talk about designing for people with dyscalculia, low numeracy and maths anxiety.</p>
-				<p><a href="https://accessiblenumbers.com/inclusive-design-systems">Podcast overview and transcript</a></p>
-			</div>
-
-		</article>
-
-		<hr class="section-divider" />
-
-		<!-- article start -->
-
-		<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>Converge Design Systems Conference</h2>
-				<p class="smaller">October 2024</p>
-				<p>Zeroheight's Converge is my favourite conference! I spoke alongside some legends of design systems, closing out the day in the beautiful Brighton Dome.</p>
-				<p><a href="https://zeroheight.com/events/converge/video-archives/">Watch all the Converge videos</a></p>
-			</div>
-  			<div class="portfolio-media">
-				<iframe style="border-radius:12px" src="https://www.youtube.com/embed/BiInyL2fQcs?si=BqS0ne_YIMZcWury" title="Converge Design Systems Conference" width="100%" height="315px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-			</div>
-
-		</article>
-
-		<hr class="section-divider" />
-
-		<!-- spotify start -->
-
-		<article class="portfolio">
-			<div>
-			<h2>Back to (Design Systems) School</h2>
-			<p class="smaller">March-August 2024</p>
-			</div>
-
-			<div class="portfolio-spotify">
-				    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/652X2mvN0FtNoTSSnotmvR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-			</div>
-			<div class="portfolio-text">
-				<p>Amy Hupe and I put aside our opinionated assumptions to deep dive on design systems topics in a series of 6 podcasts. Along with the history of design systems, I learned about...capybaras.</p>
-				<p><a href="https://accessiblenumbers.com/inclusive-design-systems">Listen to Back to School on Spotify</a></p>
-			</div>
-
-		</article>
-
-		<hr class="section-divider" />
-
-		<!-- article start -->
-
-		<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>The Question</h2>
-				<p class="smaller">August 2025</p>
-				<p>Ben Callaghan invited me to co-host his podcast The Question. We asked the design systems community if they measure accessibility in their product or design system and received had a great response. You can see findings and download the raw data on Ben's site.</p>
-				<p><a href="https://bencallahan.com/the-question">The Question</a></p>
-			</div>
-
-  			<div class="portfolio-media">
-				<img src="src/assets/thequestion.png" alt="The Question design systems deep dives hosted by Ben Callaghan and co-hosted by Geri Reid on Design Systems Accessibility Impact">
-			</div>
-		</article>
-
-		<hr class="section-divider" />
-
-		<!-- article start -->
-
-		<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>Webexpo</h2>
-				<p class="smaller">2024</p>
-				<p>I spoke about my accessibility journey through design systems at WebExpo in Prague at the historic Lucerna Great Hall.</p>
-				<p><a href="https://slideslive.com/39021006/dont-worry-the-design-system-takes-care-of-accessibility?ref=search-presentations">Video and slides</a></p>
-			</div>
-
-  			<div class="portfolio-media">
-				<img src="src/assets/web-expo.jpg" alt="View from the back of the stage at WebExpo Prague with Geri speaking to the audience in the Lucerna Great Hall">
-			</div>
-		</article>
-
-		<hr class="section-divider" />
-
-<!-- article start -->
-
-		<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>Patterns Day</h2>
-				<p class="smaller">March 2024</p>
-				<p>I was honoured to speak at Clearleft's Patterns Day in Brighton, a one-day event for designers and developers focused on design systems. I spoke about my journey in design systems teams, trying (and sometimes failing!) to support on web accessibility.</p>
-				<p><a href="https://slideslive.com/39021006/dont-worry-the-design-system-takes-care-of-accessibility?ref=search-presentations">Video and slides</a></p>
-			</div>
-
-  			<div class="portfolio-media">
-
-				<figure class="photo-with-caption">
+				<li class="post-item">
+					<div class="post-date">February 2025</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://accessiblenumbers.com/inclusive-design-systems" target="_blank" rel="noopener noreferrer">
+						Accessible Numbers Podcast
+						</a>
+					</h2>
+					<p class="speaking-description">
+						I joined Laura Parker on the Accessible Numbers Podcast to talk about designing for people with dyscalculia, low numeracy and maths anxiety.
+					</p>
 					
-					<img src="src/assets/patterns-day.jpg" alt="Geri Reid speaking on stage at Patterns Day with a British Sign Language interpreter signing at the front of the stage">
+					<iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/0Rnv4eTmhmYujWFFPeRSUC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+					
+					</div>
+				</li>
 
-					<figcaption>Thanks to <a href="https://marcthiele.com/photos/patternsday-2024">Marc Thiele</a> for this fab photo of me with the British Sign Language interpreter.
+				<li class="post-item">
+					<div class="post-date">October 2024</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://converge.zeroheight.com/" target="_blank" rel="noopener noreferrer">
+						Converge
+						</a>
+					</h2>
+					<p class="speaking-description">
+						Zeroheight's Converge is my favourite conference! I spoke alongside some legends of design systems, closing out the day in the beautiful Brighton Dome.
+					</p>
+					<iframe style="border-radius:12px" src="https://www.youtube.com/embed/BiInyL2fQcs?si=BqS0ne_YIMZcWury" title="Converge Design Systems Conference" width="100%" height="315px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-whenh-cross-origin" allowfullscreen></iframe>
+					</div>
+				</li>
+
+				<li class="post-item">
+					<div class="post-date">March–August 2024</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://zeroheight.com/podcast/back-to-school-with-amy-hupe-and-geri-reid/" target="_blank" rel="noopener noreferrer">
+						Back to School
+						</a>
+					</h2>
+					<p class="speaking-description">
+						Amy Hupe and I put aside our opinionated assumptions to deep dive on design systems topics in a series of 6 podcasts. Along with the history of design systems, I learned about... capybaras.
+					</p>
+					<iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/652X2mvN0FtNoTSSnotmvR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+					</div>
+				</li>
+
+				<li class="post-item">
+					<div class="post-date">August 2025</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://bencallahan.com/the-question" target="_blank" rel="noopener noreferrer">
+						The Question
+						</a>
+					</h2>
+					<p class="speaking-description">
+						Ben Callaghan invited me to co-host his podcast The Question. We asked the design systems community if they measure accessibility in their product or design system and had a great response.
+					</p>
+					<img src="src/assets/thequestion.png" alt="The Question design systems deep dives hosted by Ben Callaghan and co-hosted by Geri Reid on Design Systems Accessibility Impact" class="post-media">
+					</div>
+				</li>
+
+				<li class="post-item">
+					<div class="post-date">May 2024</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://slideslive.com/39021006/dont-worry-the-design-system-takes-care-of-accessibility?ref=search-presentations" target="_blank" rel="noopener noreferrer">
+						Webexpo
+						</a>
+					</h2>
+					<p class="speaking-description">
+						I spoke about my accessibility journey through design systems at WebExpo in Prague at the historic Lucerna Great Hall.
+					</p>
+					<img src="src/assets/web-expo.jpg" alt="View from the back of the stage at WebExpo Prague with Geri speaking to the audience in the Lucerna Great Hall" class="post-media">
+					</div>
+				</li>
+
+				<li class="post-item">
+					<div class="post-date">March 2024</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://slideslive.com/39021006/dont-worry-the-design-system-takes-care-of-accessibility?ref=search-presentations" target="_blank" rel="noopener noreferrer">
+						Patterns Day
+						</a>
+					</h2>
+					<p class="speaking-description">
+						I was honoured to speak at Clearleft's Patterns Day in Brighton, a one-day event for designers and developers focused on design systems.
+					</p>
+					<img src="src/assets/patterns-day.jpg" alt="Geri Reid speaking on stage at Patterns Day with a British Sign Language interpreter signing at the front of the stage" class="post-media">
+					<figcaption>
+						Thanks to <a href="https://marcthiele.com/photos/patternsday-2024" target="_blank" rel="noopener noreferrer">Marc Thiele</a> for this fab photo of me with the British Sign Language interpreter.
 					</figcaption>
+					</div>
+				</li>
 
-				</figure>
+				<li class="post-item">
+					<div class="post-date">January 2024</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://thedesignsystem.guide/interview-geri-reid" target="_blank" rel="noopener noreferrer">
+						Design Systems Masters
+						</a>
+					</h2>
+					<p class="speaking-description">
+						Romina Kavcic interviewed me for Design System Masters. I spoke about future trends, measuring success and the creative importance of not starting with a system.
+					</p>
+					<img src="src/assets/ds-guide.png" alt="The Design System Guide, interview with Geri Reid" class="post-media">
+					</div>
+				</li>
 
-			</div>
+				<li class="post-item">
+					<div class="post-date">May 2023</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://zeroheight.com/events/converge/video-archives/" target="_blank" rel="noopener noreferrer">
+						Converge US
+						</a>
+					</h2>
+					<p class="speaking-description">
+						I spoke about the evolution of design systems at Converge, closing out zeroheight's design systems conference in San Francisco. This conf was a blast!
+					</p>
+					<div class="post-media">
+						<iframe style="border-radius:12px" width="100%" height="315px" src="https://www.youtube.com/embed/QjwqMlcn2Vo?si=GgdLGrsvD9osTUTq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
+					</div>
+				</li>
 
-		</article>
+				<li class="post-item">
+					<div class="post-date">October 2022</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://webdevconf.com/" target="_blank" rel="noopener noreferrer">
+						WDC
+						</a>
+					</h2>
+					<p class="speaking-description">
+						I spoke at WDC in Bristol about applying the principles of WCAG 3 to some current visions of the future, like Web3. This is a lovely cozy conference and I made friends with a lot of nerds.
+					</p>
+					<div class="post-media">
+						<iframe style="border-radius:12px" width="100%" height="315px" src="https://www.youtube.com/embed/xYoNxYirdOY?si=OqNfLqjQ1VMuzqpI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+					</div>
+					</div>
+				</li>
 
-		<hr class="section-divider" />
+				<li class="post-item">
+					<div class="post-date">February 2023</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://www.supernova.io/blog/scaling-accessibility-through-your-design-system-panel-recap" target="_blank" rel="noopener noreferrer">
+						Supernova accessibility panel
+						</a>
+					</h2>
+					<p class="speaking-description">
+						Fireside chat on using design systems to scale accessibility – with Lauren Beatty, Stéphanie Walter and Aprile Elcich from Supernova.
+					</p>
+					<img src="src/assets/scaling-a11y-through-design-systems.png" alt="Scaling accessibility through design systems promo" class="post-media">
+					</div>
+				</li>
 
-		<!-- article start -->
+				<li class="post-item">
+					<div class="post-date">September 2022</div>
+					<div class="post-content">
+					<h2>
+						<a href="https://open.spotify.com/episode/3mcQ3P2KEhTrDW8BjvNf2o?si=6fD_ElQERAmNaPlcR-7ouQ" target="_blank" rel="noopener noreferrer">
+						Design Ops Island Discs
+						</a>
+					</h2>
+					<p class="speaking-description">
+						I joined Luke Murphy live on the Design Ops Island Discs, to talk about my role as lead designer on design systems.
+					</p>
+					<iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/3mcQ3P2KEhTrDW8BjvNf2o?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+					</div>
+				</li>
+				</ul>
+			</section>
+			</main>
 
-		<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>Design Systems Guide</h2>
-				<p class="smaller">January 2024</p>
-				<p>Romina Kavcic interviewed me for Design System Masters. I spoke about future trends, measuring success and the creative importance of not starting with a system.</p>
-				<p><a href="https://slideslive.com/39021006/dont-worry-the-design-system-takes-care-of-accessibility?ref=search-presentations">Design Systems Guide interview</a></p>
-			</div>
-
-  			<div class="portfolio-media">
-				<figure class="photo-with-caption">	
-					<img src="src/assets/ds-guide.png" alt="The Design System Guide, interview with Geri Reid">
-				</figure>
-			</div>
-		</article>
-
-		<hr class="section-divider" />
-
-		<!-- article start -->
-
-		<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>Converge US</h2>
-				<p class="smaller">May 2023</p>
-				<p>I spoke about the evolution of design systems at Converge, closing out zeroheight's design systems conference in San Francisco. This conf was a blast!</p>
-				<p><a href="https://zeroheight.com/events/converge/video-archives/">Watch all the Converge videos</a></p>
-			</div>
-  			<div class="portfolio-media">
-				<iframe style="border-radius:12px" width="100%" height="315px" src="https://www.youtube.com/embed/QjwqMlcn2Vo?si=GgdLGrsvD9osTUTq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-			</div>
-
-		</article>
-
-		<hr class="section-divider" />
-
-				<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>Designing an Accessible Future</h2>
-				<p class="smaller">October 2022</p>
-				<p>Watch my talk from WDC conference, applying the principles of WCAG 3 to some current visions of the future, like Web3.</p>
-				<p><a href="https://youtu.be/xYoNxYirdOY?si=oyARNy7-xUy5Ypys">Watch on YouTube</a></p>
-			</div>
-  			<div class="portfolio-media">
-			<iframe style="border-radius:12px" width="100%" height="315px" src="https://www.youtube.com/embed/xYoNxYirdOY?si=OqNfLqjQ1VMuzqpI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-			</div>
-
-		</article>
-
-		<hr class="section-divider" />
-
-<!-- spotify start -->
-
-		<article class="portfolio">
-			<div>
-			<h2>Design Ops Island Discs</h2>
-			<p class="smaller">Setptember 2022</p>
-			</div>
-			<div class="portfolio-spotify">
-				    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/3mcQ3P2KEhTrDW8BjvNf2o?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-			</div>		
-			<div class="portfolio-text">
-				<p>I joined Luke Murphy live on the Design Ops Island Discs, to talk about my role as lead designer on design systems.</p>
-				<p><a href="https://open.spotify.com/episode/3mcQ3P2KEhTrDW8BjvNf2o?si=6fD_ElQERAmNaPlcR-7ouQ">Listen on Spotify</a></p>
-			</div>
-
-		</article>
-
-		<hr class="section-divider" />
-
-			<article class="portfolio">
-
-			<div class="portfolio-text">
-				<h2>Supernova accessibility panel</h2>
-				<p class="smaller">February 2023</p>
-				<p>Fireside chat on using design systems to scale accessibility – with Lauren Beatty, Stéphanie Walter and Aprile Elcich from Supernova.</p>
-				<p><a href="https://www.supernova.io/blog/scaling-accessibility-through-your-design-system-panel-recap">Supernova panel recap</a></p>
-			</div>
-
-  			<div class="portfolio-media">
-				<figure class="photo-with-caption">	
-					<img src="src/assets/scaling-a11y-through-design-systems.png" alt="Scaling accessibility through design systems promo">
-				</figure>
-			</div>
-		</article>
-		</main>
 		<Footer />
 	</body>
 </html>

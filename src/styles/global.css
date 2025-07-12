@@ -5,19 +5,21 @@
 @font-face {
   font-family: 'WorkSans';
   src: url('/fonts/WorkSans-VariableFont.woff2') format('woff2');
-  font-weight: 400;
+  font-weight: 100 900;
   font-style: normal;
+  font-display: fallback;
 }
 
 @font-face {
   font-family: 'WorkSans-Italic';
   src: url('/fonts/WorkSans-Italic-VariableFont.woff2') format('woff2');
-  font-weight: 400;
+  font-weight: 100 900;
   font-style: normal;
+  font-display: swap;
 }
 
 :root {
-  font-size: clamp(0.7rem, 4vmin, 1.3rem);
+  font-size: clamp(1rem, 4vmin, 1.5rem);
   line-height: var(--line-height-loose);
   font-weight: var(--font-weight-regular);
 }
@@ -31,15 +33,17 @@
 }
 
 html {
-  font-size: clamp(0.7rem, 4vmin, 1.3rem);
+  font-size: clamp(1rem, 4vmin, 1.3rem);
 }
 
 body {
+  font-size: var(--font-m);
   display: flex;
   flex-direction: column;
   min-block-size: 100vh;
-  font-family: 'WorkSans';
+  font-family: var(--font-sans);
   color: var(--color-blue);
+  background: var(--color-cream);
 }
 
 .container {
@@ -51,9 +55,9 @@ body {
 
 blockquote {
   border-left: 4px solid var(--color-red);
-  padding-left: 1rem;
+  padding-left: var(--space-m);
   margin: 2rem 0;
-  font-size: 1.1rem;
+  font-size: var(--font-l);
   font-style: italic;
 }
 
@@ -63,61 +67,57 @@ hr,
   border-top: 1px dotted var(--color-grey);
   max-width: var(--measure-loose);
   margin-inline: auto;
-  margin-block: var(--space-xl);
+  margin-block: var(--space-m);
 }
 
-p {
-  margin-bottom: var(--space-m);
-}
-
-/*p + p {
-  margin-bottom: var(--space-m);
-}
-  */
-
-p:not(:has(+ p)) {
-  margin-bottom: var(--space-l);
-}
-
-.small {
-  font-size: clamp(0.85rem, 1.2vmin, 0.95rem);
-}
-
-.smaller {
-  font-size: clamp(0.75rem, 1vmin, 0.85rem);
-  font-weight: var(--font-weight-bolder);
-}
 
 /* ===================================================
    HEADINGS
 =================================================== */
 
 h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 0.7rem 0;
-  font-weight: var(--font-weight-light);
   line-height: var(--line-height-tight);
-  padding-bottom: 1rem;
+  font-weight: var(--font-weight-regular);
+  padding-bottom: var(--space-xs);
 }
 
 h1 {
-  font-size: 3rem;
-  font-weight: var(--font-weight-lighter);
-}
-
-h2 {
-  font-size: 1.802rem;
+  font-size: var(--font-3xl);
   padding-bottom: var(--space-m);
 }
 
-h3 {
-  font-size: 1.602rem;
-  font-weight: var(--font-weight-bolder);
+h2 {
+  font-size: var(--font-xl);
+  padding-bottom: var(--space-l);
 }
 
-h4 { font-size: 1.424rem; }
-h5 { font-size: 1.266rem; }
+h3 {
+  font-size: var(--font-l);
+  padding-bottom: var(--space-m);
+  font-weight: var(--font-weight-semi-bold);
+}
 
-.strong { font-weight: 700; }
+h4 {
+  font-size: var(--font-l);
+}
+
+h5 {
+  font-size: var(--font-m);
+}
+
+p + h1, p + h2, p + h3, p + h4, p + h5 {
+  margin-top: var(--space-l); 
+}
+
+p + img, p + iframe {
+  margin-top: var(--space-s);
+}
+
+ul + h1, ul + h2, ul + h3, ul + h4, ul + h5,
+ul + p {
+  margin-bottom: var(--space-m);
+}
+
 
 /* ===================================================
    IMAGES, MEDIA
@@ -127,19 +127,13 @@ img, picture, video, canvas, svg {
   display: block;
   max-inline-size: 100%;
   block-size: auto;
-  padding-bottom: var(--space-xs);
 }
 
-.photo-with-caption {
-  text-align: left;
-  color: var(--color-bluey);
-  font-size: clamp(0.75rem, 1vw, 0.875rem);
-  padding-bottom: 1rem;
-}
-
-.photo-with-caption figcaption {
+figcaption {
+  color: var(--color-blue);
+  font-size: var(--font-xs);
   font-style: italic;
-  line-height: 1.4;
+  padding-bottom: 1rem;
 }
 
 /* ===================================================
@@ -277,10 +271,9 @@ footer {
 }
 
 .footer-columns h3 {
-  font-weight: var(--font-weight-bolder);
   color: var(--color-cream);
   margin-bottom: var(--space-s);
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 footer a {
@@ -305,7 +298,7 @@ footer ul {
 }
 
 footer li {
-  margin-bottom: var(--space-xs);
+  margin-bottom: 0.2rem;
 }
 
 .footer-contact,
@@ -315,7 +308,7 @@ footer li {
   gap: var(--space-m);
 }
 
-.footer-illustration {
+.footer-image{
   width: 100px;
   flex-shrink: 0;
   height: auto;
@@ -330,70 +323,97 @@ footer li {
 }
 
 /* ===================================================
-   BLOG
+   POSTS (used for blog + speaking)
 =================================================== */
 
-.blog ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-
-.blog li {
-  font-size: clamp(0.9rem, 4vmin, 1.4rem);
+.post-intro {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
   border-bottom: 1px dotted var(--color-grey);
 }
 
-.blog li a {
-  text-decoration: none;
+ul.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--font-s);
 }
 
 .post-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0rem 2rem;
-  padding-block: 2rem;
+  flex-wrap: wrap; /* allows stacking if needed */
+  gap: var(--space-s) var(--space-m); /* vertical and horizontal gap */
+  align-items: flex-start;
+  padding-block: var(--space-m);
+  border-bottom: 1px dotted var(--color-blue);
+}
+
+.post-item h2 {
+  padding-bottom: var(--space-xs);
+
+}
+.post-item a {
+  text-decoration: none;
+}
+
+.post-item a:hover {
+  text-decoration: underline;
 }
 
 .post-date {
-  font-size: clamp(0.75rem, 1vmin, 0.85rem);
-  flex: 1 1 8rem;
-  min-width: 8rem;
-  max-width: 12rem;
+  font-size: var(--font-s);
+  flex: 0 0 6rem;
+  min-width: 6rem;
+  max-width: 7rem;
   text-align: left;
-  padding: 0 0 0.5rem 0; /* Remove all padding */
-  margin: 0 0 2rem 0; /* Remove all margin */
-  line-height: 1; /* Tighter line height */
-  border-bottom: 1px solid var(--color-blue);
+  margin: 0;
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-l);
+  border-bottom: 1px solid var(--color-lightblue);
   align-self: flex-start;
 }
 
-
 .post-content {
-  flex: 1 1 20rem;
+  flex: 1 1 0;          /* fill remaining space and shrink if needed */
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .post-title {
   font-size: clamp(1.2rem, 3vw, 1.8rem);
-  font-weight: 700;
+  font-weight: var(--font-weight-semi-bold);
   margin: 0;
-  line-height: 1.2; 
+  padding-bottom: 0;
 }
 
-.post-description {
-  font-size: 1rem;
-  margin: 0;
+.blog p + p {
+  margin-top: var(--space-m);
 }
 
-article ul {
-  list-style-position: outside;
-  padding-left: 1rem;
-  padding-bottom: var(--space-l);
+.blog-content {
+  font-size: var(--font-m);
+  line-height: var(--line-height-loose);
+  max-width: var(--measure-loose);
 }
+
+.blog-content ul,
+.blog-content ol {
+  padding-left: 1rem;  /* indent bullets slightly */
+  margin-left: 0;
+}
+
+.post-intro p,
+.blog-content p {
+  margin-block: 0 1.2rem;
+}
+
+.blog-date {
+  font-size: var(--font-s);
+  margin-bottom: var(--space-m);
+}
+
 
 /* ===================================================
    TABLE
@@ -403,8 +423,6 @@ article table {
   border-collapse: collapse;
   width: 100%;
   margin-bottom: var(--space-l);
-  font-family: var(--font-sans);
-  color: var(--color-blue);
   font-size: clamp(0.75rem, 1.1vmin, 0.875rem);
 }
 
@@ -422,9 +440,6 @@ article th {
   font-weight: var(--font-weight-bold);
 }
 
-article td {
-  font-weight: var(--font-weight-regular);
-}
 
 /* ===================================================
    ABOUT PAGE
