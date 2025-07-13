@@ -3,13 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
-import { Image } from 'astro:assets';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
 ---
 
 <!doctype html>
@@ -34,7 +28,7 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">May 2025</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://londonwebstandards.org/talks/shift-left-on-accessibility/" target="_blank" rel="noopener noreferrer">
+						<a href="https://londonwebstandards.org/talks/shift-left-on-accessibility/" rel="noopener noreferrer">
 						London Web Standards
 						</a>
 					</h2>
@@ -50,7 +44,7 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">February 2025</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://accessiblenumbers.com/inclusive-design-systems" target="_blank" rel="noopener noreferrer">
+						<a href="https://accessiblenumbers.com/inclusive-design-systems" rel="noopener noreferrer">
 						Accessible Numbers Podcast
 						</a>
 					</h2>
@@ -67,7 +61,7 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">October 2024</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://converge.zeroheight.com/" target="_blank" rel="noopener noreferrer">
+						<a href="https://converge.zeroheight.com/" rel="noopener noreferrer">
 						Converge
 						</a>
 					</h2>
@@ -82,7 +76,7 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">March–August 2024</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://zeroheight.com/podcast/back-to-school-with-amy-hupe-and-geri-reid/" target="_blank" rel="noopener noreferrer">
+						<a href="https://zeroheight.com/podcast/back-to-school-with-amy-hupe-and-geri-reid/" rel="noopener noreferrer">
 						Back to School
 						</a>
 					</h2>
@@ -97,14 +91,14 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">August 2025</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://bencallahan.com/the-question" target="_blank" rel="noopener noreferrer">
+						<a href="https://bencallahan.com/the-question" rel="noopener noreferrer">
 						The Question
 						</a>
 					</h2>
 					<p class="speaking-description">
 						Ben Callaghan invited me to co-host his podcast The Question. We asked the design systems community if they measure accessibility in their product or design system and had a great response.
 					</p>
-					<img src="src/assets/thequestion.png" alt="The Question design systems deep dives hosted by Ben Callaghan and co-hosted by Geri Reid on Design Systems Accessibility Impact" class="post-media">
+					<img src="images/thequestion.png" alt="The Question design systems deep dives hosted by Ben Callaghan and co-hosted by Geri Reid on Design Systems Accessibility Impact" class="post-media">
 					</div>
 				</li>
 
@@ -112,14 +106,14 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">May 2024</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://slideslive.com/39021006/dont-worry-the-design-system-takes-care-of-accessibility?ref=search-presentations" target="_blank" rel="noopener noreferrer">
+						<a href="https://slideslive.com/39021006/dont-worry-the-design-system-takes-care-of-accessibility?ref=search-presentations" rel="noopener noreferrer">
 						Webexpo
 						</a>
 					</h2>
 					<p class="speaking-description">
 						I spoke about my accessibility journey through design systems at WebExpo in Prague at the historic Lucerna Great Hall.
 					</p>
-					<img src="src/assets/web-expo.jpg" alt="View from the back of the stage at WebExpo Prague with Geri speaking to the audience in the Lucerna Great Hall" class="post-media">
+					<img src="images/web-expo.jpg" alt="View from the back of the stage at WebExpo Prague with Geri speaking to the audience in the Lucerna Great Hall" class="post-media">
 					</div>
 				</li>
 
@@ -127,16 +121,16 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">March 2024</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://slideslive.com/39021006/dont-worry-the-design-system-takes-care-of-accessibility?ref=search-presentations" target="_blank" rel="noopener noreferrer">
+						<a href="https://patternsday.com/" rel="noopener noreferrer">
 						Patterns Day
 						</a>
 					</h2>
 					<p class="speaking-description">
 						I was honoured to speak at Clearleft's Patterns Day in Brighton, a one-day event for designers and developers focused on design systems.
 					</p>
-					<img src="src/assets/patterns-day.jpg" alt="Geri Reid speaking on stage at Patterns Day with a British Sign Language interpreter signing at the front of the stage" class="post-media">
+					<img src="images/patterns-day.jpg" alt="Geri Reid speaking on stage at Patterns Day with a British Sign Language interpreter signing at the front of the stage" class="post-media">
 					<figcaption>
-						Thanks to <a href="https://marcthiele.com/photos/patternsday-2024" target="_blank" rel="noopener noreferrer">Marc Thiele</a> for this fab photo of me with the British Sign Language interpreter.
+						Thanks to <a href="https://marcthiele.com/photos/patternsday-2024" rel="noopener noreferrer">Marc Thiele</a> for this fab photo of me with the British Sign Language interpreter.
 					</figcaption>
 					</div>
 				</li>
@@ -145,14 +139,14 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">January 2024</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://thedesignsystem.guide/interview-geri-reid" target="_blank" rel="noopener noreferrer">
+						<a href="https://thedesignsystem.guide/interview-geri-reid" rel="noopener noreferrer">
 						Design Systems Masters
 						</a>
 					</h2>
 					<p class="speaking-description">
 						Romina Kavcic interviewed me for Design System Masters. I spoke about future trends, measuring success and the creative importance of not starting with a system.
 					</p>
-					<img src="src/assets/ds-guide.png" alt="The Design System Guide, interview with Geri Reid" class="post-media">
+					<img src="images/ds-guide.png" alt="The Design System Guide, interview with Geri Reid" class="post-media">
 					</div>
 				</li>
 
@@ -160,7 +154,7 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">May 2023</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://zeroheight.com/events/converge/video-archives/" target="_blank" rel="noopener noreferrer">
+						<a href="https://zeroheight.com/events/converge/video-archives/" rel="noopener noreferrer">
 						Converge US
 						</a>
 					</h2>
@@ -177,7 +171,7 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">October 2022</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://webdevconf.com/" target="_blank" rel="noopener noreferrer">
+						<a href="https://webdevconf.com/" rel="noopener noreferrer">
 						WDC
 						</a>
 					</h2>
@@ -194,14 +188,14 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">February 2023</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://www.supernova.io/blog/scaling-accessibility-through-your-design-system-panel-recap" target="_blank" rel="noopener noreferrer">
+						<a href="https://www.supernova.io/blog/scaling-accessibility-through-your-design-system-panel-recap" rel="noopener noreferrer">
 						Supernova accessibility panel
 						</a>
 					</h2>
 					<p class="speaking-description">
 						Fireside chat on using design systems to scale accessibility – with Lauren Beatty, Stéphanie Walter and Aprile Elcich from Supernova.
 					</p>
-					<img src="src/assets/scaling-a11y-through-design-systems.png" alt="Scaling accessibility through design systems promo" class="post-media">
+					<img src="images/scaling-a11y-through-design-systems.png" alt="Scaling accessibility through design systems promo" class="post-media">
 					</div>
 				</li>
 
@@ -209,7 +203,7 @@ const posts = (await getCollection('blog')).sort(
 					<div class="post-date">September 2022</div>
 					<div class="post-content">
 					<h2>
-						<a href="https://open.spotify.com/episode/3mcQ3P2KEhTrDW8BjvNf2o?si=6fD_ElQERAmNaPlcR-7ouQ" target="_blank" rel="noopener noreferrer">
+						<a href="https://open.spotify.com/episode/3mcQ3P2KEhTrDW8BjvNf2o?si=6fD_ElQERAmNaPlcR-7ouQ" rel="noopener noreferrer">
 						Design Ops Island Discs
 						</a>
 					</h2>

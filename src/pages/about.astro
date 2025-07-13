@@ -3,13 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
-import { Image } from 'astro:assets';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
 ---
 
 <!doctype html>
@@ -24,7 +18,7 @@ const posts = (await getCollection('blog')).sort(
 
 			<p>I'm an accessibility specialist with a background in design systems and inclusive product development. I help teams build accessibility into everyday work, creating communities and practices that scale. My approach is practical, collaborative and shaped by my experience in large organisations.</p>
 
-			<img src="/src/assets/nerds.jpg" style="padding-top: 1.5rem" alt="Geri on stage speaking at a conference in front of a venn diagram that reads accessibility and design systems. The overlap of the venn diagram reads nerds">
+			<img src="/images/nerds.jpg" style="padding-top: 1.5rem" alt="Geri on stage speaking at a conference in front of a venn diagram that reads accessibility and design systems. The overlap of the venn diagram reads nerds">
 
 			<p style="padding-top: var(--space-m)">The reason I specialise in accessibility is so no one gets left out.
 

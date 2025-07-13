@@ -1,0 +1,28 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title="Page not found" description="404 – Page not found" />
+  </head>
+  <body>
+    <Header />
+    <main id="main-content" class="container blog" style="text-align: center; padding-block: var(--space-xl);">
+      <img
+        src="/images/not-found.svg"
+        alt=""
+        style="max-width: 200px; width: 100%; height: auto; margin: 0 auto var(--space-l);"
+      />
+      <h1 style="font-size: var(--font-3xl); margin-bottom: var(--space-s);">Yikes, it's a 404!</h1>
+      <p>
+        <a href="/" style="text-decoration: underline;">← Head home</a>
+      </p>
+    </main>
+    <Footer />
+  </body>
+</html>

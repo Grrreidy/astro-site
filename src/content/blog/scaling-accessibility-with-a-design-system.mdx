@@ -1,13 +1,13 @@
 ---
 title: "Scaling accessibility with a design system"
-description: "Case study on designing accessible components and scaling their impact through a design system."
+description: "Designing accessible components and scaling their impact through a design system."
 pubDate: "August 2021"
 author: Geri Reid
 ---
 
 # Scaling accessibility with a design system
 
-This is a case study about my experience of learning how to design accessible web components, then scale their impact through a design system.
+This is a post about my experience of learning how to design accessible web components, then scale their impact through a design system.
 
 ## What problem does this solve?
 
@@ -17,7 +17,7 @@ Rather than everyone individually fixing the same accessibility problems, a desi
 
 I spent 3.5 years [building a design system](design-systems.html) for Lloyds Banking Group. The design system supports 4 brands: Lloyds, Halifax, Bank of Scotland and MBNA. Any change made to a component like a button, form field or notification is pushed out to all brands.
 
-![Screens from the Constellation Design System website](../../assets/accessible-design-system.png)
+![Screens from the Constellation Design System website](/images/accessible-design-system.png)
 
 The design system 'source of truth' is React components, with corresponding Sketch design libraries. Components are served from a website which brings together UX, copy, and guidance for use. The system is currently used by over 30 product teams within the Lloyds Group; our main consumers are designers, developers and POs.
 
@@ -26,7 +26,7 @@ Accessibility is important because [1 in 5 of the UK population report a disabil
 > Accessible products are better for everyone. Along with users of assistive technology, there are many situational and temporary scenarios that affect the way people use the web.  
 > Graphic adapted from Microsoft's [Inclusive Toolkit](https://www.microsoft.com/design/inclusive/).
 
-![Graphic showing different types of users](../../assets/persona-spectrum.png)
+![Graphic showing different types of users](/images/persona-spectrum.png)
 
 Legal and regulatory obligations aside, it's been great to work for a company that has a genuine commitment to making inclusive products. Lloyds has an active Accessibility Guild, tools, testing, and clinics that designers are encouraged to take part in.
 
@@ -46,7 +46,7 @@ Each WCAG guideline has a number of success criteria and also a [conformance lev
 
 When I started my role I volunteered to become an Accessibility Champion – a program run by Lloyds Vulnerable Customers team. Through this I was introduced to the [Digital Accessibility Centre](https://digitalaccessibilitycentre.org), a not-for-profit that employs a team with a range of disabilities. They specialise in testing digital products using assistive technology.
 
-![Photograph of a door with the DAC logo](../../assets/DAC.jpg)
+![Photograph of a door with the DAC logo](/images/DAC.jpg)
 
 Watching DAC’s Low Vision and Screen Magnification Analyst test our web components made me rethink the way I design. I realised how difficult it was for someone with low vision to interact with low contrast elements. Observing real users of assistive tech is eye-opening in a way that simulations never are.
 
@@ -73,15 +73,15 @@ I used [Colour Contrast Analyser](https://developer.paciellogroup.com/resources/
 
 Don’t rely on colour alone. We added icons to error states, alerts and notifications.
 
-![Low contrast form field and improved version](../../assets/form-field-error.png)
+![Low contrast form field and improved version](/images/form-field-error.png)
 
 ### Non-Text Contrast: WCAG 1.4.11 (AA)
 
 We changed input field colours and adjusted alerts to meet contrast standards.
 
-![Form field in deuteranopia simulator](../../assets/improved-colour-contrast.png)
+![Form field in deuteranopia simulator](/images/improved-colour-contrast.png)
 
-![Two green icons: one fails, one passes contrast](../../assets/improved-colour-contrast2.png)
+![Two green icons: one fails, one passes contrast](/images/improved-colour-contrast2.png)
 
 ### Meaningful sequence: WCAG 1.3.2 (A)
 
