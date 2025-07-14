@@ -271,7 +271,7 @@ footer {
 }
 
 .footer-columns > div:nth-child(1) {
-  flex: 1 1 clamp(300px, 45%, 100%);
+  flex: 1 1 clamp(300px, 40%, 100%);
 }
 
 .footer-columns > div:nth-child(2),

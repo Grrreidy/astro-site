@@ -22,7 +22,7 @@
  	--space-m: 1.5rem;
 	--space-l: 2.25rem;
  	--space-xl: 3rem;
-	--font-xs: clamp(0.85rem, 1.2vw, 0.9rem);     /* ~13.6–14.4px */
+	--font-xs: clamp(0.7rem, 0.8vw, 0.8rem);     /* ~13.6–14.4px */
 	--font-s:  clamp(0.95rem, 1.5vw, 1rem);       /* ~15.2–16px */
 	--font-m:  clamp(1rem, 1.8vw, 1.125rem);   /* ~16.8–18px */
 	--font-l:  clamp(1.25rem, 2.2vw, 1.4rem);     /* ~20–22.4px */
