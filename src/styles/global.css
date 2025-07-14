@@ -246,8 +246,7 @@ nav a.active {
 .skip-link:focus {
   transform: translateY(0);
 }
-
-/* ===================================================
+ /* ===================================================
    FOOTER
 =================================================== */
 
@@ -260,7 +259,7 @@ footer {
 .footer-inner {
   max-width: 1000px;
   margin: 0 auto;
-  padding-block: var(--space-s);
+  padding-block: var(--space-m);
 }
 
 .footer-columns {
@@ -270,22 +269,43 @@ footer {
   font-size: var(--font-xs);
 }
 
-.footer-columns > div:nth-child(1) {
-  flex: 1 1 clamp(300px, 40%, 100%);
+/* Shared padding for all top-level columns */
+.footer-column {
+  padding: 0 var(--space-s);
 }
 
-.footer-columns > div:nth-child(2),
-.footer-columns > div:nth-child(3) {
-  flex: 1 1 clamp(100px, 15%, 100%);
+.footer-column-1 {
+  flex: 1 1 clamp(320px, 30%, 100%);
 }
 
-.footer-columns > div {
-  padding: var(--space-m);
+.footer-column-with-image {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-s);
+}
+
+.footer-image {
+  width: 100px;
+  flex-shrink: 0;
+  height: auto;
+  margin: 0;
+}
+
+/* Column 2 + 3 container — wraps internally */
+.footer-column-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.footer-column-2,
+.footer-column-3 {
+ gap: var(--space-m);
 }
 
 .footer-columns h3 {
   color: var(--color-cream);
-  font-size: var(--font-m)
+  font-size: var(--font-m);
 }
 
 footer a {
@@ -314,28 +334,14 @@ footer li {
   margin-bottom: 0.3rem;
 }
 
-.footer-contact,
-.footer-column-with-image {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-m);
-}
-
-.footer-image{
-  width: 100px;
-  flex-shrink: 0;
-  height: auto;
-  margin: 0;
-}
-
 .footer-meta {
   padding-bottom: var(--space-m);
-  font-size:  var(--font-xs);
+  font-size: var(--font-xs);
   text-align: center;
   color: var(--color-lightblue);
 }
 
-footer ::-moz-selection { 
+footer ::-moz-selection {
   color: var(--color-blue);
   background: var(--color-beige);
 }
@@ -344,6 +350,7 @@ footer::selection {
   color: var(--color-blue);
   background: var(--color-beige);
 }
+
 
 
 /* ===================================================
