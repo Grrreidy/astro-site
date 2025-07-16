@@ -51,7 +51,6 @@ body {
   width: 100%;
   margin-inline: auto;
   padding: 3em 1em;
-  text-wrap: pretty;
 }
 
 blockquote {
@@ -260,14 +259,14 @@ footer {
 .footer-inner {
   max-width: 1000px;
   margin: 0 auto;
-  padding-block: var(--space-m);
+  padding-block: var(--space-l);
 }
 
 .footer-columns {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-m);
-  font-size: var(--font-xs);
+  font-size: var(--font-s);
 }
 
 /* Shared padding for all top-level columns */
@@ -276,17 +275,18 @@ footer {
 }
 
 .footer-column-1 {
-  flex: 1 1 clamp(320px, 30%, 100%);
+  flex: 1 1 clamp(320px, 42%, 100%);
+  padding-bottom: var(--space-l);
 }
 
 .footer-column-with-image {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-s);
+  gap: var(--space-m);
 }
 
 .footer-image {
-  width: 100px;
+  width: 140px;
   flex-shrink: 0;
   height: auto;
   margin: 0;
@@ -296,17 +296,17 @@ footer {
 .footer-column-right {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: var(--space-xl);
 }
 
 .footer-column-2,
 .footer-column-3 {
- gap: var(--space-m);
+ gap: var(--space-l);
 }
 
 .footer-columns h3 {
   color: var(--color-cream);
-  font-size: var(--font-m);
+  font-size: var(--font-l);
 }
 
 footer a {
@@ -336,7 +336,7 @@ footer li {
 }
 
 .footer-meta {
-  padding-bottom: var(--space-m);
+  padding: var(--space-s) var(--space-l);
   font-size: var(--font-xs);
   text-align: center;
   color: var(--color-lightblue);
