@@ -18,6 +18,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'HeptaSlab';
+  src: url('/fonts/HeptaSlab-Regular.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   font-size: clamp(1rem, 4vmin, 1.5rem);
   line-height: var(--line-height-loose);
@@ -87,6 +95,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
+  font-family: var(--font-display);
+  font-feature-settings: "ss02" 1;
+  text-transform: lowercase;
   font-size: var(--font-3xl);
   padding-bottom: var(--space-m);
 }
