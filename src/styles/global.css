@@ -6,16 +6,8 @@
   font-family: 'WorkSans';
   src: url('/fonts/WorkSans-VariableFont.woff2') format('woff2');
   font-weight: 100 900;
-  font-style: normal;
+  font-style: normal italic;
   font-display: fallback;
-}
-
-@font-face {
-  font-family: 'WorkSans-Italic';
-  src: url('/fonts/WorkSans-Italic-VariableFont.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
 }
 
 @font-face {
@@ -27,7 +19,6 @@
 }
 
 :root {
-  font-size: clamp(1rem, 4vmin, 1.5rem);
   line-height: var(--line-height-loose);
   font-weight: var(--font-weight-regular);
 }
@@ -63,7 +54,6 @@ body {
 
 blockquote {
   border-left: 4px solid var(--color-red);
-  font-size: var(--font-xs);
   padding-left: var(--space-m);
   margin: 2rem 0;
   font-size: var(--font-l);
@@ -91,7 +81,15 @@ hr,
 h1, h2, h3, h4, h5, h6 {
   line-height: var(--line-height-tight);
   font-weight: var(--font-weight-regular);
+}
+
+h1, h3 {
+  padding-bottom: var(--space-m);
+}
+
+h4, h5, h6 {
   padding-bottom: var(--space-xs);
+
 }
 
 h1 {
@@ -99,7 +97,6 @@ h1 {
   font-feature-settings: "ss02" 1;
   text-transform: lowercase;
   font-size: var(--font-3xl);
-  padding-bottom: var(--space-m);
 }
 
 h2 {
@@ -109,7 +106,6 @@ h2 {
 
 h3 {
   font-size: var(--font-l);
-  padding-bottom: var(--space-m);
   font-weight: var(--font-weight-semi-bold);
 }
 
@@ -210,8 +206,7 @@ nav a {
   transition: color 0.2s ease, border-bottom-color 0.2s ease;
 }
 
-nav a:hover,
-nav a:focus {
+a:is(:hover, :focus) {
   color: var(--color-red);
   border-bottom-color: var(--color-red);
 }
@@ -270,7 +265,7 @@ footer {
 .footer-inner {
   max-width: 1140px;
   margin: 0 auto;
-  padding-block: var(--space-l);
+  padding: var(--space-l) var(--space-l) var(--space-xs) var(--space-l);
 }
 
 .footer-columns {
@@ -287,7 +282,7 @@ footer {
 
 .footer-column-1 {
   flex: 1 1 clamp(330px, 42%, 100%);
-  padding-bottom: var(--space-l);
+  padding-bottom: var(--space-s);
 }
 
 .footer-column-with-image {
@@ -308,11 +303,6 @@ footer {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xl);
-}
-
-.footer-column-2,
-.footer-column-3 {
- gap: var(--space-l);
 }
 
 .footer-columns h3 {
@@ -353,16 +343,11 @@ footer li {
   color: var(--color-lightblue);
 }
 
+footer ::selection,
 footer ::-moz-selection {
   color: var(--color-blue);
   background: var(--color-beige);
 }
-
-footer::selection {
-  color: var(--color-blue);
-  background: var(--color-beige);
-}
-
 
 
 /* ===================================================
