@@ -11,9 +11,9 @@
 }
 
 @font-face {
-  font-family: 'HeptaSlab';
-  src: url('/fonts/HeptaSlab-Regular.woff2') format('woff2');
-  font-weight: 500;
+  font-family: 'GT-Eesti';
+  src: url('/fonts/GT-Eesti-Text-Book.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -61,7 +61,7 @@ blockquote {
 }
 
 blockquote p {
-  font-size: var(--font-s);
+  font-size: var(--font-m);
 }
 
 hr,
@@ -79,8 +79,8 @@ hr,
 =================================================== */
 
 h1, h2, h3, h4, h5, h6 {
-  line-height: var(--line-height-tight);
   font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-tight);
 }
 
 h1, h3 {
@@ -94,13 +94,13 @@ h4, h5, h6 {
 
 h1 {
   font-family: var(--font-display);
-  font-feature-settings: "ss02" 1;
-  text-transform: lowercase;
   font-size: var(--font-3xl);
+  text-transform: lowercase;
 }
 
 h2 {
-  font-size: var(--font-xl);
+  font-family: var(--font-display);
+  font-size: var(--font-2xl);
   padding-bottom: var(--space-l);
 }
 
@@ -265,7 +265,7 @@ footer {
 .footer-inner {
   max-width: 1140px;
   margin: 0 auto;
-  padding: var(--space-l) var(--space-l) var(--space-xs) var(--space-l);
+  padding: var(--space-l) var(--space-m) var(--space-xs) var(--space-s);
 }
 
 .footer-columns {
@@ -306,6 +306,7 @@ footer {
 }
 
 .footer-columns h3 {
+  font-family: var(--font-sans);
   color: var(--color-cream);
   font-size: var(--font-l);
 }
@@ -423,10 +424,6 @@ ul.post-list {
   font-size: var(--font-m);
   line-height: var(--line-height-loose);
   max-width: var(--measure-loose);
-}
-
-.blog-content h1 {
-  font-size: var(--font-2xl);
 }
 
 .blog-content h2 {

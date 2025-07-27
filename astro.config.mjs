@@ -3,7 +3,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'http://localhost:4321',
+  site: 'https://gerireid.com',
   trailingSlash: 'never',
   integrations: [mdx(), sitemap()],
   content: {

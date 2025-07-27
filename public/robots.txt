@@ -1,0 +1,7 @@
+# Allow all crawlers access to everything
+User-agent: *
+Disallow: /*.pdf 
+Disallow: /images 
+
+# Point to your sitemap
+Sitemap: https://gerireid.com/sitemap.xml

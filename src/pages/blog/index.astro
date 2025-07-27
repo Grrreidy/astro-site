@@ -58,6 +58,12 @@ const allPosts = [
                     rel={post.external ? "noopener noreferrer" : undefined}
                   >
                     {post.title}
+                    {post.external && (
+                      <>
+                        <span aria-hidden="true"> ↗</span>
+                        <span class="visually-hidden">(opens in new tab)</span>
+                      </>
+                    )}
                   </a>
                 </h2>
                 <p>{post.description}</p>

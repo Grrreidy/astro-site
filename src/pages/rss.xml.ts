@@ -6,7 +6,7 @@ export async function GET() {
   return rss({
     title: 'Geri Reid Blog',
     description: 'Writing on accessibility, design systems, and UX.',
-    site: import.meta.env.SITE || 'http://localhost:4321',
+    site: 'https://gerireid.com',
     items: blog.map((post) => ({
       title: post.data.title,
       pubDate: post.data.pubDate,
