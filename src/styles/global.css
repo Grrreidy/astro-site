@@ -497,6 +497,66 @@ article th {
 }
 
 /* 
+   COPY BIO
+=================================================== */
+.speaker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Unify button and link appearance */
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--font-m);
+  background-color: var(--color-cream);
+  color: var(--color-red);
+  padding: 0.25em 0.5em;
+  text-decoration: underline;
+  border: none;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  text-decoration: none;
+}
+
+.action-button svg {
+  width: 1em;
+  height: 1em;
+}
+
+.action-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.copy-message {
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateY(-50%) translateX(0.5em);
+  background: var(--color-red);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius);
+  font-size: var(--font-xs);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.copy-message.visible {
+  opacity: 1;
+}
+
+
+
+/* 
    SCREEN READERS
 =================================================== */
 

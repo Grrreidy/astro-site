@@ -218,9 +218,67 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
               <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/3mcQ3P2KEhTrDW8BjvNf2o?utm_source=generator" width="100%" height="152" frameborder="0" allowfullscreen="" title="Design Ops Island Discs" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
           </li>
+
+<li class="post-item">
+  <h2>Speaker bio</h2>
+
+  <div class="speaker-actions">
+    <!-- Copy button -->
+    <div class="action-wrapper">
+      <button id="copy-button" type="button" class="action-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+        </svg>
+        <span>Copy bio</span>
+      </button>
+      <span id="copy-msg" class="copy-message" aria-live="polite">Copied!</span>
+    </div>
+
+    <!-- Download link -->
+    <a href="/images/gerireid.jpg" download class="action-button">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      <span>Download speaker photo</span>
+    </a>
+  </div>
+
+  <p id="bio-text">
+    Geri is an accessibility consultant from London. As design and accessibility lead on design systems at News UK and Lloyds Banking Group,
+    she helped some of the UK’s largest media and banking brands to design at scale.
+    She is currently Lead Accessibility Specialist at Just Eat Takeaway.
+    Geri is a keen accessibility advocate, amateur writer and documentation nerd.
+  </p>
+</li>
+
+
         </ul>
       </section>
     </main>
     <Footer />
+
+	<!-- Copy bio -->
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', () => {
+    const copyButton = document.getElementById('copy-button');
+    const bioText = document.getElementById('bio-text');
+    const message = document.getElementById('copy-msg');
+
+    copyButton.addEventListener('click', () => {
+      navigator.clipboard.writeText(bioText.innerText).then(() => {
+        message.classList.add('visible');
+        setTimeout(() => {
+          message.classList.remove('visible');
+        }, 1500);
+      });
+    });
+  });
+</script>
+
   </body>
 </html>
