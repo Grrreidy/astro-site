@@ -223,7 +223,6 @@ nav a.active {
 
 .logo {
   display: inline-flex;
-  padding-top: 8px;
   align-items: center;
   color: var(--color-blue);
   transition: color 0.2s ease;
