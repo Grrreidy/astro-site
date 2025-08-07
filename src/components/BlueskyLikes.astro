@@ -1,0 +1,13 @@
+---
+// src/components/BlueskyLikes.astro
+import { onMount } from 'astro/client';
+
+onMount(async () => {
+  const { injectLikes } = await import('bluesky-likes');
+  injectLikes();
+});
+---
+
+<div class="bsky-likes" data-uri="">
+  <!-- Placeholder, filled by JS -->
+</div>

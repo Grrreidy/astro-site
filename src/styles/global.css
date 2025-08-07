@@ -124,7 +124,7 @@ p + img, p + iframe {
   margin-top: var(--space-s);
 }
 
-ul + h1, ul + h2, ul + h3, ul + h4, ul + h5,
+ul + h1, ul + h2, ul + h4, ul + h5,
 ul + p {
   margin-bottom: var(--space-m);
 }

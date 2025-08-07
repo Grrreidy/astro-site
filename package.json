@@ -13,6 +13,7 @@
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.4.1",
     "astro": "^5.11.0",
+    "bluesky-likes": "^0.0.5",
     "rehype-external-links": "^3.0.0",
     "sharp": "^0.34.2"
   }
