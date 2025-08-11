@@ -6,103 +6,49 @@ const title = 'Accessibility Docs Helper';
   <head>
     <meta charset="utf-8" />
     <title>{title}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        font-family: system-ui, sans-serif;
-        line-height: 1.5;
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-      }
-      label {
-        font-weight: 600;
-        display: block;
-        margin-top: 1rem;
-      }
-      input, button {
-        width: 100%;
-        font-size: 1rem;
-        padding: 0.5rem;
-        margin-top: 0.25rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-      }
-      button {
-        background: #0077ff;
-        color: white;
-        border: none;
-        cursor: pointer;
-      }
-      button:hover {
-        background: #005ccc;
-      }
-      pre {
-        background: #f6f6f6;
-        padding: 1rem;
-        border-radius: 12px;
-        white-space: pre-wrap;
-      }
-    </style>
   </head>
   <body>
     <h1>{title}</h1>
-
     <form id="form">
       <label>Component name
         <input name="component" required placeholder="Button / Tabs / Modal" />
       </label>
-
       <label>Storybook URL
         <input name="url" required placeholder="https://yourstorybook/component" />
       </label>
-
-      <button type="submit" style="margin-top:1rem;">Generate guidance</button>
+      <button type="submit">Generate guidance</button>
     </form>
-
     <p id="status"></p>
     <pre id="output"></pre>
-    <button id="copy" style="display:none">Copy markdown</button>
-    <button id="download" style="display:none">Download .md</button>
-
     <script is:inline>
       const form = document.getElementById('form');
       const statusEl = document.getElementById('status');
       const outEl = document.getElementById('output');
-      const copyBtn = document.getElementById('copy');
-      const dlBtn = document.getElementById('download');
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        statusEl.textContent = 'Generating…';
+        statusEl.textContent = 'Generating...';
         outEl.textContent = '';
-        copyBtn.style.display = 'none';
-        dlBtn.style.display = 'none';
 
         const data = Object.fromEntries(new FormData(form));
         const res = await fetch('/.netlify/functions/a11y-generate', {
           method: 'POST',
-          headers: { 'Content-Type':'application/json' },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) {
-          statusEl.textContent = 'Generation failed. Check function logs.';
-          return;
+        const text = await res.text();
+        try {
+          const json = JSON.parse(text);
+          if (!res.ok) {
+            statusEl.textContent = json.error ? JSON.stringify(json.error) : text;
+            return;
+          }
+          outEl.textContent = json.markdown;
+          statusEl.textContent = 'Done';
+        } catch {
+          statusEl.textContent = text || 'Unknown error';
         }
-        const { markdown } = await res.json();
-        statusEl.textContent = 'Done';
-        outEl.textContent = markdown;
-        copyBtn.style.display = 'inline-block';
-        dlBtn.style.display = 'inline-block';
-
-        copyBtn.onclick = () => navigator.clipboard.writeText(markdown);
-        dlBtn.onclick = () => {
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(new Blob([markdown], {type:'text/markdown'}));
-          a.download = `${data.component || 'component'}-accessibility.md`;
-          a.click();
-        };
       });
     </script>
   </body>
