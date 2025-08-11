@@ -1,0 +1,75 @@
+---
+const title = 'Geris accessibility docs helper';
+---
+<html lang="en">
+  <head><meta charset="utf-8" /><title>{title}</title></head>
+  <body style="font-family:system-ui;line-height:1.5;max-width:900px;margin:2rem auto;padding:0 1rem">
+    <h1>{title}</h1>
+
+    <form id="form">
+      <label>Component name
+        <input name="component" required placeholder="Tabs / Button / Modal" />
+      </label><br><br>
+
+      <label>Props / states (comma separated)
+        <textarea name="props" rows="3" placeholder="size, variant, disabled, selected"></textarea>
+      </label><br><br>
+
+      <label>Design tokens (paste any relevant colours/spacing)
+        <textarea name="tokens" rows="3" placeholder="--color-text:#111; --color-bg:#fff; --focus-ring:#0A7;"></textarea>
+      </label><br><br>
+
+      <label>Storybook or code link (optional)
+        <input name="url" placeholder="https://your-storybook/component" />
+      </label><br><br>
+
+      <button type="submit">Generate guidance</button>
+    </form>
+
+    <p id="status"></p>
+    <pre id="output" style="white-space:pre-wrap;background:#f6f6f6;padding:1rem;border-radius:12px"></pre>
+    <button id="copy" style="display:none">Copy markdown</button>
+    <button id="download" style="display:none">Download .md</button>
+
+    <script is:inline>
+      const form = document.getElementById('form');
+      const statusEl = document.getElementById('status');
+      const outEl = document.getElementById('output');
+      const copyBtn = document.getElementById('copy');
+      const dlBtn = document.getElementById('download');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusEl.textContent = 'Generating…';
+        outEl.textContent = '';
+        copyBtn.style.display = 'none';
+        dlBtn.style.display = 'none';
+
+        const data = Object.fromEntries(new FormData(form));
+        const res = await fetch('/.netlify/functions/a11y-generate', {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+          statusEl.textContent = 'Generation failed. Check your function logs.';
+          return;
+        }
+        const { markdown } = await res.json();
+        statusEl.textContent = 'Done';
+        outEl.textContent = markdown;
+        copyBtn.style.display = 'inline-block';
+        dlBtn.style.display = 'inline-block';
+
+        copyBtn.onclick = () => navigator.clipboard.writeText(markdown);
+        dlBtn.onclick = () => {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(new Blob([markdown], {type:'text/markdown'}));
+          a.download = `${data.component || 'component'}-accessibility.md`;
+          a.click();
+        };
+      });
+    </script>
+  </body>
+</html>
