@@ -1,6 +1,15 @@
-export default async (req) => {
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+exports.handler = async (event) => {
   try {
-    const { component, url } = await req.json();
+    const { component = '', url = '' } = JSON.parse(event.body || '{}');
+
+    if (!OPENAI_API_KEY) {
+      return { statusCode: 500, body: JSON.stringify({ error: 'Missing OPENAI_API_KEY' }) };
+    }
+    if (!component || !url) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'component and url are required' }) };
+    }
 
     const prompt = `
 You are writing accessibility documentation for the "${component}" component.
@@ -16,7 +25,7 @@ Return clear MARKDOWN with:
     const resp = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -26,12 +35,19 @@ Return clear MARKDOWN with:
       })
     });
 
-    const json = await resp.json();
-    const markdown = json.choices?.[0]?.message?.content ?? '';
-    return new Response(JSON.stringify({ markdown }), {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
+    }
+
+    const markdown = data.choices?.[0]?.message?.content ?? '';
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ markdown })
+    };
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), { status: 500 });
+    return { statusCode: 500, body: JSON.stringify({ error: String(e) }) };
   }
 };
