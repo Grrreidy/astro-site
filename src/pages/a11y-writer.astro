@@ -1,33 +1,67 @@
 ---
-const title = 'Geris accessibility docs helper';
+const title = 'Accessibility Docs Helper';
 ---
+
 <html lang="en">
-  <head><meta charset="utf-8" /><title>{title}</title></head>
-  <body style="font-family:system-ui;line-height:1.5;max-width:900px;margin:2rem auto;padding:0 1rem">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      label {
+        font-weight: 600;
+        display: block;
+        margin-top: 1rem;
+      }
+      input, button {
+        width: 100%;
+        font-size: 1rem;
+        padding: 0.5rem;
+        margin-top: 0.25rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+      button {
+        background: #0077ff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #005ccc;
+      }
+      pre {
+        background: #f6f6f6;
+        padding: 1rem;
+        border-radius: 12px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
     <h1>{title}</h1>
 
     <form id="form">
       <label>Component name
-        <input name="component" required placeholder="Tabs / Button / Modal" />
-      </label><br><br>
+        <input name="component" required placeholder="Button / Tabs / Modal" />
+      </label>
 
-      <label>Props / states (comma separated)
-        <textarea name="props" rows="3" placeholder="size, variant, disabled, selected"></textarea>
-      </label><br><br>
+      <label>Storybook URL
+        <input name="url" required placeholder="https://yourstorybook/component" />
+      </label>
 
-      <label>Design tokens (paste any relevant colours/spacing)
-        <textarea name="tokens" rows="3" placeholder="--color-text:#111; --color-bg:#fff; --focus-ring:#0A7;"></textarea>
-      </label><br><br>
-
-      <label>Storybook or code link (optional)
-        <input name="url" placeholder="https://your-storybook/component" />
-      </label><br><br>
-
-      <button type="submit">Generate guidance</button>
+      <button type="submit" style="margin-top:1rem;">Generate guidance</button>
     </form>
 
     <p id="status"></p>
-    <pre id="output" style="white-space:pre-wrap;background:#f6f6f6;padding:1rem;border-radius:12px"></pre>
+    <pre id="output"></pre>
     <button id="copy" style="display:none">Copy markdown</button>
     <button id="download" style="display:none">Download .md</button>
 
@@ -53,7 +87,7 @@ const title = 'Geris accessibility docs helper';
         });
 
         if (!res.ok) {
-          statusEl.textContent = 'Generation failed. Check your function logs.';
+          statusEl.textContent = 'Generation failed. Check function logs.';
           return;
         }
         const { markdown } = await res.json();
