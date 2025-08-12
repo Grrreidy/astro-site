@@ -30,12 +30,11 @@ import Footer from '../components/Footer.astro';
 
       <section id="result" class="a11y-result blog-content" hidden>
         <pre id="output"></pre>
-      
       </section>
 
-      <p class="field-help">
-      Made with <a href="https://platform.openai.com/">Open AI</a> and 
-      <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.
+      <p class="field-help" style="margin-top: var(--space-xl);">
+        Made with <a href="https://platform.openai.com/">Open AI</a> and 
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.
       </p>
     </main>
 
@@ -53,11 +52,6 @@ import Footer from '../components/Footer.astro';
         overflow-x: auto;
         border: 2px dashed var(--color-blue);
       }
-      .a11y-result .actions {
-        display: flex;
-        gap: var(--space-s);
-        margin-top: var(--space-s);
-      }
     </style>
 
     <script is:inline>
@@ -65,8 +59,6 @@ import Footer from '../components/Footer.astro';
       const statusEl = document.getElementById('status');
       const resultSection = document.getElementById('result');
       const outEl = document.getElementById('output');
-      const copyBtn = document.getElementById('copy');
-      const dlBtn = document.getElementById('download');
       const componentError = document.getElementById('component-error');
       const componentInput = document.getElementById('component');
 
@@ -111,14 +103,6 @@ import Footer from '../components/Footer.astro';
           outEl.textContent = line || '';
           resultSection.hidden = false;
           statusEl.textContent = '';
-
-          copyBtn.onclick = () => navigator.clipboard.writeText(line || '');
-          dlBtn.onclick = () => {
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(new Blob([line || ''], { type: 'text/plain' }));
-            a.download = `${(payload.component || 'component').toLowerCase()}-clever.txt`;
-            a.click();
-          };
         } catch (err) {
           statusEl.textContent = String(err);
         }

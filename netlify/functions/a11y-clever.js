@@ -11,7 +11,7 @@ exports.handler = async (event) => {
       };
     }
 
-    if (!component.trim()) {
+    if (!component) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Component field is required' })
@@ -33,16 +33,17 @@ Reference specific numbered WCAG criteria. Use plain English. Avoid jargon. Be s
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7
+        temperature: 0.5
       })
     });
 
     const data = await resp.json();
+
     if (!resp.ok) {
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
-    const line = data.choices?.[0]?.message?.content?.trim() ?? '';
+    const line = data.choices?.[0]?.message?.content ?? '';
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
