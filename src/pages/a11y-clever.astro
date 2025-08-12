@@ -19,7 +19,7 @@ import Footer from '../components/Footer.astro';
         <div class="form-field">
           <label for="component">Component name</label>
           <input id="component" name="component" required aria-describedby="component-help component-error" />
-          <p id="component-help" class="field-help">Try: Button, Tabs, Modal, Tooltip, Accordion</p>
+          <p id="component-help" class="field-help">Try: Tabs, Modal, Tooltip, Accordion, Carousel, Card</p>
           <p id="component-error" class="field-help" style="color: var(--color-red);" hidden>Component field is required</p>
         </div>
 
@@ -30,11 +30,13 @@ import Footer from '../components/Footer.astro';
 
       <section id="result" class="a11y-result blog-content" hidden>
         <pre id="output"></pre>
-        <div class="actions">
-          <button id="copy" class="action-button">Copy line</button>
-          <button id="download" class="action-button">Download .txt</button>
-        </div>
+      
       </section>
+
+      <p class="field-help">
+      Made with <a href="https://platform.openai.com/">Open AI</a> and 
+      <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.
+      </p>
     </main>
 
     <Footer />
