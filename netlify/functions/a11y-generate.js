@@ -19,13 +19,15 @@ exports.handler = async (event) => {
 
     const prompt = `
 You are writing accessibility documentation for the "${component}" component.
-Reference the Storybook page here: ${url}
+Reference the Storybook, zeroheight or design system site here: ${url}
 Return clear MARKDOWN with:
 - Usage guidance
 - Keyboard interactions and focus order
+- WAI-ARIA
 - WCAG 2.2 checklist (with IDs and one-line checks)
-- Notes for ACR/VPAT
-- Keep it concise and in plain English.
+Writing tips: Keep it concise and in plain English.
+Infer usage guidance, ARIA, foundational styles and vibe from the design system docs
+Write in the style of the design system docs referenced in the URL.
 `;
 
     const resp = await fetch('https://api.openai.com/v1/chat/completions', {

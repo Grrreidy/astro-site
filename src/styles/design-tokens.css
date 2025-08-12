@@ -2,10 +2,12 @@
  	--color-black: #000000;
 	--color-blue: #20068C;
  	--color-lightblue: #D1DAE5;
+	--color-midblue: #3e2c87;
  	--color-beige: #E5DEDC;
  	--color-cream: #F8F5F1;
  	--color-white: #ffffff;
 	--color-grey: #999999;
+	--color-darkgrey: #666666;
 	--color-red: #C80136;
 	--font-sans: "WorkSans", system-ui, sans-serif;
 	--font-display: "GT-Eesti", system-ui, serif;
@@ -31,5 +33,6 @@
 	--font-xl: clamp(1.5rem, 3vw, 1.75rem);
 	--font-2xl: clamp(2rem, 4vw, 2.5rem);
 	--font-3xl: clamp(2.5rem, 6vw, 3.5rem);
+	--radius: 8px;
 
 }

@@ -1,0 +1,61 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+let result = null;
+
+if (Astro.request.method === 'POST') {
+  const data = await Astro.request.formData();
+  const component = data.get('component');
+  const storybookUrl = data.get('storybookUrl');
+
+  // Call your Netlify Function
+  const res = await fetch(`${Astro.site}/.netlify/functions/a11y-generate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ component, storybookUrl })
+  });
+  result = await res.json();
+}
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title="Accessibility helper" description="Generate accessibility guidance for your components" />
+  </head>
+  <body>
+    <Header />
+
+    <main class="container blog">
+      <h1>Write my docs</h1>
+      <p>Can AI write good design systems accessibility documentation?</p><p>Enter your Storybook, zeroheight or design system docs site to make guidance bespoke.</p>
+
+      <form method="POST" class="a11y-form">
+        <div class="form-field">
+          <label for="component">Component name</label>
+          <input id="component" name="component" required aria-describedby="component-help" />
+          <p id="component-help" class="field-help">Try: Button, Tabs or Modal</p>
+        </div>
+
+        <div class="form-field">
+          <label for="storybookUrl">Storybook URL</label>
+          <input id="storybookUrl" name="storybookUrl" type="url" />
+          <p id="component-help" class="field-help">Try: https://webc.pie.design/</p>
+        </div>
+
+        <button type="submit" class="default-button">Generate docs</button>
+      </form>
+
+      {result && (
+        <section class="a11y-result">
+          <h2>Accessibility guidance</h2>
+          <pre>{JSON.stringify(result, null, 2)}</pre>
+        </section>
+      )}
+    </main>
+
+    <Footer />
+  </body>
+</html>

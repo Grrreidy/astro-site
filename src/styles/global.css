@@ -169,6 +169,40 @@ a:is(:hover, :focus) {
   outline-offset: 2px;
 }
 
+button,
+input[type="button"],
+input[type="submit"],
+a.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--font-m);
+  color: var(--color-white);
+  background-color: var(--color-red);
+  border: 2px solid var(--color-red);
+  border-radius: var(--radius); /* uses your existing design token */
+  padding: 0.75em 1em;
+  cursor: pointer;
+  text-decoration: none; 
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+a.button:hover {
+  color: var(--color-red);
+  background-color: var(--color-cream);
+}
+
+button svg,
+input[type="button"] svg,
+input[type="submit"] svg,
+a.button svg {
+  width: 1em;
+  height: 1em;
+}
+
+
 [tabindex="-1"]:focus-visible {
   outline: none;
 }
@@ -506,6 +540,8 @@ article th {
 }
 
 /* Unify button and link appearance */
+
+
 .action-button {
   display: inline-flex;
   align-items: center;
@@ -514,13 +550,13 @@ article th {
   background-color: var(--color-cream);
   color: var(--color-red);
   padding: 0.25em 0.5em;
-  text-decoration: underline;
   border: none;
   cursor: pointer;
 }
 
 .action-button:hover {
-  text-decoration: none;
+  color: var(--color-blue);
+  text-decoration: underline;
 }
 
 .action-button svg {
@@ -551,6 +587,46 @@ article th {
 
 .copy-message.visible {
   opacity: 1;
+}
+
+
+/* 
+   FORMS
+=================================================== */
+
+.form-field {
+  margin-block: var(--space-m);
+}
+
+.form-field label {
+  display: block;
+  font-weight: var(--font-weight-semi-bold);
+  margin-block-end: 0.25rem;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  width: 100%;
+  font-size: var(--font-m);
+  color: var(--color-blue);
+  background: var(--color-cream);
+  border: 1px solid var(--color-blue);
+  border-radius: 6px;
+  padding: 0.5rem 0.6rem;
+}
+
+.form-field input:focus-visible,
+.form-field textarea:focus-visible,
+.form-field select:focus-visible {
+  outline: 0.125em solid var(--color-red);
+  outline-offset: 2px; 
+}
+
+.field-help {
+  font-size: var(--font-xs);
+  color: var(--color-midblue);
+  margin-block-start: 0.25rem;
 }
 
 
