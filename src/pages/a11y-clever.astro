@@ -1,0 +1,126 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title="Accessibility clever" description="Get a sharp, one-line accessibility point for your component" />
+  </head>
+  <body>
+    <Header />
+
+    <main class="container blog">
+      <p>Type a component and get a single sentence you can drop into a meeting to sound brilliantly on-point.</p>
+
+      <form id="clever-form" class="a11y-form" novalidate>
+        <div class="form-field">
+          <label for="component">Component name</label>
+          <input id="component" name="component" required aria-describedby="component-help component-error" />
+          <p id="component-help" class="field-help">Try: Button, Tabs, Modal, Tooltip, Accordion</p>
+          <p id="component-error" class="field-help" style="color: var(--color-red);" hidden>Component field is required</p>
+        </div>
+
+        <button type="submit" class="default-button">Make me look clever</button>
+      </form>
+
+      <p id="status" class="field-help" aria-live="polite"></p>
+
+      <section id="result" class="a11y-result blog-content" hidden>
+        <pre id="output"></pre>
+        <div class="actions">
+          <button id="copy" class="action-button">Copy line</button>
+          <button id="download" class="action-button">Download .txt</button>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+
+    <style>
+      .a11y-result {
+        margin-block-start: var(--space-l);
+      }
+      .a11y-result pre {
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 12px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        border: 2px dashed var(--color-blue);
+      }
+      .a11y-result .actions {
+        display: flex;
+        gap: var(--space-s);
+        margin-top: var(--space-s);
+      }
+    </style>
+
+    <script is:inline>
+      const form = document.getElementById('clever-form');
+      const statusEl = document.getElementById('status');
+      const resultSection = document.getElementById('result');
+      const outEl = document.getElementById('output');
+      const copyBtn = document.getElementById('copy');
+      const dlBtn = document.getElementById('download');
+      const componentError = document.getElementById('component-error');
+      const componentInput = document.getElementById('component');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        componentError.hidden = true;
+
+        if (!componentInput.value.trim()) {
+          componentError.hidden = false;
+          return;
+        }
+
+        statusEl.textContent = 'Generating…';
+        resultSection.hidden = true;
+        outEl.textContent = '';
+
+        const payload = Object.fromEntries(new FormData(form));
+
+        try {
+          const res = await fetch('/.netlify/functions/a11y-clever', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const text = await res.text();
+          let data;
+          try { data = JSON.parse(text); } catch { data = { error: text }; }
+
+          if (!res.ok) {
+            if (data.error && String(data.error).includes('Component field is required')) {
+              componentError.hidden = false;
+            } else {
+              statusEl.textContent = (typeof data.error === 'string')
+                ? data.error
+                : JSON.stringify(data.error);
+            }
+            return;
+          }
+
+          const { line } = data;
+          outEl.textContent = line || '';
+          resultSection.hidden = false;
+          statusEl.textContent = '';
+
+          copyBtn.onclick = () => navigator.clipboard.writeText(line || '');
+          dlBtn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([line || ''], { type: 'text/plain' }));
+            a.download = `${(payload.component || 'component').toLowerCase()}-clever.txt`;
+            a.click();
+          };
+        } catch (err) {
+          statusEl.textContent = String(err);
+        }
+      });
+    </script>
+  </body>
+</html>
