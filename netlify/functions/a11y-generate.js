@@ -10,7 +10,8 @@ exports.handler = async (event) => {
         body: JSON.stringify({ error: 'Missing OPENAI_API_KEY environment variable' })
       };
     }
-    if (!component || !url) {
+
+    if (!component) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Component field is required' })
@@ -19,15 +20,15 @@ exports.handler = async (event) => {
 
     const prompt = `
 You are writing accessibility documentation for the "${component}" component.
-Reference the Storybook, zeroheight or design system site here: ${url}
+${url ? `Reference the Storybook, zeroheight or design system site here: ${url}` : ''}
 Return clear MARKDOWN with:
 - Usage guidance
 - Keyboard interactions and focus order
 - WAI-ARIA
 - WCAG 2.2 checklist (with IDs and one-line checks)
 Writing tips: Keep it concise and in plain English.
-Infer usage guidance, ARIA, foundational styles and vibe from the design system docs
-Write in the style of the design system docs referenced in the URL.
+Infer usage guidance, ARIA, foundational styles and vibe from the design system docs.
+Write in the style of the design system docs referenced ${url ? 'in the URL above' : 'in well-known design systems like Polaris, Lightning, or USWDS'}.
 `;
 
     const resp = await fetch('https://api.openai.com/v1/chat/completions', {
