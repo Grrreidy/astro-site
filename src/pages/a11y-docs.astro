@@ -2,22 +2,6 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-
-let result = null;
-
-if (Astro.request.method === 'POST') {
-  const data = await Astro.request.formData();
-  const component = data.get('component');
-  const storybookUrl = data.get('storybookUrl');
-
-  // Call your Netlify Function
-  const res = await fetch(`${Astro.site}/.netlify/functions/a11y-generate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ component, storybookUrl })
-  });
-  result = await res.json();
-}
 ---
 
 <!DOCTYPE html>
@@ -30,9 +14,9 @@ if (Astro.request.method === 'POST') {
 
     <main class="container blog">
       <h1>Write my docs</h1>
-      <p>Can AI write good design systems accessibility documentation?</p><p>Enter your Storybook, zeroheight or design system docs site to make guidance bespoke.</p>
+      <p>Enter a component name and a link to your Storybook, zeroheight or design system docs.</p>
 
-      <form method="POST" class="a11y-form">
+      <form id="a11y-form" class="a11y-form" novalidate>
         <div class="form-field">
           <label for="component">Component name</label>
           <input id="component" name="component" required aria-describedby="component-help" />
@@ -40,22 +24,76 @@ if (Astro.request.method === 'POST') {
         </div>
 
         <div class="form-field">
-          <label for="storybookUrl">Storybook URL</label>
-          <input id="storybookUrl" name="storybookUrl" type="url" />
-          <p id="component-help" class="field-help">Try: https://webc.pie.design/</p>
+          <label for="url">Docs URL</label>
+          <input id="url" name="url" type="url" required aria-describedby="url-help" />
+          <p id="url-help" class="field-help">Try: https://webc.pie.design/</p>
         </div>
 
         <button type="submit" class="default-button">Generate docs</button>
       </form>
 
-      {result && (
-        <section class="a11y-result">
-          <h2>Accessibility guidance</h2>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
-        </section>
-      )}
+      <p id="status" class="field-help" aria-live="polite"></p>
+
+      <section id="result" class="a11y-result" hidden>
+        <h2>Accessibility guidance</h2>
+        <pre id="output"></pre>
+        <button id="copy" class="action-button">Copy markdown</button>
+        <button id="download" class="action-button">Download .md</button>
+      </section>
     </main>
 
     <Footer />
+
+    <script is:inline>
+      const form = document.getElementById('a11y-form');
+      const statusEl = document.getElementById('status');
+      const resultSection = document.getElementById('result');
+      const outEl = document.getElementById('output');
+      const copyBtn = document.getElementById('copy');
+      const dlBtn = document.getElementById('download');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusEl.textContent = 'Generating…';
+        resultSection.hidden = true;
+        outEl.textContent = '';
+
+        const payload = Object.fromEntries(new FormData(form));
+
+        try {
+          const res = await fetch('/.netlify/functions/a11y-generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const text = await res.text();
+          let data;
+          try { data = JSON.parse(text); } catch { data = { error: text }; }
+
+          if (!res.ok) {
+            statusEl.textContent = (typeof data.error === 'string')
+              ? data.error
+              : JSON.stringify(data.error);
+            return;
+          }
+
+          const { markdown } = data;
+          outEl.textContent = markdown || '';
+          resultSection.hidden = false;
+          statusEl.textContent = 'Done';
+
+          copyBtn.onclick = () => navigator.clipboard.writeText(markdown || '');
+          dlBtn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([markdown || ''], { type: 'text/markdown' }));
+            a.download = `${(payload.component || 'component').toLowerCase()}-accessibility.md`;
+            a.click();
+          };
+        } catch (err) {
+          statusEl.textContent = String(err);
+        }
+      });
+    </script>
   </body>
 </html>
