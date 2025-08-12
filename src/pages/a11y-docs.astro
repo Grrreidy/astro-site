@@ -14,7 +14,7 @@ import Footer from '../components/Footer.astro';
 
     <main class="container blog">
       <h1>Write my docs</h1>
-      <p>Enter a component name and a link to your Storybook, zeroheight or design system docs.</p>
+      <p>Can AI write design system accessibility docs? Try it out!</p><p>Add a link to your Storybook, zeroheight or design system docs site to make the docs bespoke to your design system.</p>
 
       <form id="a11y-form" class="a11y-form" novalidate>
         <div class="form-field">
@@ -24,25 +24,30 @@ import Footer from '../components/Footer.astro';
         </div>
 
         <div class="form-field">
-          <label for="url">Docs URL</label>
+          <label for="url">Storybook or docs URL</label>
           <input id="url" name="url" type="url" required aria-describedby="url-help" />
           <p id="url-help" class="field-help">Try: https://webc.pie.design/</p>
         </div>
 
         <button type="submit" class="default-button">Generate docs</button>
       </form>
+<hr>
+      <p class="field-help">Made with <a href="https://platform.openai.com/">Open AI</a> and <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.</p>
 
       <p id="status" class="field-help" aria-live="polite"></p>
 
-      <section id="result" class="a11y-result" hidden>
-        <h2>Accessibility guidance</h2>
+      <section id="result" class="a11y-result blog-content" hidden>
         <pre id="output"></pre>
-        <button id="copy" class="action-button">Copy markdown</button>
-        <button id="download" class="action-button">Download .md</button>
+        <div class="actions">
+          <button id="copy" class="action-button">Copy markdown</button>
+          <button id="download" class="action-button">Download .md</button>
+        </div>
       </section>
     </main>
 
     <Footer />
+
+ 
 
     <script is:inline>
       const form = document.getElementById('a11y-form');
@@ -81,7 +86,7 @@ import Footer from '../components/Footer.astro';
           const { markdown } = data;
           outEl.textContent = markdown || '';
           resultSection.hidden = false;
-          statusEl.textContent = 'Done';
+          statusEl.textContent = ''; // no "Done" message
 
           copyBtn.onclick = () => navigator.clipboard.writeText(markdown || '');
           dlBtn.onclick = () => {

@@ -630,6 +630,25 @@ article th {
 }
 
 
+/* 
+   A11Y DOCS RESULTS
+=================================================== */
+.a11y-result {
+  margin-block-start: var(--space-l); 
+}
+
+.a11y-result pre {
+  background: #f6f6f6;
+  padding: 1rem;
+  border-radius: 12px;
+  white-space: pre-wrap;
+}
+
+.a11y-result .actions {
+  display: flex;
+  gap: var(--space-s);
+  margin-top: var(--space-s);
+}
 
 /* 
    SCREEN READERS
