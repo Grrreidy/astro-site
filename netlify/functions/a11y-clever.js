@@ -20,8 +20,8 @@ exports.handler = async (event) => {
 
     const prompt = `
 Give me TWO short, sharp sentences about the accessibility of the "${component}" component.
-It should be clever, insightful, and something I could say in a meeting to sound like an accessibility expert.
-Reference WCAG criteria. Use plain English. Avoid jargon.
+It should be clever, insightful, and something I could say in a meeting to sound like an advanced and knowledgable accessibility expert.
+Reference specific numbered WCAG criteria. Use plain English. Avoid jargon. Be specific and insightful, not just a generic comment that everyone knows.
 `;
 
     const resp = await fetch('https://api.openai.com/v1/chat/completions', {
