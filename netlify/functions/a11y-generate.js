@@ -13,7 +13,7 @@ exports.handler = async (event) => {
     if (!component || !url) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Both "component" and "url" fields are required' })
+        body: JSON.stringify({ error: 'Component field is required' })
       };
     }
 

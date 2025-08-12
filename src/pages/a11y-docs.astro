@@ -14,7 +14,8 @@ import Footer from '../components/Footer.astro';
 
     <main class="container blog">
       <h1>Write my docs</h1>
-      <p>Can AI write design system accessibility docs? Try it out!</p><p>Add a link to your Storybook, zeroheight or design system docs site to make the docs bespoke to your design system.</p>
+      <p>Can AI write design system accessibility docs? Try it out!</p>
+      <p>Add a link to your Storybook, zeroheight or design system docs site to make the docs bespoke to your design system.</p>
 
       <form id="a11y-form" class="a11y-form" novalidate>
         <div class="form-field">
@@ -25,16 +26,19 @@ import Footer from '../components/Footer.astro';
 
         <div class="form-field">
           <label for="url">Storybook or docs URL</label>
-          <input id="url" name="url" type="url" required aria-describedby="url-help" />
+          <input id="url" name="url" type="url" aria-describedby="url-help" />
           <p id="url-help" class="field-help">Try: https://webc.pie.design/</p>
         </div>
 
         <button type="submit" class="default-button">Generate docs</button>
       </form>
-<hr>
-      <p class="field-help">Made with <a href="https://platform.openai.com/">Open AI</a> and <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.</p>
-
       <p id="status" class="field-help" aria-live="polite"></p>
+
+      <hr>
+      <p class="field-help">
+        Made with <a href="https://platform.openai.com/">Open AI</a> and 
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.
+      </p>
 
       <section id="result" class="a11y-result blog-content" hidden>
         <pre id="output"></pre>
@@ -47,7 +51,26 @@ import Footer from '../components/Footer.astro';
 
     <Footer />
 
- 
+    <style>
+      .a11y-result {
+        margin-block-start: var(--space-l);
+      }
+
+      .a11y-result pre {
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 12px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        border: 2px dashed var(--color-blue);
+      }
+
+      .a11y-result .actions {
+        display: flex;
+        gap: var(--space-s);
+        margin-top: var(--space-s);
+      }
+    </style>
 
     <script is:inline>
       const form = document.getElementById('a11y-form');
@@ -86,7 +109,7 @@ import Footer from '../components/Footer.astro';
           const { markdown } = data;
           outEl.textContent = markdown || '';
           resultSection.hidden = false;
-          statusEl.textContent = ''; // no "Done" message
+          statusEl.textContent = '';
 
           copyBtn.onclick = () => navigator.clipboard.writeText(markdown || '');
           dlBtn.onclick = () => {
