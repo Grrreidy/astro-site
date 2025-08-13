@@ -16,15 +16,15 @@ You are writing accessibility documentation for the ${component} on ${platform}.
 
 Return HTML (no <html> or <body>) using only headings, paragraphs, and lists, styled by the site's CSS. Use sentence case for headings.
 
-First heading: Component name (use <h2>)
+First heading: ${component} (use <h2>)
 Subsequent headings (use <h3>)
 - One short sentence component definition
 - Usage guidance
 - Guidelines (e.g., WCAG 2.2 criteria that applies with links to the criteria including the number; for iOS components also include relevant Apple Human Interface Guidelines with links with links to the relevant component page(s) https://developer.apple.com/design/human-interface-guidelines/components; for Android include Material 3 guidance with links to the relevant component page(s) https://m3.material.io/components)
 - Checklist
 - Keyboard interactions and focus order
-- WAI-ARIA
-- Which disabilities and impairments could be affected by this component?
+- ARIA (which ARIA roles, states and properties are relevant to this component? Include links to the ARIA Authoring Practices https://www.w3.org/WAI/ARIA/apg/)
+- Which disabilities and impairments could be affected by this component? Title this section "Who this helps". For example "People withh visual impairments" or "People with cognitive disabilities"
 
 Rules:
 - UK English. Concise, plain language.
