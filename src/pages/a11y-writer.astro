@@ -14,7 +14,7 @@ import Footer from '../components/Footer.astro';
 
     <main class="container blog">
       <h1>Accessibility writer</h1>
-      <p>Choose a platform and enter a component to generate concise, well-structured accessibility guidance.</p>
+      <p>Choose a platform and enter a component to generate accessibility guidance.</p>
 
       <form id="writer-form" class="a11y-form" novalidate>
         <div class="form-field">
@@ -72,16 +72,22 @@ import Footer from '../components/Footer.astro';
         align-items: center;
         gap: 0.5rem;
       }
+
       .spinner {
+        display: inline-block;            /* <-- key fix */
         width: 1rem;
         height: 1rem;
         border: 2px solid var(--color-blue);
-        border-top-color: transparent;
+        border-right-color: transparent;  /* smooth arc */
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
       }
-      @keyframes spin {
-        to { transform: rotate(360deg); }
+
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Optional: respect reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .spinner { animation: none; }
       }
     </style>
 
