@@ -1,0 +1,144 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title="Accessibility writer" description="Generate platform-specific accessibility guidance for a component" />
+  </head>
+  <body>
+    <Header />
+
+    <main class="container blog">
+      <h1>Accessibility writer</h1>
+      <p>Choose a platform and enter a component to generate concise, well-structured accessibility guidance.</p>
+
+      <form id="writer-form" class="a11y-form" novalidate>
+        <div class="form-field">
+          <label for="platform">Platform</label>
+          <select id="platform" name="platform" required aria-describedby="platform-help platform-error">
+            <option value="">Select a platform</option>
+            <option value="Design">Design</option>
+            <option value="Web">Web</option>
+            <option value="iOS">iOS</option>
+            <option value="Android">Android</option>
+          </select>
+          <p id="platform-error" class="field-help" style="color: var(--color-red);" hidden>Platform is required</p>
+        </div>
+
+        <div class="form-field">
+          <label for="component">Component</label>
+          <input id="component" name="component" required aria-describedby="component-help component-error" />
+          <p id="component-help" class="field-help">Try: Button, Tabs or Modal</p>
+          <p id="component-error" class="field-help" style="color: var(--color-red);" hidden>Component is required</p>
+        </div>
+
+        <button type="submit" class="default-button">Generate guidance</button>
+      </form>
+
+      <p id="status" class="field-help status-message" aria-live="polite"></p>
+
+      <section id="result" class="a11y-result blog-content" hidden>
+        <div id="output" class="blog-content"></div>
+      </section>
+
+      <p class="field-help" style="margin-top: var(--space-xl);">
+        Made with <a href="https://platform.openai.com/">Open AI</a> and 
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.
+      </p>
+    </main>
+
+    <Footer />
+
+    <style>
+      .a11y-result { margin-block-start: var(--space-l); }
+      .a11y-result .blog-content {
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 2px dashed var(--color-blue);
+      }
+      #output ul, #output ol { margin: 0 0 var(--space-m) 1rem; }
+      #output h2, #output h3 { margin-top: var(--space-m); }
+      #output p + h2, #output ul + h2, #output ol + h2 { margin-top: var(--space-l); }
+
+      /* Spinner styles */
+      .status-message {
+        margin-top: var(--space-m);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .spinner {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid var(--color-blue);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+
+    <script is:inline>
+      const form = document.getElementById('writer-form');
+      const statusEl = document.getElementById('status');
+      const resultSection = document.getElementById('result');
+      const outEl = document.getElementById('output');
+
+      const platformInput = document.getElementById('platform');
+      const platformError = document.getElementById('platform-error');
+      const componentInput = document.getElementById('component');
+      const componentError = document.getElementById('component-error');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        platformError.hidden = true;
+        componentError.hidden = true;
+
+        const platform = platformInput.value.trim();
+        const component = componentInput.value.trim();
+        if (!platform) platformError.hidden = false;
+        if (!component) componentError.hidden = false;
+        if (!platform || !component) return;
+
+        statusEl.innerHTML = `Generating… <span class="spinner"></span>`;
+        resultSection.hidden = true;
+        outEl.innerHTML = '';
+
+        const payload = { platform, component };
+
+        try {
+          const res = await fetch('/.netlify/functions/a11y-writer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const text = await res.text();
+          let data;
+          try { data = JSON.parse(text); } catch { data = { error: text }; }
+
+          if (!res.ok) {
+            statusEl.textContent = (typeof data.error === 'string')
+              ? data.error
+              : JSON.stringify(data.error);
+            return;
+          }
+
+          const { html } = data;
+          outEl.innerHTML = html || '';
+          resultSection.hidden = false;
+          statusEl.textContent = '';
+        } catch (err) {
+          statusEl.textContent = String(err);
+        }
+      });
+    </script>
+  </body>
+</html>
