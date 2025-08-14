@@ -2,17 +2,17 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 exports.handler = async (event) => {
   try {
-    const { platform = '', component = '' } = JSON.parse(event.body || '{}');
+    const { component = '' } = JSON.parse(event.body || '{}');
 
     if (!OPENAI_API_KEY) {
       return { statusCode: 500, body: JSON.stringify({ error: 'Missing OPENAI_API_KEY environment variable' }) };
     }
-    if (!platform || !component) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'Platform and component are required' }) };
+    if (!component) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Component is required' }) };
     }
 
     const prompt = `
-You are writing accessibility documentation for the "${component}" component on "${platform}".
+You are writing cross-platform accessibility documentation for the "${component}" component.
 
 Output requirements
 - Return a single HTML fragment only (no <!doctype>, <html>, <head>, <body>, scripts or inline styles).
@@ -27,30 +27,31 @@ Section order and exact headings
 3) <h3>Usage</h3>
    - When to use, when not to, common variants and states.
 4) <h3>Guidelines</h3>
-   - List the applicable WCAG 2.2 AA criteria by number and name (e.g., “2.4.7 Focus visible”).
-   - For each, give one plain-English implication for this component.
-   - Include links per “Link policy” below.
+   - Applicable WCAG 2.2 AA criteria by number and name (e.g., “2.4.7 Focus visible”) with a one-line implication for this component.
+   - Link each criterion per Link policy.
 5) <h3>Checklist</h3>
-   - Actionable Do/Check items a designer/engineer can verify.
+   - Actionable items a designer/engineer can verify.
 6) <h3>Keyboard and focus</h3>
-   - Typical keyboard interactions and expected focus order.
-   - If not interactive, state that clearly.
+   - Typical keyboard interactions and expected focus order (state if not interactive).
 7) <h3>ARIA</h3>
-   - Only ARIA roles/states/properties that are necessary (prefer native semantics).
-   - Include ARIA Authoring Practices links per “Link policy”.
+   - Only ARIA roles/states/properties that are necessary (prefer native semantics). Include ARIA Authoring Practices links per Link policy.
 8) <h3>Acceptance criteria</h3>
-   - Concise, testable statements. Where AtomicA11y has relevant items, reflect them; if not, write sensible criteria.
+   - Concise, testable statements (reflect relevant Atomic A11y items where applicable).
 9) <h3>Who this helps</h3>
-   - Short bullets naming affected groups (e.g., “People with visual impairments”) with one clause on how this guidance helps.
+   - Short bullets naming affected groups (e.g., “People with visual impairments”) with a brief note on how the guidance helps.
 
-Platform rules
-- Web: prioritise WCAG 2.2 and ARIA Authoring Practices patterns.
-- iOS: include relevant Apple Human Interface Guidelines component pages.
-- Android: include relevant Material 3 component pages.
-- Design: focus on content design, naming, semantics, states, contrast, and error prevention at system level; avoid platform code specifics.
+10) <h2>Platform specifics</h2>
+11) <h3>Web</h3>
+   - Notes specific to web implementations, including relevant ARIA Authoring Practices pattern(s) and any extra WCAG nuances.
+12) <h3>iOS</h3>
+   - Notes specific to iOS with links to the relevant Apple Human Interface Guidelines component page(s).
+13) <h3>Android</h3>
+   - Notes specific to Android with links to the relevant Material 3 component page(s).
+14) <h3>Design</h3>
+   - System-level advice on content design, naming, semantics, states, contrast and error prevention. Avoid platform code specifics.
 
 Link policy (use only these domains; never invent other sources)
-- WCAG 2.2 Quick Reference: https://www.w3.org/WAI/WCAG22/quickref/  (anchor with the criterion id when certain; otherwise link to the Quick Reference home and show the correct number and name)
+- WCAG 2.2 Quick Reference: https://www.w3.org/WAI/WCAG22/quickref/  (when a stable deep anchor is known, use it; otherwise link to the Quick Reference home but still show the exact criterion number and name)
 - ARIA Authoring Practices: https://www.w3.org/WAI/ARIA/apg/
 - Apple HIG components (iOS): https://developer.apple.com/design/human-interface-guidelines/components/
 - Material 3 components (Android): https://m3.material.io/components
@@ -60,8 +61,9 @@ Link policy (use only these domains; never invent other sources)
 Style rules
 - Concise, direct, GOV.UK-style tone.
 - No code fences, no markdown, no placeholders like “TBD”.
-- Do not include content outside the 9 sections above.
+- Do not include content outside the sections and headings listed above.
 
+Return only the HTML fragment.
 `;
 
     const resp = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -73,7 +75,7 @@ Style rules
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
-        temperature: 0.3
+        temperature: 0.2
       })
     });
 

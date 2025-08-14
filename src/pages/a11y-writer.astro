@@ -7,28 +7,16 @@ import Footer from '../components/Footer.astro';
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <BaseHead title="Accessibility writer" description="Generate platform-specific accessibility guidance for a component" />
+    <BaseHead title="Accessibility writer" description="Generate cross-platform accessibility guidance for a component" />
   </head>
   <body>
     <Header />
 
     <main class="container blog">
-      <h1>Accessibility writer</h1>
-      <p>Choose a platform and enter a component to generate accessibility guidance.</p>
+      <h1>Accessibility guidance</h1>
+      <p>Enter a component to generate accessibility guidance for Web, iOS, Android, and Design.</p>
 
       <form id="writer-form" class="a11y-form" novalidate>
-        <div class="form-field">
-          <label for="platform">Platform</label>
-          <select id="platform" name="platform" required aria-describedby="platform-help platform-error">
-            <option value="">Select a platform</option>
-            <option value="Design">Design</option>
-            <option value="Web">Web</option>
-            <option value="iOS">iOS</option>
-            <option value="Android">Android</option>
-          </select>
-          <p id="platform-error" class="field-help" style="color: var(--color-red);" hidden>Platform is required</p>
-        </div>
-
         <div class="form-field">
           <label for="component">Component</label>
           <input id="component" name="component" required aria-describedby="component-help component-error" />
@@ -46,8 +34,8 @@ import Footer from '../components/Footer.astro';
       </section>
 
       <p class="field-help" style="margin-top: var(--space-xl);">
-        Made with <a href="https://platform.openai.com/">Open AI</a> and 
-        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. Generated content is not guaranteed to be accurate or complete. Always review and validate the guidance before use :)
+        Made with <a href="https://platform.openai.com/">OpenAI</a> and 
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. Generated content isn’t guaranteed to be accurate or complete. Review and validate before use.
       </p>
     </main>
 
@@ -74,11 +62,11 @@ import Footer from '../components/Footer.astro';
       }
 
       .spinner {
-        display: inline-block;            /* <-- key fix */
+        display: inline-block;
         width: 1rem;
         height: 1rem;
         border: 2px solid var(--color-blue);
-        border-right-color: transparent;  /* smooth arc */
+        border-right-color: transparent;
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
       }
@@ -97,27 +85,24 @@ import Footer from '../components/Footer.astro';
       const resultSection = document.getElementById('result');
       const outEl = document.getElementById('output');
 
-      const platformInput = document.getElementById('platform');
-      const platformError = document.getElementById('platform-error');
       const componentInput = document.getElementById('component');
       const componentError = document.getElementById('component-error');
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        platformError.hidden = true;
         componentError.hidden = true;
 
-        const platform = platformInput.value.trim();
         const component = componentInput.value.trim();
-        if (!platform) platformError.hidden = false;
-        if (!component) componentError.hidden = false;
-        if (!platform || !component) return;
+        if (!component) {
+          componentError.hidden = false;
+          return;
+        }
 
-        statusEl.innerHTML = `Generating… <span class="spinner"></span>`;
+        statusEl.innerHTML = `Generating… <span class="spinner" aria-hidden="true"></span>`;
         resultSection.hidden = true;
         outEl.innerHTML = '';
 
-        const payload = { platform, component };
+        const payload = { component };
 
         try {
           const res = await fetch('/.netlify/functions/a11y-writer', {
