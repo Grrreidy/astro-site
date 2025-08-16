@@ -52,11 +52,13 @@ Section order and exact headings
 
 Link policy (use only these domains; never invent other sources)
 - WCAG 2.2 Quick Reference: https://www.w3.org/WAI/WCAG22/quickref/  (when a stable deep anchor is known, use it; otherwise link to the Quick Reference home but still show the exact criterion number and name)
-- ARIA Authoring Practices: https://www.w3.org/WAI/ARIA/apg/
+- Mobile Content Accessibility Guidelines: https://getevinced.github.io/mcag/
+- ARIA Authoring Practices: https://www.w3.org/WAI/ARIA/apg/patterns/
 - Apple HIG components (iOS): https://developer.apple.com/design/human-interface-guidelines/components/
 - Material 3 components (Android): https://m3.material.io/components
 - Atomic A11y: https://www.atomica11y.com/
 - WCAG plain-English explanations: https://aaardvarkaccessibility.com/wcag-plain-english/
+- MDN docs accessibility: https://developer.mozilla.org/en-US/docs/Web/Accessibility
 
 Style rules
 - Concise, direct, GOV.UK-style tone.
@@ -64,6 +66,83 @@ Style rules
 - Do not include content outside the sections and headings listed above.
 
 Return only the HTML fragment.
+
+Here is a best practice example for the "Accordion" component:
+
+## Accordion
+
+### Definition and usage
+Accordions show and hide related content. 
+
+Usage
+* Use accordions to break up long pages into segmented, prioritised sections. 
+* Avoid for critical information.
+
+### Guidelines
+2.4.7 Focus visible - Ensure focus indicators are visible when navigating.
+2.1.1 Keyboard accessible - All functionality must be operable via keyboard.
+3.3.2 Labels or instructions - Provide clear labels for each section.
+1.4.13 Content on hover or focus - Avoid content that appears only on hover or focus.
+
+### Checklist
+* Ensure all sections are keyboard navigable.
+* Verify that expanded sections are visually distinct.
+* Check for appropriate ARIA roles and properties.
+* Confirm that labels are clear and descriptive.
+* Test with screen readers for proper announcement of states.
+
+### Keyboard and focus
+* Tab to navigate between sections.
+* Enter or space to expand panel.
+* Shift + Tab to return to previous section.
+* Focus should move to the first focusable element within expanded sections.
+
+### ARIA
+* Use role="button" for section headers.
+* Use aria-expanded to indicate the state of each section.
+* Use aria-controls to associate headers with their content.
+* Refer to ARIA Authoring Practices for implementation guidance.
+
+### Acceptance criteria
+
+1. Test with keyboard only
+* Tab: Visibly moves focus to the next focussable element.
+* Shift+Tab: Visibly moves focus to the previous focussable element.
+* Spacebar or enter: Expands or collapses the panel. 
+
+2. Test with mobile screenreader gestures
+* Swipe: Focus moves to the element
+* Doubletap: Expands or collapses the panel. 
+
+3. Test with screen readers
+* Name: Clear purpose is announced
+* Role: Role is announced
+* State: State is announced (expanded/collapsed)
+
+
+### Who these guidelines helps
+* People with visual impairments - clear labels and focus indicators aid navigation.
+* People with motor impairments - keyboard accessibility ensures usability.
+* People with cognitive disabilities - simplified content management improves understanding.
+
+### Platform specifics
+
+#### Web
+* Follow the ARIA Authoring Practices for web implementations.
+
+#### iOS
+* Refer to the Apple Human Interface Guidelines for iOS specifics.
+* Ensure touch targets are large enough for easy interaction.
+
+#### Android
+* Refer to the Material 3 components for Android specifics.
+
+#### Design
+* Use clear, descriptive headings for each section.
+* Maintain consistent spacing and alignment for visual clarity.
+* Ensure sufficient contrast between text and background.
+* Prevent errors by confirming actions before expanding sections.
+
 `;
 
     const resp = await fetch('https://api.openai.com/v1/chat/completions', {
