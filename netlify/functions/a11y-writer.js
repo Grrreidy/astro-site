@@ -33,7 +33,7 @@ Section order and exact headings
    - When to use, when not to, common variants and states.
 4) <h3>Guidelines</h3>
    - List applicable WCAG 2.2 AA criteria by number and name (e.g., “2.4.7 Focus visible”) with one line on what it means for this component.
-   - Link each criterion per Link policy.
+   - Link each criterion per Link policy. Only use tested links, don't invent links.
 5) <h3>Checklist</h3>
    - Actionable items a designer/engineer can verify.
 6) <h3>Keyboard and focus</h3>
@@ -49,15 +49,16 @@ Section order and exact headings
    - Short bullets naming affected groups (e.g., “People with visual impairments”) with a brief note on how this guidance helps.
 10) <h2>Platform specifics</h2>
 11) <h3>Web</h3>
-   - Notes for web implementations, including relevant ARIA Authoring Practices pattern(s) and any WCAG nuances.
+   - Notes for web implementations, including relevant ARIA Authoring Practices pattern(s) and any WCAG nuances. 
 12) <h3>iOS</h3>
-   - Notes for iOS with links to the relevant Apple Human Interface Guidelines component page(s).
+   - Notes for iOS with links to the relevant Apple Human Interface Guidelines component page(s). 
 13) <h3>Android</h3>
-   - Notes for Android with links to the relevant Material 3 component page(s); reference MCAG where it adds mobile-specific considerations.
+   - Notes for Android with links to the relevant Material 3 component page(s); reference MCAG where it adds mobile-specific considerations. 
 14) <h3>Design</h3>
-   - System-level advice on content design, naming, semantics, states, contrast and error prevention. Avoid platform code specifics.
+   - System-level advice on content design, naming, semantics, states, contrast and error prevention. Avoid platform code specifics. 
 
 Link policy (use only these domains; never invent or use other sources)
+Only display tested links, don't invent links.
 - WCAG 2.2 Quick Reference: https://www.w3.org/WAI/WCAG22/quickref/  (use a stable deep anchor when certain; otherwise link to the Quick Reference home but still show the exact criterion number and name)
 - Mobile Content Accessibility Guidelines (MCAG): https://getevinced.github.io/mcag/
 - ARIA Authoring Practices patterns: https://www.w3.org/WAI/ARIA/apg/patterns/
@@ -77,7 +78,7 @@ Reference example (copy headings verbatim. Use for tone, brevity, and structure 
 
 Return only the HTML fragment.
 
-Here is copy and structure for a best practice example for the "Accordion" component for reference.
+Here is copy and structure for a best practice example for the "Accordion" component to reference tone, brevity and structure.
 
 Accordion
 
