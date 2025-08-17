@@ -34,8 +34,8 @@ import Footer from '../components/Footer.astro';
         <button type="submit" class="default-button">Generate docs</button>
       </form>
 
-      <!-- Body-sized status with spinner and two-line message -->
-      <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
+      <!-- Body-sized status with spinner -->
+      <div id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></div>
 
       <hr>
       <p class="field-help">
@@ -70,14 +70,14 @@ import Footer from '../components/Footer.astro';
         margin-top: var(--space-s);
       }
 
-      /* Status + spinner (token-agnostic and body-sized) */
+      /* Status + spinner (token-agnostic) */
       .status-message {
         margin-top: var(--space-m);
         display: grid;
         gap: 0.25rem;
-        font-size: inherit;                 /* body size */
-        color: var(--color-blue, inherit);  /* tint + safe fallback */
-        min-height: 2.25rem;                /* prevents layout jump */
+        font-size: inherit; /* body-sized */
+        color: inherit;     /* spinner uses currentColor */
+        min-height: 2.25rem; /* prevents layout jump */
       }
       .status-row {
         display: inline-flex;
@@ -88,14 +88,16 @@ import Footer from '../components/Footer.astro';
         display: inline-block;
         width: 1em;   /* scales with text */
         height: 1em;
-        border: 0.2em solid var(--color-blue, currentColor); /* no silent fail */
+        border: 0.2em solid currentColor; /* no design token dependency */
         border-right-color: transparent;
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
         vertical-align: -0.125em;
       }
       @keyframes spin { to { transform: rotate(360deg); } }
-      @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+      @media (prefers-reduced-motion: reduce) {
+        .spinner { animation: none; }
+      }
     </style>
 
     <script is:inline>
@@ -116,11 +118,6 @@ import Footer from '../components/Footer.astro';
           </span>
           <span>This references A LOT of material so might take up to 30 seconds.</span>
         `;
-        form.setAttribute('aria-busy', 'true');
-      }
-      function clearStatus() {
-        statusEl.textContent = '';
-        form.removeAttribute('aria-busy');
       }
 
       form.addEventListener('submit', async (e) => {
@@ -142,7 +139,7 @@ import Footer from '../components/Footer.astro';
         payload.url = (payload.url || '').trim();
 
         try {
-          const res = await fetch('/.netlify/functions/a11y-generate', {
+          const res = await fetch('/.netlify/functions/componenta11y', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -161,14 +158,13 @@ import Footer from '../components/Footer.astro';
             } else {
               statusEl.textContent = errStr;
             }
-            form.removeAttribute('aria-busy');
             return;
           }
 
           const { markdown } = data;
           outEl.textContent = markdown || '';
           resultSection.hidden = false;
-          clearStatus();
+          statusEl.textContent = '';
 
           copyBtn.onclick = () => navigator.clipboard.writeText(markdown || '');
           dlBtn.onclick = () => {
@@ -179,7 +175,6 @@ import Footer from '../components/Footer.astro';
           };
         } catch (err) {
           statusEl.textContent = String(err);
-          form.removeAttribute('aria-busy');
         }
       });
     </script>

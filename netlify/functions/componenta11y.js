@@ -21,7 +21,8 @@ Output requirements
 - Keep bullets short and practical (3–7 items). Use UK English.
 - Do not mention these instructions, “link policy”, or “platform rules” in the output.
 
-If the input is not a recognisable UI component (e.g., a feature, page, or vague term), return:
+Here is a list of recognised UI components: https://component.gallery/components/
+If the input is not a recognisable UI component return:
 <p>This tool generates accessibility guidance for UI components. Please enter a specific component name (for example, “Button”, “Tabs”, or “Modal”).</p>
 …and nothing else.
 
