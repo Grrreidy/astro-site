@@ -7,7 +7,7 @@ import Footer from '../components/Footer.astro';
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <BaseHead title="Accessibility helper" description="Generate accessibility guidance for your components" />
+    <BaseHead title="Accessibility docs" description="Generate accessibility docs for your components" />
   </head>
   <body>
     <Header />
@@ -38,10 +38,6 @@ import Footer from '../components/Footer.astro';
       <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
       <hr>
-      <p class="field-help">
-        Made with <a href="https://platform.openai.com/">Open AI</a> and 
-        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
-      </p>
 
       <section id="result" class="a11y-result blog-content" hidden>
         <pre id="output"></pre>
@@ -50,6 +46,11 @@ import Footer from '../components/Footer.astro';
           <button id="download" class="action-button">Download .md</button>
         </div>
       </section>
+
+        <p class="field-help">
+        Made with <a href="https://platform.openai.com/">Open AI</a> and 
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
+      </p>
     </main>
 
     <Footer />
@@ -75,9 +76,9 @@ import Footer from '../components/Footer.astro';
         margin-top: var(--space-m);
         display: grid;
         gap: 0.25rem;
-        font-size: inherit;                 /* body size */
-        color: var(--color-blue, inherit);  /* tint + safe fallback */
-        min-height: 2.25rem;                /* prevents layout jump */
+        font-size: inherit;
+        color: var(--color-blue, inherit);
+        min-height: 2.25rem;
       }
       .status-row {
         display: inline-flex;
@@ -86,9 +87,9 @@ import Footer from '../components/Footer.astro';
       }
       .spinner {
         display: inline-block;
-        width: 1em;   /* scales with text */
+        width: 1em;
         height: 1em;
-        border: 0.2em solid var(--color-blue, currentColor); /* no silent fail */
+        border: 0.2em solid var(--color-blue, currentColor);
         border-right-color: transparent;
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
@@ -142,7 +143,7 @@ import Footer from '../components/Footer.astro';
         payload.url = (payload.url || '').trim();
 
         try {
-          const res = await fetch('/.netlify/functions/a11y-generate', {
+          const res = await fetch('/.netlify/functions/a11y-docs', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -161,7 +162,7 @@ import Footer from '../components/Footer.astro';
             } else {
               statusEl.textContent = errStr;
             }
-            form.removeAttribute('aria-busy');
+            clearStatus();
             return;
           }
 
@@ -179,7 +180,7 @@ import Footer from '../components/Footer.astro';
           };
         } catch (err) {
           statusEl.textContent = String(err);
-          form.removeAttribute('aria-busy');
+          clearStatus();
         }
       });
     </script>

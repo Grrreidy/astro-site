@@ -7,77 +7,61 @@ import Footer from '../components/Footer.astro';
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <BaseHead title="Accessibility helper" description="Generate accessibility guidance for your components" />
+    <BaseHead title="Componenta11y" description="Generate cross-platform accessibility guidance for a component" />
   </head>
   <body>
     <Header />
 
     <main class="container blog">
-      <h1>Write my docs</h1>
-      <p>Can AI write design system accessibility docs? Try it out!</p>
-      <p>Add a link to your Storybook, zeroheight or design system docs site to make the docs bespoke to your design system.</p>
+      <h1>Componenta11y</h1>
+      <p>Generate cross-platform accessibility guidance for a component.</p>
 
-      <form id="a11y-form" class="a11y-form" novalidate>
+      <form id="writer-form" class="a11y-form" novalidate>
         <div class="form-field">
-          <label for="component">Component name</label>
+          <label for="component">Component</label>
           <input id="component" name="component" required aria-describedby="component-help component-error" />
           <p id="component-help" class="field-help">Try: Accordion, Card, Button, Tooltip or Modal</p>
-          <p id="component-error" class="field-help" style="color: var(--color-red);" hidden>Component field is required</p>
+          <p id="component-error" class="field-help" style="color: var(--color-red);" hidden>Component is required</p>
         </div>
 
-        <div class="form-field">
-          <label for="url">Storybook or docs URL</label>
-          <input id="url" name="url" type="url" aria-describedby="url-help" />
-          <p id="url-help" class="field-help">Try: https://webc.pie.design/</p>
-        </div>
-
-        <button type="submit" class="default-button">Generate docs</button>
+        <button type="submit" class="default-button">Generate guidance</button>
       </form>
 
-      <!-- Body-sized status with spinner -->
-      <div id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></div>
-
-      <hr>
-      <p class="field-help">
-        Made with <a href="https://platform.openai.com/">Open AI</a> and 
-        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
-      </p>
+      <!-- Body-sized status with spinner and two-line message -->
+      <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
       <section id="result" class="a11y-result blog-content" hidden>
-        <pre id="output"></pre>
-        <div class="actions">
-          <button id="copy" class="action-button">Copy markdown</button>
-          <button id="download" class="action-button">Download .md</button>
-        </div>
+        <div id="output" class="blog-content"></div>
       </section>
+
+      <p class="field-help" style="margin-top: var(--space-xl);">
+        Made with <a href="https://platform.openai.com/">OpenAI</a> and 
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
+      </p>
     </main>
 
     <Footer />
 
     <style>
       .a11y-result { margin-block-start: var(--space-l); }
-      .a11y-result pre {
+      .a11y-result .blog-content {
         background: #ffffff;
         padding: 1rem;
         border-radius: 12px;
-        white-space: pre-wrap;
-        overflow-x: auto;
         border: 2px dashed var(--color-blue);
       }
-      .a11y-result .actions {
-        display: flex;
-        gap: var(--space-s);
-        margin-top: var(--space-s);
-      }
+      #output ul, #output ol { margin: 0 0 var(--space-m) 1rem; }
+      #output h2, #output h3 { margin-top: var(--space-m); }
+      #output p + h2, #output ul + h2, #output ol + h2 { margin-top: var(--space-l); }
 
       /* Status + spinner (token-agnostic) */
       .status-message {
         margin-top: var(--space-m);
         display: grid;
         gap: 0.25rem;
-        font-size: inherit; /* body-sized */
-        color: inherit;     /* spinner uses currentColor */
-        min-height: 2.25rem; /* prevents layout jump */
+        font-size: inherit; /* body size */
+        color: var(--color-blue, inherit);
+        min-height: 2.25rem;
       }
       .status-row {
         display: inline-flex;
@@ -88,27 +72,24 @@ import Footer from '../components/Footer.astro';
         display: inline-block;
         width: 1em;   /* scales with text */
         height: 1em;
-        border: 0.2em solid currentColor; /* no design token dependency */
+        border: 0.2em solid var(--color-blue, currentColor);
         border-right-color: transparent;
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
         vertical-align: -0.125em;
       }
       @keyframes spin { to { transform: rotate(360deg); } }
-      @media (prefers-reduced-motion: reduce) {
-        .spinner { animation: none; }
-      }
+      @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
     </style>
 
     <script is:inline>
-      const form = document.getElementById('a11y-form');
+      const form = document.getElementById('writer-form');
       const statusEl = document.getElementById('status');
       const resultSection = document.getElementById('result');
       const outEl = document.getElementById('output');
-      const copyBtn = document.getElementById('copy');
-      const dlBtn = document.getElementById('download');
-      const componentError = document.getElementById('component-error');
+
       const componentInput = document.getElementById('component');
+      const componentError = document.getElementById('component-error');
 
       function showGenerating() {
         statusEl.innerHTML = `
@@ -118,25 +99,28 @@ import Footer from '../components/Footer.astro';
           </span>
           <span>This references A LOT of material so might take up to 30 seconds.</span>
         `;
+        form.setAttribute('aria-busy', 'true');
+      }
+      function clearStatus() {
+        statusEl.textContent = '';
+        form.removeAttribute('aria-busy');
       }
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         componentError.hidden = true;
 
-        if (!componentInput.value.trim()) {
+        const component = componentInput.value.trim();
+        if (!component) {
           componentError.hidden = false;
           return;
         }
 
         showGenerating();
         resultSection.hidden = true;
-        outEl.textContent = '';
+        outEl.innerHTML = '';
 
-        const fd = new FormData(form);
-        const payload = Object.fromEntries(fd);
-        payload.component = (payload.component || '').trim();
-        payload.url = (payload.url || '').trim();
+        const payload = { component };
 
         try {
           const res = await fetch('/.netlify/functions/componenta11y', {
@@ -150,31 +134,20 @@ import Footer from '../components/Footer.astro';
           try { data = JSON.parse(text); } catch { data = { error: text }; }
 
           if (!res.ok) {
-            const errStr = typeof data.error === 'string'
+            statusEl.textContent = (typeof data.error === 'string')
               ? data.error
-              : (data.error?.error?.message || JSON.stringify(data.error));
-            if (typeof errStr === 'string' && errStr.includes('Component field is required')) {
-              componentError.hidden = false;
-            } else {
-              statusEl.textContent = errStr;
-            }
+              : JSON.stringify(data.error);
+            clearStatus();
             return;
           }
 
-          const { markdown } = data;
-          outEl.textContent = markdown || '';
+          const { html } = data;
+          outEl.innerHTML = html || '';
           resultSection.hidden = false;
-          statusEl.textContent = '';
-
-          copyBtn.onclick = () => navigator.clipboard.writeText(markdown || '');
-          dlBtn.onclick = () => {
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(new Blob([markdown || ''], { type: 'text/markdown' }));
-            a.download = `${(payload.component || 'component').toLowerCase()}-accessibility.md`;
-            a.click();
-          };
+          clearStatus();
         } catch (err) {
           statusEl.textContent = String(err);
+          clearStatus();
         }
       });
     </script>
