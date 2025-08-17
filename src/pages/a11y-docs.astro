@@ -34,7 +34,8 @@ import Footer from '../components/Footer.astro';
         <button type="submit" class="default-button">Generate docs</button>
       </form>
 
-      <p id="status" class="field-help" aria-live="polite"></p>
+      <!-- Status: regular body size, with spinner and two-line message -->
+      <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
       <hr>
       <p class="field-help">
@@ -68,6 +69,31 @@ import Footer from '../components/Footer.astro';
         gap: var(--space-s);
         margin-top: var(--space-s);
       }
+
+      /* Status + spinner */
+      .status-message {
+        margin-top: var(--space-m);
+        display: grid;
+        gap: 0.25rem;
+        font-size: inherit; /* keep regular body size */
+      }
+      .status-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .spinner {
+        display: inline-block;
+        width: 1em; /* scales with text */
+        height: 1em;
+        border: 2px solid var(--color-blue);
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        vertical-align: -0.125em;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
     </style>
 
     <script is:inline>
@@ -80,6 +106,16 @@ import Footer from '../components/Footer.astro';
       const componentError = document.getElementById('component-error');
       const componentInput = document.getElementById('component');
 
+      function showGenerating() {
+        statusEl.innerHTML = `
+          <span class="status-row">
+            <strong>Generating</strong>
+            <span class="spinner" aria-hidden="true"></span>
+          </span>
+          <span>This references A LOT of material so might take up to 30 seconds.</span>
+        `;
+      }
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         componentError.hidden = true;
@@ -89,7 +125,7 @@ import Footer from '../components/Footer.astro';
           return;
         }
 
-        statusEl.textContent = 'Generating…';
+        showGenerating();
         resultSection.hidden = true;
         outEl.textContent = '';
 
@@ -125,7 +161,7 @@ import Footer from '../components/Footer.astro';
           outEl.textContent = markdown || '';
           resultSection.hidden = false;
           statusEl.textContent = '';
-
+          
           copyBtn.onclick = () => navigator.clipboard.writeText(markdown || '');
           dlBtn.onclick = () => {
             const a = document.createElement('a');

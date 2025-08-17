@@ -7,13 +7,13 @@ import Footer from '../components/Footer.astro';
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <BaseHead title="Accessibility writer" description="Generate cross-platform accessibility guidance for a component" />
+    <BaseHead title="Componenta11y" description="Generate cross-platform accessibility guidance for a component" />
   </head>
   <body>
     <Header />
 
     <main class="container blog">
-      <h1>Accessibility guidance</h1>
+      <h1>Componenta11y</h1>
       <p>Enter a component to generate accessibility guidance.</p>
 
       <form id="writer-form" class="a11y-form" novalidate>
@@ -27,7 +27,8 @@ import Footer from '../components/Footer.astro';
         <button type="submit" class="default-button">Generate guidance</button>
       </form>
 
-      <p id="status" class="field-help status-message" aria-live="polite"></p>
+      <!-- Status: regular body size (no 'field-help' class), accessible live region -->
+      <p id="status" class="status-message" role="status" aria-live="polite"></p>
 
       <section id="result" class="a11y-result blog-content" hidden>
         <div id="output" class="blog-content"></div>
@@ -53,27 +54,31 @@ import Footer from '../components/Footer.astro';
       #output h2, #output h3 { margin-top: var(--space-m); }
       #output p + h2, #output ul + h2, #output ol + h2 { margin-top: var(--space-l); }
 
-      /* Spinner styles */
+      /* Status + spinner */
       .status-message {
         margin-top: var(--space-m);
-        display: flex;
+        display: grid;
+        gap: 0.25rem;
+        font-size: inherit; /* ensure regular body size */
+      }
+      .status-row {
+        display: inline-flex;
         align-items: center;
         gap: 0.5rem;
       }
-
       .spinner {
         display: inline-block;
-        width: 1rem;
-        height: 1rem;
+        width: 1em;     /* scales with text size */
+        height: 1em;
         border: 2px solid var(--color-blue);
         border-right-color: transparent;
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
+        vertical-align: -0.125em;
       }
-
       @keyframes spin { to { transform: rotate(360deg); } }
 
-      /* Optional: respect reduced motion */
+      /* Respect reduced motion: keep icon but stop spinning */
       @media (prefers-reduced-motion: reduce) {
         .spinner { animation: none; }
       }
@@ -88,6 +93,16 @@ import Footer from '../components/Footer.astro';
       const componentInput = document.getElementById('component');
       const componentError = document.getElementById('component-error');
 
+      function showGenerating() {
+        statusEl.innerHTML = `
+          <span class="status-row">
+            <strong>Generating</strong>
+            <span class="spinner" aria-hidden="true"></span>
+          </span>
+          <span>This references A LOT of material so might take up to 30 seconds.</span>
+        `;
+      }
+
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         componentError.hidden = true;
@@ -98,7 +113,7 @@ import Footer from '../components/Footer.astro';
           return;
         }
 
-        statusEl.innerHTML = `Generating… <span class="spinner" aria-hidden="true"></span>`;
+        showGenerating();
         resultSection.hidden = true;
         outEl.innerHTML = '';
 
