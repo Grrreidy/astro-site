@@ -1,6 +1,16 @@
+# netlify.toml
+
 [build]
-command = "astro build"
-publish = "dist"
+  command   = "npm run build"
+  publish   = "dist"
 
 [functions]
-directory = "netlify/functions"
+  # Folder where your function files live
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[dev]
+  # Local dev server
+  framework = "astro"
+  port = 8888             # where the dev site runs
+  functionsPort = 9999    # separate port for functions (proxied automatically)
