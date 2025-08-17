@@ -1,5 +1,9 @@
-// a11y-docs.js (CommonJS serverless handler)
-const { recognisedComponentsURL, invalidComponentMsgMd, linkPolicyBullets } = require("./shared/a11y-shared.js");
+// netlify/functions/a11y-docs.js (CommonJS serverless handler)
+const {
+  recognisedComponentsURL,
+  invalidComponentMsgMd,
+  linkPolicyBullets
+} = require("./shared/a11y-shared.js");
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
@@ -45,7 +49,7 @@ exports.handler = async (event) => {
       "- Use sentence case for all headings.",
       "- Keep bullets short and practical (3–7 items).",
       "- Use UK English and a concise, direct tone.",
-      '- Prefer native elements over custom ARIA (for example, an accordion trigger should be a real button with aria-expanded, not a generic element with role="button").',
+      "- Prefer native elements over custom ARIA (for example, an accordion trigger should be a real button with aria-expanded, not a generic element with role=\"button\").",
 
       "",
       "Sections (use exactly these headings)",
@@ -70,10 +74,10 @@ exports.handler = async (event) => {
       "",
       "### WAI-ARIA",
       "- Native first: name the specific native element(s) that satisfy the need (button, details/summary, dialog, input[type=range], select, etc.).",
-      '- If native does not cover this component’s interaction/state, add a bulleted list titled "Required ARIA for custom widgets" with role/state/property and why (role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal="true"; aria-valuemin/max/now; aria-checked; aria-activedescendant).',
+      "- If native does not cover this component’s interaction/state, add a bulleted list titled \"Required ARIA for custom widgets\" with role/state/property and why (role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal=\\\"true\\\"; aria-valuemin/max/now; aria-checked; aria-activedescendant).",
       "- Reference the matching ARIA Authoring Practices pattern name.",
-      '- Never output a generic sentence like "No additional ARIA is required". If native is sufficient, explicitly name the native element and say so.',
-      '- Do not add ARIA that conflicts with native semantics (e.g., do not add role="button" to a real button).',
+      "- Never output a generic sentence like \"No additional ARIA is required\". If native is sufficient, explicitly name the native element and say so.",
+      "- Do not add ARIA that conflicts with native semantics (e.g., do not add role=\\\"button\\\" to a real button).",
 
       "",
       "### WCAG 2.2 checklist",
@@ -83,4 +87,53 @@ exports.handler = async (event) => {
 
       "",
       "### Links",
-      "Only include links from the approved domains in “Link policy” and
+      "Only include links from the approved domains in “Link policy” and only when you are certain. If unsure of a deep anchor, link to the collection’s main page and still show the exact criterion number and name.",
+
+      "",
+      "Link policy (approved sources only; never invent links)",
+      linkPolicyBullets("md"),
+
+      "",
+      "Writing tips",
+      "- Be specific; avoid vague advice like \"make it accessible\".",
+      "- Use consistent, component-appropriate naming (mirror the referenced site if a URL is provided).",
+      "- Do not copy proprietary content verbatim; summarise and adapt to accessibility guidance.",
+
+      "",
+      "Return only the markdown for the sections above."
+    ].join("\n");
+
+    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "You are an expert accessibility technical writer. Follow instructions exactly and be concise." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.2,
+        max_tokens: 1200
+      })
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) {
+      console.error("OpenAI error:", data);
+      return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
+    }
+
+    const markdown = (data.choices?.[0]?.message?.content || "").trim();
+    return {
+      statusCode: 200,
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({ markdown })
+    };
+  } catch (err) {
+    console.error("Function error:", err);
+    return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
+  }
+};

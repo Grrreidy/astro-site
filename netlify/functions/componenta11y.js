@@ -1,5 +1,9 @@
-// componenta11y.js (CommonJS serverless handler)
-const { recognisedComponentsURL, invalidComponentMsgHtml, linkPolicyBullets } = require("./shared/a11y-shared.js");
+// netlify/functions/componenta11y.js (CommonJS serverless handler)
+const {
+  recognisedComponentsURL,
+  invalidComponentMsgHtml,
+  linkPolicyBullets
+} = require("./shared/a11y-shared.js");
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
@@ -41,7 +45,7 @@ exports.handler = async (event) => {
       "3) <h3>Usage</h3>",
       "   - When to use, when not to, common variants and states.",
       "4) <h3>Guidelines</h3>",
-      '   - List applicable WCAG 2.2 AA criteria by number and name (e.g., "2.4.7 Focus visible") with one line on what it means for this component.',
+      "   - List applicable WCAG 2.2 AA criteria by number and name (e.g., \"2.4.7 Focus visible\") with one line on what it means for this component.",
       "   - Link each criterion per Link policy. Only use tested links; never invent links.",
       "5) <h3>Checklist</h3>",
       "   - Actionable items a designer/engineer can verify.",
@@ -50,14 +54,14 @@ exports.handler = async (event) => {
       "   - For mobile, add common assistive-tech gestures where relevant.",
       "7) <h3>ARIA</h3>",
       "   - Native first: name the specific native element(s) that satisfy the requirement (for example, button, details/summary, dialog, input[type=range], select).",
-      '   - If native is insufficient for this component, add a subsection bullet list titled "Required ARIA for custom widgets" with role/state/property and why it is needed (e.g., role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal="true"; aria-valuemin/max/now; aria-checked; aria-activedescendant).',
+      "   - If native is insufficient for this component, add a subsection bullet list titled \"Required ARIA for custom widgets\" with role/state/property and why it is needed (e.g., role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal=\\\"true\\\"; aria-valuemin/max/now; aria-checked; aria-activedescendant).",
       "   - Reference the matching ARIA Authoring Practices pattern name and link to it.",
-      '   - Never output a generic line like "No additional ARIA is required". If native is sufficient, explicitly state the native element (e.g., “Use a native button; no additional ARIA beyond name and focus management.”).',
-      '   - Never add ARIA that conflicts with native semantics (e.g., do not add role="button" to a real button).',
+      "   - Never output a generic line like \"No additional ARIA is required\". If native is sufficient, explicitly state the native element (e.g., \"Use a native button; no additional ARIA beyond name and focus management.\").",
+      "   - Never add ARIA that conflicts with native semantics (e.g., do not add role=\\\"button\\\" to a real button).",
       "8) <h3>Acceptance criteria</h3>",
       "   - Concise, testable statements (reflect relevant Atomic A11y items where applicable).",
       "9) <h3>Who this helps</h3>",
-      '   - Short bullets naming affected groups (e.g., "People with visual impairments") with a brief note on how this guidance helps.',
+      "   - Short bullets naming affected groups (e.g., \"People with visual impairments\") with a brief note on how this guidance helps.",
 
       "10) <h2>Platform specifics</h2>",
       "11) <h3>Web</h3>",

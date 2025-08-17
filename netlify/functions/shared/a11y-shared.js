@@ -1,12 +1,7 @@
-// shared/a11y-shared.js (CommonJS)
-
-// One source of truth for shared links, messages, and small text fragments.
-// Keep this file "data-like": no side effects, just exports.
+// netlify/functions/shared/a11y-shared.js (CommonJS)
 
 const recognisedComponentsURL = "https://component.gallery/components/";
 
-// Approved sources that BOTH prompts reference.
-// Edit here and both functions inherit the change.
 const approvedSources = [
   { name: "WCAG 2.2 Quick Reference", url: "https://www.w3.org/WAI/WCAG22/quickref/" },
   { name: "Mobile Content Accessibility Guidelines (MCAG)", url: "https://getevinced.github.io/mcag/" },
@@ -18,15 +13,13 @@ const approvedSources = [
   { name: "MDN Web Docs (accessibility)", url: "https://developer.mozilla.org/en-US/docs/Web/Accessibility" }
 ];
 
-// Same message expressed once, reused in both prompts (HTML vs Markdown form).
 const invalidComponentMsgHtml =
   '<p>This tool generates accessibility guidance for UI components. Please enter a specific component name (for example, "Button", "Tabs", or "Modal").</p>';
 
 const invalidComponentMsgMd =
-  'This tool generates guidance for UI components only. Please enter a specific component name (for example, "Button", "Tabs", or "Modal".)';
+  'This tool generates guidance for UI components only. Please enter a specific component name (for example, "Button", "Tabs", or "Modal").';
 
-// Utility to turn approved sources into bullets with the punctuation that matches each prompt style.
-function linkPolicyBullets(format /* "html" | "md" */ = "html") {
+function linkPolicyBullets(format = "html") {
   const join = (name, url) => (format === "html" ? `${name}: ${url}` : `${name} — ${url}`);
   return approvedSources.map(s => `- ${join(s.name, s.url)}`).join("\n");
 }
