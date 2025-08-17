@@ -6,26 +6,22 @@ exports.handler = async (event) => {
     let body = {};
     try { body = JSON.parse(event.body || "{}"); } catch {}
 
-    const { component = "", url = "" } = body;
+    const component = typeof body.component === "string" ? body.component.trim() : "";
+    const url = typeof body.url === "string" ? body.url.trim() : "";
 
     if (!OPENAI_API_KEY) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" })
-      };
+      return { statusCode: 500, body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" }) };
     }
 
-    if (!component || typeof component !== "string" || !component.trim()) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Component field is required" })
-      };
+    if (!component) {
+      return { statusCode: 400, body: JSON.stringify({ error: "Component field is required" }) };
     }
 
     const dsRefLine = url
       ? `- Reference and mirror the site at: ${url}`
       : "- No URL provided. Emulate clear, neutral DS tone similar to GOV.UK, Polaris, Lightning, or USWDS.";
 
+    // Build prompt with commas between array items (no backticks inside)
     const prompt = [
       `You are an accessibility technical writer creating design system documentation for the "${component}" component.`,
       "",
@@ -39,7 +35,7 @@ exports.handler = async (event) => {
       `- If "${component}" is not a recognisable UI component, return exactly:`,
       'This tool generates guidance for UI components only. Please enter a specific component name (for example, "Button", "Tabs", or "Modal".)',
       "...and nothing else.",
-      "Here is a list of recognised UI components: https://component.gallery/components/"
+      "Here is a list of recognised UI components: https://component.gallery/components/",
       "",
       "Output format",
       "- Return markdown only (no HTML, no fenced code blocks, no inline styles).",
@@ -107,14 +103,14 @@ exports.handler = async (event) => {
           { role: "system", content: "You are an expert accessibility technical writer. Follow instructions exactly and be concise." },
           { role: "user", content: prompt }
         ],
-        temperature: 0.2
+        temperature: 0.2,
+        max_tokens: 1200
       })
     });
 
     const data = await resp.json();
 
     if (!resp.ok) {
-      // Surface useful error info for debugging in Netlify logs
       console.error("OpenAI error:", data);
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
@@ -127,9 +123,6 @@ exports.handler = async (event) => {
     };
   } catch (err) {
     console.error("Function error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: String(err) })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
   }
 };

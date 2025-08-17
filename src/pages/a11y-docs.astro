@@ -54,9 +54,7 @@ import Footer from '../components/Footer.astro';
     <Footer />
 
     <style>
-      .a11y-result {
-        margin-block-start: var(--space-l);
-      }
+      .a11y-result { margin-block-start: var(--space-l); }
       .a11y-result pre {
         background: #ffffff;
         padding: 1rem;
@@ -95,7 +93,10 @@ import Footer from '../components/Footer.astro';
         resultSection.hidden = true;
         outEl.textContent = '';
 
-        const payload = Object.fromEntries(new FormData(form));
+        const fd = new FormData(form);
+        const payload = Object.fromEntries(fd);
+        payload.component = (payload.component || '').trim();
+        payload.url = (payload.url || '').trim();
 
         try {
           const res = await fetch('/.netlify/functions/a11y-generate', {
@@ -109,12 +110,13 @@ import Footer from '../components/Footer.astro';
           try { data = JSON.parse(text); } catch { data = { error: text }; }
 
           if (!res.ok) {
-            if (data.error && data.error.includes('Component field is required')) {
+            const errStr = typeof data.error === 'string'
+              ? data.error
+              : (data.error?.error?.message || JSON.stringify(data.error));
+            if (typeof errStr === 'string' && errStr.includes('Component field is required')) {
               componentError.hidden = false;
             } else {
-              statusEl.textContent = (typeof data.error === 'string')
-                ? data.error
-                : JSON.stringify(data.error);
+              statusEl.textContent = errStr;
             }
             return;
           }
