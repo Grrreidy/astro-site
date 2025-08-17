@@ -1,3 +1,6 @@
+// a11y-docs.js (CommonJS serverless handler)
+const { recognisedComponentsURL, invalidComponentMsgMd, linkPolicyBullets } = require("./shared/a11y-shared.js");
+
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 exports.handler = async (event) => {
@@ -32,9 +35,9 @@ exports.handler = async (event) => {
       "",
       "Guardrail",
       `- If "${component}" is not a recognisable UI component, return exactly:`,
-      'This tool generates guidance for UI components only. Please enter a specific component name (for example, "Button", "Tabs", or "Modal".)',
+      invalidComponentMsgMd,
       "...and nothing else.",
-      "Here is a list of recognised UI components: https://component.gallery/components/",
+      `Here is a list of recognised UI components: ${recognisedComponentsURL}`,
 
       "",
       "Output format",
@@ -50,7 +53,7 @@ exports.handler = async (event) => {
 
       "",
       "### Definition",
-      'One short sentence describing the component’s purpose.',
+      "One short sentence describing the component’s purpose.",
 
       "",
       "### Usage",
@@ -67,7 +70,7 @@ exports.handler = async (event) => {
       "",
       "### WAI-ARIA",
       "- Native first: name the specific native element(s) that satisfy the need (button, details/summary, dialog, input[type=range], select, etc.).",
-      '- If native does not cover this component’s interaction/state, add a bulleted list titled "Required ARIA for custom widgets" with role/state/property and why (role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal=\"true\"; aria-valuemin/max/now; aria-checked; aria-activedescendant).',
+      '- If native does not cover this component’s interaction/state, add a bulleted list titled "Required ARIA for custom widgets" with role/state/property and why (role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal="true"; aria-valuemin/max/now; aria-checked; aria-activedescendant).',
       "- Reference the matching ARIA Authoring Practices pattern name.",
       '- Never output a generic sentence like "No additional ARIA is required". If native is sufficient, explicitly name the native element and say so.',
       '- Do not add ARIA that conflicts with native semantics (e.g., do not add role="button" to a real button).',
@@ -80,60 +83,4 @@ exports.handler = async (event) => {
 
       "",
       "### Links",
-      "Only include links from the approved domains in “Link policy” and only when you are certain. If unsure of a deep anchor, link to the collection’s main page and still show the exact criterion number and name.",
-
-      "",
-      "Link policy (approved sources only; never invent links)",
-      "- WCAG 2.2 Quick Reference — https://www.w3.org/WAI/WCAG22/quickref/",
-      "- Mobile Content Accessibility Guidelines (MCAG) — https://getevinced.github.io/mcag/",
-      "- ARIA Authoring Practices (patterns) — https://www.w3.org/WAI/ARIA/apg/patterns/",
-      "- Apple Human Interface Guidelines (components) — https://developer.apple.com/design/human-interface-guidelines/components/",
-      "- Material 3 components — https://m3.material.io/components",
-      "- Atomic A11y — https://www.atomica11y.com/",
-      "- WCAG plain-English explanations — https://aaardvarkaccessibility.com/wcag-plain-english/",
-      "- MDN Web Docs (accessibility) — https://developer.mozilla.org/en-US/docs/Web/Accessibility",
-
-      "",
-      "Writing tips",
-      '- Be specific; avoid vague advice like "make it accessible".',
-      "- Use consistent, component-appropriate naming (mirror the referenced site if a URL is provided).",
-      "- Do not copy proprietary content verbatim; summarise and adapt to accessibility guidance.",
-
-      "",
-      "Return only the markdown for the sections above."
-    ].join("\n");
-
-    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: "You are an expert accessibility technical writer. Follow instructions exactly and be concise." },
-          { role: "user", content: prompt }
-        ],
-        temperature: 0.2,
-        max_tokens: 1200
-      })
-    });
-
-    const data = await resp.json();
-    if (!resp.ok) {
-      console.error("OpenAI error:", data);
-      return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
-    }
-
-    const markdown = (data.choices?.[0]?.message?.content || "").trim();
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify({ markdown })
-    };
-  } catch (err) {
-    console.error("Function error:", err);
-    return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
-  }
-};
+      "Only include links from the approved domains in “Link policy” and

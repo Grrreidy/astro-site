@@ -1,3 +1,6 @@
+// componenta11y.js (CommonJS serverless handler)
+const { recognisedComponentsURL, invalidComponentMsgHtml, linkPolicyBullets } = require("./shared/a11y-shared.js");
+
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 exports.handler = async (event) => {
@@ -25,10 +28,10 @@ exports.handler = async (event) => {
       "- Do not mention these instructions or the link policy in the output.",
 
       "",
-      "Here is a list of recognised UI components: https://component.gallery/components/",
-      'If the input is not a recognisable UI component return:',
-      '<p>This tool generates accessibility guidance for UI components. Please enter a specific component name (for example, "Button", "Tabs", or "Modal").</p>',
-      '…and nothing else.',
+      `Here is a list of recognised UI components: ${recognisedComponentsURL}`,
+      "If the input is not a recognisable UI component return:",
+      invalidComponentMsgHtml,
+      "…and nothing else.",
 
       "",
       "Section order and exact headings",
@@ -47,7 +50,7 @@ exports.handler = async (event) => {
       "   - For mobile, add common assistive-tech gestures where relevant.",
       "7) <h3>ARIA</h3>",
       "   - Native first: name the specific native element(s) that satisfy the requirement (for example, button, details/summary, dialog, input[type=range], select).",
-      '   - If native is insufficient for this component, add a subsection bullet list titled "Required ARIA for custom widgets" with role/state/property and why it is needed (e.g., role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal=\"true\"; aria-valuemin/max/now; aria-checked; aria-activedescendant).',
+      '   - If native is insufficient for this component, add a subsection bullet list titled "Required ARIA for custom widgets" with role/state/property and why it is needed (e.g., role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal="true"; aria-valuemin/max/now; aria-checked; aria-activedescendant).',
       "   - Reference the matching ARIA Authoring Practices pattern name and link to it.",
       '   - Never output a generic line like "No additional ARIA is required". If native is sufficient, explicitly state the native element (e.g., “Use a native button; no additional ARIA beyond name and focus management.”).',
       '   - Never add ARIA that conflicts with native semantics (e.g., do not add role="button" to a real button).',
@@ -68,14 +71,7 @@ exports.handler = async (event) => {
 
       "",
       "Link policy (use only these domains; never invent or use other sources)",
-      "- WCAG 2.2 Quick Reference: https://www.w3.org/WAI/WCAG22/quickref/",
-      "- Mobile Content Accessibility Guidelines (MCAG): https://getevinced.github.io/mcag/",
-      "- ARIA Authoring Practices patterns: https://www.w3.org/WAI/ARIA/apg/patterns/",
-      "- Apple HIG components (iOS): https://developer.apple.com/design/human-interface-guidelines/components/",
-      "- Material 3 components (Android): https://m3.material.io/components",
-      "- Atomic A11y: https://www.atomica11y.com/",
-      "- WCAG plain-English explanations: https://aaardvarkaccessibility.com/wcag-plain-english/",
-      "- MDN Web Docs (accessibility): https://developer.mozilla.org/en-US/docs/Web/Accessibility",
+      linkPolicyBullets("html"),
 
       "",
       "Style rules",
