@@ -1,23 +1,37 @@
-// netlify/functions/componenta11y.js (CommonJS serverless handler)
-const {
+// netlify/functions/componenta11y.js
+import {
   recognisedComponentsURL,
   invalidComponentMsgHtml,
   linkPolicyBullets
-} = require("./shared/a11y-shared.js");
+} from "./shared/a11y-shared.js";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
-exports.handler = async (event) => {
+async function fetchWithTimeout(resource, options = {}, ms = 28000) {
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), ms);
+  try {
+    return await fetch(resource, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+export async function handler(event) {
   try {
     let body = {};
     try { body = JSON.parse(event.body || "{}"); } catch {}
     const component = typeof body.component === "string" ? body.component.trim() : "";
 
     if (!OPENAI_API_KEY) {
-      return { statusCode: 500, body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" }) };
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" })
+      };
     }
     if (!component) {
-      return { statusCode: 400, body: JSON.stringify({ error: "Component is required" }) };
+      return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
 
     const prompt = [
@@ -87,7 +101,7 @@ exports.handler = async (event) => {
       "Return only the HTML fragment."
     ].join("\n");
 
-    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+    const resp = await fetchWithTimeout(OPENAI_URL, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${OPENAI_API_KEY}`,
@@ -100,22 +114,27 @@ exports.handler = async (event) => {
           { role: "user", content: prompt }
         ],
         temperature: 0.2,
-        max_tokens: 1600
+        max_tokens: 900
       })
     });
 
     const data = await resp.json();
     if (!resp.ok) {
+      console.error("OpenAI error:", data);
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
-    const html = (data.choices?.[0]?.message?.content || "").trim();
+    let html = (data.choices?.[0]?.message?.content || "").trim();
+    html = html.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ html })
     };
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
+    console.error("Function error:", err);
+    const msg = err?.name === "AbortError" ? "Upstream request timed out." : String(err);
+    return { statusCode: 500, body: JSON.stringify({ error: msg }) };
   }
-};
+}

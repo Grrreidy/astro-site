@@ -13,16 +13,15 @@ import Footer from '../components/Footer.astro';
     <Header />
 
     <main class="container blog">
-      <h1>Write my docs</h1>
-      <p>Can AI write design system accessibility docs? Try it out!</p>
-      <p>Add a link to your Storybook, zeroheight or design system docs site to make the docs bespoke to your design system.</p>
+      <h1 class="h1-small">Generate accessibility docs for a component</h1>
 
       <form id="a11y-form" class="a11y-form" novalidate>
         <div class="form-field">
-          <label for="component">Component name</label>
+          <label for="component">Component (required)</label>
           <input id="component" name="component" required aria-describedby="component-help component-error" />
           <p id="component-help" class="field-help">Try: Accordion, Card, Button, Tooltip or Modal</p>
-          <p id="component-error" class="field-help" style="color: var(--color-red);" hidden>Component field is required</p>
+          <!-- Body-sized red error with warning icon (exactly like Componenta11y page) -->
+          <p id="component-error" class="field-error" hidden>Enter a component</p>
         </div>
 
         <div class="form-field">
@@ -31,10 +30,13 @@ import Footer from '../components/Footer.astro';
           <p id="url-help" class="field-help">Try: https://webc.pie.design/</p>
         </div>
 
-        <button type="submit" class="default-button">Generate docs</button>
+        <button id="generate-btn" type="submit" class="default-button">
+          <span class="btn-text">Generate docs</span>
+          <span id="btn-spinner" class="btn-spinner" aria-hidden="true" hidden></span>
+        </button>
       </form>
 
-      <!-- Body-sized status with spinner and two-line message -->
+      <!-- Body-sized status text -->
       <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
       <hr>
@@ -47,15 +49,17 @@ import Footer from '../components/Footer.astro';
         </div>
       </section>
 
-        <p class="field-help" style="margin-top: var(--space-xl);">
+      <p class="field-help" style="margin-top: var(--space-xl);">
         Made with <a href="https://platform.openai.com/">Open AI</a> and 
-        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment I documented in a blog post. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
       </p>
     </main>
 
     <Footer />
 
     <style>
+      [hidden] { display: none !important; }
+
       .a11y-result { margin-block-start: var(--space-l); }
       .a11y-result pre {
         background: #ffffff;
@@ -71,76 +75,98 @@ import Footer from '../components/Footer.astro';
         margin-top: var(--space-s);
       }
 
-      /* Status + spinner (token-agnostic and body-sized) */
       .status-message {
         margin-top: var(--space-m);
-        display: grid;
-        gap: 0.25rem;
-        font-size: inherit;
         color: var(--color-blue, inherit);
-        min-height: 2.25rem;
+        min-height: 1.5rem;
       }
-      .status-row {
+
+      /* Body-sized red error with warning icon (identical to Componenta11y page) */
+      .field-error {
+        font-size: inherit;
+        color: var(--color-red);
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: .4rem;
+        margin-top: .25rem;
       }
-      .spinner {
+      .field-error::before {
+        content: "⚠︎";
+        font-size: 1em;
+        line-height: 1;
         display: inline-block;
+      }
+
+      /* Button spinner: white by default, red on hover (identical styles) */
+      .btn-spinner {
+        display: inline-block;
+        margin-left: 0.5em;
         width: 1em;
         height: 1em;
-        border: 0.2em solid var(--color-blue, currentColor);
-        border-right-color: transparent;
+        border: 0.2em solid var(--color-white);
+        border-top: 0.2em solid transparent;
         border-radius: 50%;
-        animation: spin 0.6s linear infinite;
-        vertical-align: -0.125em;
+        animation: spin 0.8s linear infinite;
+        vertical-align: middle;
       }
-      @keyframes spin { to { transform: rotate(360deg); } }
-      @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+      .default-button:hover .btn-spinner {
+        border-color: var(--color-red);
+        border-top-color: transparent;
+      }
+
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) {
+        .btn-spinner { animation: none; }
+      }
     </style>
 
-    <script is:inline>
+    <script type="module" is:inline>
       const form = document.getElementById('a11y-form');
+      const btn  = document.getElementById('generate-btn');
+      const btnSpinner = document.getElementById('btn-spinner');
       const statusEl = document.getElementById('status');
       const resultSection = document.getElementById('result');
       const outEl = document.getElementById('output');
       const copyBtn = document.getElementById('copy');
       const dlBtn = document.getElementById('download');
-      const componentError = document.getElementById('component-error');
       const componentInput = document.getElementById('component');
+      const componentError = document.getElementById('component-error');
+      const urlInput = document.getElementById('url');
 
-      function showGenerating() {
-        statusEl.innerHTML = `
-          <span class="status-row">
-            <strong>Generating</strong>
-            <span class="spinner" aria-hidden="true"></span>
-          </span>
-          <span>This references A LOT of material so might take up to 30 seconds.</span>
-        `;
+      let isLoading = false; // keep hover styles active; prevent double-submit
+
+      function showLoading() {
+        isLoading = true;
+        statusEl.textContent = 'This references A LOT of material so might take up to 30 seconds.';
+        btnSpinner.hidden = false;               // show spinner in button
+        btn.setAttribute('aria-disabled', 'true');
         form.setAttribute('aria-busy', 'true');
       }
-      function clearStatus() {
-        statusEl.textContent = '';
+      function clearLoading() {
+        isLoading = false;
+        btnSpinner.hidden = true;                // hide spinner
+        btn.removeAttribute('aria-disabled');
         form.removeAttribute('aria-busy');
       }
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (isLoading) return;
+
         componentError.hidden = true;
 
-        if (!componentInput.value.trim()) {
-          componentError.hidden = false;
+        const component = componentInput.value.trim();
+        if (!component) {
+          componentError.hidden = false;         // show body-sized red error with icon + exact text
           return;
         }
+        const url = urlInput.value.trim();
 
-        showGenerating();
+        showLoading();
         resultSection.hidden = true;
         outEl.textContent = '';
 
-        const fd = new FormData(form);
-        const payload = Object.fromEntries(fd);
-        payload.component = (payload.component || '').trim();
-        payload.url = (payload.url || '').trim();
+        const payload = { component, url };
 
         try {
           const res = await fetch('/.netlify/functions/a11y-docs', {
@@ -150,39 +176,39 @@ import Footer from '../components/Footer.astro';
           });
 
           const text = await res.text();
-          let data;
-          try { data = JSON.parse(text); } catch { data = { error: text }; }
+          let data; try { data = JSON.parse(text); } catch { data = { error: text }; }
 
           if (!res.ok) {
             const errStr = typeof data.error === 'string'
               ? data.error
               : (data.error?.error?.message || JSON.stringify(data.error));
-            if (typeof errStr === 'string' && errStr.includes('Component field is required')) {
+            if (typeof errStr === 'string' && /Component field is required|Enter a component/i.test(errStr)) {
               componentError.hidden = false;
             } else {
               statusEl.textContent = errStr;
             }
-            clearStatus();
             return;
           }
 
           const { markdown } = data;
           outEl.textContent = markdown || '';
-          resultSection.hidden = false;
-          clearStatus();
+          resultSection.hidden = !markdown;
+          statusEl.textContent = markdown ? '' : 'No content returned.';
 
           copyBtn.onclick = () => navigator.clipboard.writeText(markdown || '');
           dlBtn.onclick = () => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(new Blob([markdown || ''], { type: 'text/markdown' }));
-            a.download = `${(payload.component || 'component').toLowerCase()}-accessibility.md`;
+            a.download = `${(component || 'component').toLowerCase()}-accessibility.md`;
             a.click();
           };
         } catch (err) {
-          statusEl.textContent = String(err);
-          clearStatus();
+          console.error(err);
+          statusEl.textContent = 'Generation failed. Check console for details.';
+        } finally {
+          clearLoading(); // spinner stops/hides when done or on error
         }
       });
     </script>
   </body>
-</html>
+</ht

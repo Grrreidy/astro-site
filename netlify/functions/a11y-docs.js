@@ -1,13 +1,12 @@
-// netlify/functions/a11y-docs.js (CommonJS serverless handler)
-const {
+import {
   recognisedComponentsURL,
   invalidComponentMsgMd,
   linkPolicyBullets
-} = require("./shared/a11y-shared.js");
+} from "./shared/a11y-shared.js";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-exports.handler = async (event) => {
+export async function handler(event) {
   try {
     let body = {};
     try { body = JSON.parse(event.body || "{}"); } catch {}
@@ -136,4 +135,4 @@ exports.handler = async (event) => {
     console.error("Function error:", err);
     return { statusCode: 500, body: JSON.stringify({ error: String(err) }) };
   }
-};
+}

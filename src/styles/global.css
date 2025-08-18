@@ -97,6 +97,11 @@ h1 {
   text-transform: lowercase;
 }
 
+.h1-small { 
+  font-size: var(--font-2xl);
+  text-transform: none;
+}
+
 h2 {
   font-family: var(--font-display);
   font-size: var(--font-2xl);
