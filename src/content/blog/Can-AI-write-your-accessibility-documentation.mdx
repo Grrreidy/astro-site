@@ -16,28 +16,28 @@ But accessibility guidance for components?
 
 There's some variation based on context but the core principles remain consistent: component usage, keyboard and focus order, WCAG and platform compliance standards. These don't change much from system to system. I thought I'd have a pop at aggregating all this into a prompt to save me searching the web every time.
 
-## Aggregating good practices
+## Prompt 1: Aggregate
 
-When I'm researching the accessibility guidelines for a component, I generally start with WCAG, then pull in various sources from bookmarks.  I got ChatGPT to help me write a prompt, thus demonstrating how the world is just *slowly eating itself*. Here's what we came up with:
+When I'm researching the accessibility guidelines for a component, I generally start with WCAG, then pull in various sources from bookmarks.  I got ChatGPT to help me write a prompt to do this, thus demonstrating how the world is *slowly eating itself*. Here's what we came up with:
 
-☞ [Generate accessibility guidance for a component](https://gerireid.com/componenta11y/)
+☞ [Generate accessibility guidance](https://gerireid.com/componenta11y/)
 
-The results are helpful and mostly accurate. The danger is that everything is formatted neatly so it *looks* authoritative. Despite my prompt explicitly referencing only trusted sources, it still makes ridiculous shit up, hallucinating entire components. Here are some of my favourite fabrications:
+The results are helpful and *mostly* accurate. The danger is that everything is formatted neatly so it *looks* authoritative. Despite my prompt explicitly referencing only trusted sources, it still makes ridiculous shit up, hallucinating entire components. Here are some of my favourite fabrications:
 
 ![A screenshot of my favourite hallucinated components: the SickMonkey, Yaksmas, BossMan and NumberWang components](/images/hallucinated-components.png)
 <span class="figcaption">*My favourite hallucinated components*</span>
 
-## From research to docs
+## Prompt 2: Write docs
 
 Once I've gathered guidance from credible sources, I need to condense it into succinct, actionable accessibility guidance for design system sites. So I wrote a second prompt that takes all that research and outputs clean markdown ready to copy and paste.
 
 If there's already a Storybook, zeroheight site or component docs, I've tried to tailor results to the system. 
 
-☞ [Generate accessibility docs for a component](https://gerireid.com/a11y-docs/)
+☞ [Generate accessibility docs](https://gerireid.com/a11y-docs/)
 
 You could easily switch up the output by referencing a brand tone of voice or specifying a specific format. Test it out and let me know what you think, I'd love some feedback on whether this works for you and if it's useful. 
 
-## Setup
+## How I built this
 
 With a site built in Astro, it's surprisingly straightforward to set up a little app like this. I'm a designer and I'm not super technical. I wrote a JS function that calls the [OpenAI API](https://platform.openai.com/docs/overview) with my prompt. [Netlify runs the function](https://docs.netlify.com/build/functions/overview/) and keeps the API key tucked away safely in environment variables. I'm finding Astro is so fast and light for little experiments.
 
@@ -51,7 +51,7 @@ This is genuinely useful for quick aggregation and a solid time-saver. The possi
 
 More importantly, it's got me thinking about how, as an accessibility practitioner, I can use AI responsibly amidst such serious [ethical](https://www.theatlantic.com/technology/archive/2025/03/libgen-meta-openai/682093/?gift=iWa_iB9lkw4UuiWbIbrWGYDRoX8kfg3ZQZL6J-W0kQE) and [environmental](https://wimvanderbauwhede.codeberg.page/articles/google-search-vs-chatgpt-emissions/) costs. It's hard to ignore that powerful AI systems rest on the [invisible work of underpaid labour](https://www.noemamag.com/the-exploited-labor-behind-artificial-intelligence). I also worry that an over‑reliance on AI can [erode critical thinking,](https://slejournal.springeropen.com/articles/10.1186/s40561-024-00316-7) turning me from a mildly engaging human into a zombified prompt engineer. I'm determined to keep writing blog posts from scratch so I don't lose my own voice.
 
-## Where next?
+## Cue: my existential AI crisis
 
 You know, I actually enjoy researching and writing this stuff from scratch. That way I know it's correct. While I could potentially bend this prompt to a bunch of other things like:
 - A designer’s checklist for handover
