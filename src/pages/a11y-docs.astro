@@ -1,18 +1,19 @@
----
+--- 
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <BaseHead title="Accessibility docs" description="Generate accessibility docs for your components" />
-  </head>
-  <body>
-    <Header />
-
-    <main class="container blog">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main id="main-content" class="container blog">
       <h1 class="h1-small">Generate accessibility docs for a component</h1>
 
       <form id="a11y-form" class="a11y-form" novalidate>
@@ -20,7 +21,6 @@ import Footer from '../components/Footer.astro';
           <label for="component">Component (required)</label>
           <input id="component" name="component" required aria-describedby="component-help component-error" />
           <p id="component-help" class="field-help">Try: Accordion, Card, Button, Tooltip or Modal</p>
-          <!-- Body-sized red error with warning icon (exactly like Componenta11y page) -->
           <p id="component-error" class="field-error" hidden>Enter a component</p>
         </div>
 
@@ -36,12 +36,12 @@ import Footer from '../components/Footer.astro';
         </button>
       </form>
 
-      <!-- Body-sized status text -->
       <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
       <hr>
 
-      <section id="result" class="a11y-result blog-content" hidden>
+      <section id="result" class="a11y-result blog-content" hidden aria-busy="false" aria-labelledby="result-heading">
+        <h2 id="result-heading" class="sr-only">Generated results</h2>
         <pre id="output"></pre>
         <div class="actions">
           <button id="copy" class="action-button">Copy markdown</button>
@@ -51,14 +51,43 @@ import Footer from '../components/Footer.astro';
 
       <p class="field-help" style="margin-top: var(--space-xl);">
         Made with <a href="https://platform.openai.com/">Open AI</a> and 
-        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment I documented in a blog post. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
       </p>
     </main>
 
-    <Footer />
+    <footer>
+      <Footer />
+    </footer>
 
     <style>
       [hidden] { display: none !important; }
+
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        padding: 0.5rem 0.75rem;
+        background: var(--color-blue, #0b5fff);
+        color: #fff;
+        border-radius: 6px;
+      }
+      .skip-link:focus {
+        left: 0.5rem;
+        top: 0.5rem;
+        z-index: 1000;
+      }
+
+      .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
 
       .a11y-result { margin-block-start: var(--space-l); }
       .a11y-result pre {
@@ -81,7 +110,6 @@ import Footer from '../components/Footer.astro';
         min-height: 1.5rem;
       }
 
-      /* Body-sized red error with warning icon (identical to Componenta11y page) */
       .field-error {
         font-size: inherit;
         color: var(--color-red);
@@ -97,7 +125,6 @@ import Footer from '../components/Footer.astro';
         display: inline-block;
       }
 
-      /* Button spinner: white by default, red on hover (identical styles) */
       .btn-spinner {
         display: inline-block;
         margin-left: 0.5em;
@@ -133,20 +160,31 @@ import Footer from '../components/Footer.astro';
       const componentError = document.getElementById('component-error');
       const urlInput = document.getElementById('url');
 
-      let isLoading = false; // keep hover styles active; prevent double-submit
+      let isLoading = false;
+
+      function announce(msg) { statusEl.textContent = msg; }
+      function focusResult() {
+        const firstHeading = outEl.querySelector('h1, h2, h3');
+        const target = firstHeading || resultSection;
+        target.setAttribute('tabindex', '-1');
+        target.focus({ preventScroll: false });
+        target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
+      }
 
       function showLoading() {
         isLoading = true;
-        statusEl.textContent = 'This references A LOT of material so might take up to 30 seconds.';
-        btnSpinner.hidden = false;               // show spinner in button
+        announce('This references A LOT of material so might take up to 30 seconds.');
+        btnSpinner.hidden = false;
         btn.setAttribute('aria-disabled', 'true');
         form.setAttribute('aria-busy', 'true');
+        resultSection.setAttribute('aria-busy', 'true');
       }
       function clearLoading() {
         isLoading = false;
-        btnSpinner.hidden = true;                // hide spinner
+        btnSpinner.hidden = true;
         btn.removeAttribute('aria-disabled');
         form.removeAttribute('aria-busy');
+        resultSection.setAttribute('aria-busy', 'false');
       }
 
       form.addEventListener('submit', async (e) => {
@@ -157,7 +195,7 @@ import Footer from '../components/Footer.astro';
 
         const component = componentInput.value.trim();
         if (!component) {
-          componentError.hidden = false;         // show body-sized red error with icon + exact text
+          componentError.hidden = false;
           return;
         }
         const url = urlInput.value.trim();
@@ -185,7 +223,7 @@ import Footer from '../components/Footer.astro';
             if (typeof errStr === 'string' && /Component field is required|Enter a component/i.test(errStr)) {
               componentError.hidden = false;
             } else {
-              statusEl.textContent = errStr;
+              announce(errStr);
             }
             return;
           }
@@ -193,7 +231,13 @@ import Footer from '../components/Footer.astro';
           const { markdown } = data;
           outEl.textContent = markdown || '';
           resultSection.hidden = !markdown;
-          statusEl.textContent = markdown ? '' : 'No content returned.';
+
+          if (markdown) {
+            announce('Documentation ready. Results below.');
+            focusResult();
+          } else {
+            announce('No content returned.');
+          }
 
           copyBtn.onclick = () => navigator.clipboard.writeText(markdown || '');
           dlBtn.onclick = () => {
@@ -204,11 +248,11 @@ import Footer from '../components/Footer.astro';
           };
         } catch (err) {
           console.error(err);
-          statusEl.textContent = 'Generation failed. Check console for details.';
+          announce('Generation failed. Check console for details.');
         } finally {
-          clearLoading(); // spinner stops/hides when done or on error
+          clearLoading();
         }
       });
     </script>
   </body>
-</ht
+</html>

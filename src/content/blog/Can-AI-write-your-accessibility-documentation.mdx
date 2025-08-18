@@ -1,0 +1,83 @@
+---
+title: "Can AI write your accessibility documentation?"
+description: "Prompt experiments using the OpenAI API."
+pubDate: "August 2025"
+image: "/public/images/open-graph.png"
+author: Geri Reid
+---
+
+# Can AI write your accessibility documentation?
+
+After wanging on to Amy Hupe about the perils of letting AI write design system documentation, my brain went wandering into a dangerous place: *could you get AI to write your accessibility docs?*
+
+Design systems docs should be tailored to the needs of the consumers and the brand. While there are many similarities between generic design system components, their application into products varies. It's also important to consider your audience. The docs I write for engineers are succinct and technical, while folks in marketing might appreciate a more brand-focused approach.
+
+But accessibility guidance for components?
+
+There's some variation based on context but the core principles remain consistent: component usage, keyboard and focus order, WCAG and platform compliance standards. These don't change much from system to system. I thought I'd have a pop at aggregating all this into a prompt to save me searching the web every time.
+
+## Aggregating good practices
+
+When I'm researching the accessibility guidelines for a component, I generally start with WCAG, then pull in various sources from bookmarks.  I got ChatGPT to help me write a prompt, thus demonstrating how the world is just *slowly eating itself*. Here's what we came up with:
+
+☞ [Generate accessibility guidance for a component](https://gerireid.com/componenta11y/)
+
+The results are helpful and mostly accurate. The danger is that everything is formatted neatly so it *looks* authoritative. Despite my prompt explicitly referencing only trusted sources, it still makes ridiculous shit up, hallucinating entire components. Here are some of my favourite fabrications:
+
+![A screenshot of my favourite hallucinated components: the SickMonkey, Yaksmas, BossMan and NumberWang components](/images/hallucinated-components.png)
+<span class="figcaption">*My favourite hallucinated components*</span>
+
+## From research to docs
+
+Once I've gathered guidance from credible sources, I need to condense it into succinct, actionable accessibility guidance for design system sites. So I wrote a second prompt that takes all that research and outputs clean markdown ready to copy and paste.
+
+If there's already a Storybook, zeroheight site or component docs, I've tried to tailor results to the system. 
+
+☞ [Generate accessibility docs for a component](https://gerireid.com/a11y-docs/)
+
+You could easily switch up the output by referencing a brand tone of voice or specifying a specific format. Test it out and let me know what you think, I'd love some feedback on whether this works for you and if it's useful. 
+
+## Setup
+
+With a site built in Astro, it's surprisingly straightforward to set up a little app like this. I'm a designer and I'm not super technical. I wrote a JS function that calls the [OpenAI API](https://platform.openai.com/docs/overview) with my prompt. [Netlify runs the function](https://docs.netlify.com/build/functions/overview/) and keeps the API key tucked away safely in environment variables. I'm finding Astro is so fast and light for little experiments.
+
+To keep things neat, I put the core logic and prompt structure in a shared JS module. Both of my functions import it, so I don’t have to duplicate everything and can keep adding new bits in one place.
+
+To appease my conscience, I'm using the [PT-4o-mini model](https://platform.openai.com/docs/models/gpt-4o-mini), which is a smaller and more efficient version of OpenAI’s GPT-4o model. Because it’s lighter, each request apparently uses less computing power, which in turn reduces the electricity required and lowers the carbon footprint compared to larger models. While the exact savings depend on the data-centre hardware, GPT-4o-mini is designed to deliver useful results with a much smaller environmental impact. Apparently.
+
+## Where I landed
+
+This is genuinely useful for quick aggregation and a solid time-saver. The possibilities are interesting, but the risks are very real. Hallucinations are paired with the overconfidence of a crypto influencer explaining NFTs to your Nan. LLMs are significantly better than they were a year ago, but they still regularly get it wrong. Given the material they're fed is flawed, can we ever rely on them to be 100% correct? The [WebAim Million](https://webaim.org/projects/million/) still shows that 94% of the internet's top million homepages have WCAG fails, so I feel like we're asking the impossible.
+
+More importantly, it's got me thinking about how, as an accessibility practitioner, I can use AI responsibly amidst such serious [ethical](https://www.theatlantic.com/technology/archive/2025/03/libgen-meta-openai/682093/?gift=iWa_iB9lkw4UuiWbIbrWGYDRoX8kfg3ZQZL6J-W0kQE) and [environmental](https://wimvanderbauwhede.codeberg.page/articles/google-search-vs-chatgpt-emissions/) costs. It's hard to ignore that powerful AI systems rest on the [invisible work of underpaid labour](https://www.noemamag.com/the-exploited-labor-behind-artificial-intelligence). I also worry that an over‑reliance on AI can [erode critical thinking,](https://slejournal.springeropen.com/articles/10.1186/s40561-024-00316-7) turning me from a mildly engaging human into a zombified prompt engineer. I'm determined to keep writing blog posts from scratch so I don't lose my own voice.
+
+## Where next?
+
+You know, I actually enjoy researching and writing this stuff from scratch. That way I know it's correct. While I could potentially bend this prompt to a bunch of other things like:
+- A designer’s checklist for handover
+- Accessibility acceptance criteria for component tickets
+- A VPAT row generator for procurement docs
+
+My concern is that if this gets packaged up neatly, people will treat the AI output as absolute truth. These tools work best when they handle the heavy lifting, maybe that first 60%, while you bring the human insight that understands actual users, real-world context, and the stakes involved. When someone's ability to access critical information or complete essential tasks hinges on our guidance being accurate, there's no substitute for thoughtful human oversight and lived experience.
+
+While I was writing this, Mike Monteiro published a piece called [How to not build the Torment Nexus](https://buttondown.com/monteiro/archive/how-to-not-build-the-torment-nexus/). He talks about the importance of not just building things because we can, but considering the impact of what we create. It's a timely reminder that while AI can be a powerful tool, it should be used thoughtfully. Without getting all mystical about it, I firmly believe the universe puts things in my path for a reason, and this encouraged me to park this firmly in the experiment zone.
+
+I have huge respect for anyone brave enough to swerve the hype wagon and decide not to engage with AI. My brain currently swings from being *quietly* excited to simultaneously guilt-spiraling. My inner Geri, the one who rescues spiders from baths and feels bad for unused emojis, is horrified that I'm publicly admitting to even this level of moral compromise.
+
+<hr></hr>
+
+### Resources
+
+For transparency, here are the sites my prompt references. I rely on these sites for reliable accessibility guidelines. All links open in a new tab.
+
+- [WCAG 2.2 Quick Reference](https://www.w3.org/WAI/WCAG22/quickref/)  
+- [Mobile Content Accessibility Guidelines](https://getevinced.github.io/mcag/)   
+- [WCAG plain-English explanations](https://aaardvarkaccessibility.com/wcag-plain-english/)   
+- [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/)  
+- [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/components/)  
+- [Material 3 components](https://m3.material.io/components)   
+- [Atomic A11y](https://www.atomica11y.com/) 
+- [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/Accessibility) 
+
+If you have opinions, hit me on [BlueSky](https://bsky.app/profile/gerireid.com)
+

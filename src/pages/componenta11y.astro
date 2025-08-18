@@ -1,18 +1,19 @@
----
+--- 
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <BaseHead title="Componenta11y" description="Generate cross-platform accessibility guidance for a component" />
-  </head>
-  <body>
-    <Header />
-
-    <main class="container blog">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main id="main-content" class="container blog">
       <h1 class="h1-small">Generate accessibility guidance for a component</h1>
       <p></p>
 
@@ -21,7 +22,6 @@ import Footer from '../components/Footer.astro';
           <label for="component">Component</label>
           <input id="component" name="component" required aria-describedby="component-help component-error" />
           <p id="component-help" class="field-help">Try: Accordion, Card, Button, Tooltip or Modal</p>
-          <!-- Body-sized red error with warning icon -->
           <p id="component-error" class="field-error" hidden>Enter a component</p>
         </div>
 
@@ -33,7 +33,8 @@ import Footer from '../components/Footer.astro';
 
       <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
-      <section id="result" class="a11y-result blog-content" hidden>
+      <section id="result" class="a11y-result blog-content" hidden aria-busy="false" aria-labelledby="result-heading">
+        <h2 id="result-heading" class="sr-only">Generated results</h2>
         <div id="output" class="blog-content"></div>
       </section>
 
@@ -43,10 +44,39 @@ import Footer from '../components/Footer.astro';
       </p>
     </main>
 
-    <Footer />
+    <footer>
+      <Footer />
+    </footer>
 
     <style>
       [hidden] { display: none !important; }
+
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        padding: 0.5rem 0.75rem;
+        background: var(--color-blue, #0b5fff);
+        color: #fff;
+        border-radius: 6px;
+      }
+      .skip-link:focus {
+        left: 0.5rem;
+        top: 0.5rem;
+        z-index: 1000;
+      }
+
+      .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
 
       .a11y-result { margin-block-start: var(--space-l); }
       .a11y-result .blog-content {
@@ -65,7 +95,6 @@ import Footer from '../components/Footer.astro';
         min-height: 1.5rem;
       }
 
-      /* Body-sized red error with warning icon */
       .field-error {
         font-size: inherit;
         color: var(--color-red);
@@ -81,21 +110,20 @@ import Footer from '../components/Footer.astro';
         display: inline-block;
       }
 
-      /* Button spinner: white by default, red on hover */
       .btn-spinner {
-      display: inline-block;
-      margin-left: 0.5em;
-      width: 1em;
-      height: 1em;
-      border: 0.2em solid var(--color-white);
-      border-top: 0.2em solid transparent;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      vertical-align: middle;
+        display: inline-block;
+        margin-left: 0.5em;
+        width: 1em;
+        height: 1em;
+        border: 0.2em solid var(--color-white);
+        border-top: 0.2em solid transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        vertical-align: middle;
       }
       .default-button:hover .btn-spinner {
-      border-color: var(--color-red);
-      border-top-color: transparent;
+        border-color: var(--color-red);
+        border-top-color: transparent;
       }
 
       @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -114,20 +142,31 @@ import Footer from '../components/Footer.astro';
       const componentInput = document.getElementById('component');
       const componentError = document.getElementById('component-error');
 
-      let isLoading = false; // keep hover styles active; prevent double-submit
+      let isLoading = false;
+
+      function announce(msg) { statusEl.textContent = msg; }
+      function focusResult() {
+        const firstHeading = outEl.querySelector('h1, h2, h3');
+        const target = firstHeading || resultSection;
+        target.setAttribute('tabindex', '-1');
+        target.focus({ preventScroll: false });
+        target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
+      }
 
       function showLoading() {
         isLoading = true;
-        statusEl.textContent = 'This references A LOT of material so might take up to 30 seconds.';
-        btnSpinner.hidden = false;               // show spinner in button
+        announce('This references A LOT of material so might take up to 30 seconds.');
+        btnSpinner.hidden = false;
         btn.setAttribute('aria-disabled', 'true');
         form.setAttribute('aria-busy', 'true');
+        resultSection.setAttribute('aria-busy', 'true');
       }
       function clearLoading() {
         isLoading = false;
-        btnSpinner.hidden = true;                // hide spinner
+        btnSpinner.hidden = true;
         btn.removeAttribute('aria-disabled');
         form.removeAttribute('aria-busy');
+        resultSection.setAttribute('aria-busy', 'false');
       }
 
       form.addEventListener('submit', async (e) => {
@@ -138,8 +177,7 @@ import Footer from '../components/Footer.astro';
 
         const component = componentInput.value.trim();
         if (!component) {
-          componentError.hidden = false; 
-          
+          componentError.hidden = false;
           return;
         }
 
@@ -158,17 +196,23 @@ import Footer from '../components/Footer.astro';
           let data; try { data = JSON.parse(text); } catch { data = { error: text }; }
 
           if (!res.ok) {
-            statusEl.textContent = typeof data.error === 'string' ? data.error : JSON.stringify(data.error);
+            announce(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
             return;
           }
 
           const { html } = data;
           outEl.innerHTML = html || '';
           resultSection.hidden = !html;
-          statusEl.textContent = html ? '' : 'No content returned.';
+
+          if (html) {
+            announce('Guidance ready. Results below.');
+            focusResult();
+          } else {
+            announce('No content returned.');
+          }
         } catch (err) {
           console.error(err);
-          statusEl.textContent = 'Generation failed. Check console for details.';
+          announce('Generation failed. Check console for details.');
         } finally {
           clearLoading();
         }

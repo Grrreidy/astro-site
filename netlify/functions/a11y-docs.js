@@ -5,6 +5,64 @@ import {
 } from "./shared/a11y-shared.js";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+
+// ---- helpers ---------------------------------------------------------------
+
+// Fetch raw HTML as text with a short timeout
+async function fetchSiteContext(url, timeoutMs = 8000) {
+  if (!url) return null;
+  try {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), timeoutMs);
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(t);
+    if (!res.ok) return null;
+    const html = await res.text();
+    return extractSiteContext(html, url);
+  } catch {
+    return null; // silent fail → we’ll just write neutral docs
+  }
+}
+
+// Very small HTML “parser”: get <title>, H1–H3, and likely component labels
+function extractSiteContext(html, url) {
+  const maxChars = 4000; // keep prompt lean
+  const safe = (s) =>
+    s.replace(/<[^>]+>/g, " ")
+     .replace(/\s+/g, " ")
+     .replace(/&nbsp;/g, " ")
+     .trim();
+
+  // title
+  const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  const title = titleMatch ? safe(titleMatch[1]) : "";
+
+  // headings h1–h3
+  const headingMatches = [...html.matchAll(/<(h[1-3])[^>]*>([\s\S]*?)<\/\1>/gi)]
+    .map((m) => `- ${safe(m[2]).slice(0, 140)}`)
+    .slice(0, 30);
+
+  // “components” nav items (very heuristic: anchors that look like component links)
+  const componentMatches = [...html.matchAll(/<a[^>]+href="[^"]*?(components?|patterns?)[^"]*"[^>]*>([\s\S]*?)<\/a>/gi)]
+    .map((m) => safe(m[2]))
+    .filter(Boolean)
+    .slice(0, 30);
+
+  const host = (() => { try { return new URL(url).host; } catch { return url; } })();
+
+  const chunks = [];
+  if (title) chunks.push(`Site title: ${title}`);
+  if (headingMatches.length) chunks.push(`Headings:\n${headingMatches.join("\n")}`);
+  if (componentMatches.length) chunks.push(`Nav/labels suggesting component names:\n- ${componentMatches.join("\n- ")}`);
+
+  const combined = chunks.join("\n\n").slice(0, maxChars);
+  return combined
+    ? `Origin: ${host}\n${combined}`
+    : `Origin: ${host}\n(No readable headings found; mirror naming from the site where obvious.)`;
+}
+
+// ---- function --------------------------------------------------------------
 
 export async function handler(event) {
   try {
@@ -20,9 +78,12 @@ export async function handler(event) {
       return { statusCode: 400, body: JSON.stringify({ error: "Component field is required" }) };
     }
 
+    // Pull a concise, non-verbatim context from the provided URL (if any)
+    const siteContext = url ? await fetchSiteContext(url) : null;
+
     const dsRefLine = url
-      ? `- Reference and mirror the site at: ${url}`
-      : "- No URL provided. Emulate clear, neutral DS tone similar to GOV.UK, Polaris, Lightning, or USWDS.";
+      ? `- A design system URL was provided. Use the context below to mirror naming, variants, and tone (do not copy text verbatim).`
+      : "- No URL provided. Emulate a clear, neutral DS tone similar to GOV.UK, Polaris, Lightning, or USWDS.";
 
     const prompt = [
       `You are an accessibility technical writer creating design system documentation for the "${component}" component.`,
@@ -30,6 +91,10 @@ export async function handler(event) {
       "",
       "If a design system URL is provided, use it to infer naming, variants, states, tone of voice, and typical usage patterns:",
       dsRefLine,
+
+      url && siteContext
+        ? "\nDesign system context (from URL; summarised)\n" + siteContext
+        : "",
 
       "",
       "Audience",
@@ -48,7 +113,8 @@ export async function handler(event) {
       "- Use sentence case for all headings.",
       "- Keep bullets short and practical (3–7 items).",
       "- Use UK English and a concise, direct tone.",
-      "- Prefer native elements over custom ARIA (for example, an accordion trigger should be a real button with aria-expanded, not a generic element with role=\"button\").",
+      "- Prefer native elements over custom ARIA (e.g., an accordion trigger should be a real button with aria-expanded, not a generic element with role=\"button\").",
+      "- Tailor naming and examples to match the referenced site’s terminology and variants where it’s obvious from context. Do not copy proprietary text; write your own guidance.",
 
       "",
       "Sections (use exactly these headings)",
@@ -75,7 +141,6 @@ export async function handler(event) {
       "- Native first: name the specific native element(s) that satisfy the need (button, details/summary, dialog, input[type=range], select, etc.).",
       "- If native does not cover this component’s interaction/state, add a bulleted list titled \"Required ARIA for custom widgets\" with role/state/property and why (role=tablist/tab/tabpanel; aria-selected; aria-controls; aria-expanded; aria-modal=\\\"true\\\"; aria-valuemin/max/now; aria-checked; aria-activedescendant).",
       "- Reference the matching ARIA Authoring Practices pattern name.",
-      "- Never output a generic sentence like \"No additional ARIA is required\". If native is sufficient, explicitly name the native element and say so.",
       "- Do not add ARIA that conflicts with native semantics (e.g., do not add role=\\\"button\\\" to a real button).",
 
       "",
@@ -100,9 +165,9 @@ export async function handler(event) {
 
       "",
       "Return only the markdown for the sections above."
-    ].join("\n");
+    ].filter(Boolean).join("\n");
 
-    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+    const resp = await fetch(OPENAI_URL, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${OPENAI_API_KEY}`,
@@ -125,7 +190,10 @@ export async function handler(event) {
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
-    const markdown = (data.choices?.[0]?.message?.content || "").trim();
+    // Trim accidental fenced blocks
+    let markdown = (data.choices?.[0]?.message?.content || "").trim();
+    markdown = markdown.replace(/^```(?:markdown|md)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json; charset=utf-8" },
