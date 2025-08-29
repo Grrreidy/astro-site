@@ -1,0 +1,4 @@
+{
+  "Button": { "pattern": "Button", "url": "https://www.w3.org/WAI/ARIA/apg/patterns/button/" },
+  "Tabs":   { "pattern": "Tabs",   "url": "https://www.w3.org/WAI/ARIA/apg/patterns/tabs/" }
+}
