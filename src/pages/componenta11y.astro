@@ -1,19 +1,21 @@
---- 
+---
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main id="main-content" class="container blog">
+  <head>
+    <BaseHead title="Componenta11y" description="Generate cross-platform accessibility guidance for a component" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header>
+      <Header />
+    </header>
+
+    <main id="main-content" class="container blog">
       <h1 class="h1-small">Generate accessibility guidance for a component</h1>
       <p></p>
 

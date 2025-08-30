@@ -1,0 +1,79 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+
+    <main id="main-content" class="container blog">
+      <h1>Accessibility helper v2</h1>
+      <p>Generate accessibility guidance for your components. Use the RAG+validated endpoint to reduce hallucinations.</p>
+
+      <form id="a11y-form" class="a11y-form" novalidate>
+        <div class="form-field">
+          <label for="component">Component name</label>
+          <input id="component" name="component" type="text" required />
+        </div>
+
+        <label class="form-field">
+          <input type="checkbox" id="use-rag" /> Use RAG+validated endpoint
+        </label>
+
+        <div class="form-field">
+          <button type="submit">Generate guidance</button>
+        </div>
+      </form>
+
+      <section id="result" class="result"></section>
+    </main>
+
+    <Footer />
+
+    <script>
+      // @ts-check
+
+      document.addEventListener('DOMContentLoaded', () => {
+        /** @type {HTMLElement|null} */
+        const result = document.getElementById('result');
+        const formEl = document.getElementById('a11y-form');
+        const componentEl = document.getElementById('component');
+        const ragEl = document.getElementById('use-rag');
+
+        if (!(formEl instanceof HTMLFormElement)) return;
+        if (!(componentEl instanceof HTMLInputElement)) return;
+        if (!(ragEl instanceof HTMLInputElement)) return;
+        if (!(result instanceof HTMLElement)) return;
+
+        formEl.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const component = componentEl.value.trim();
+          const endpoint = ragEl.checked
+            ? '/.netlify/functions/componenta11y-rag'
+            : '/.netlify/functions/componenta11y';
+
+          const resp = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ component })
+          });
+
+          const payload = await resp.json();
+          const { html, error } = payload || {};
+
+          result.innerHTML = error
+            ? `<p class="error">${String(error)}</p>`
+            : (html || '<p>No content returned.</p>');
+        });
+      });
+    </script>
+  </body>
+</html>
