@@ -3,21 +3,55 @@ import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
-import { getCollection } from 'astro:content';
+import { getCollection, z } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 
-// Get internal and external blog posts
-const blogPosts = await getCollection('blog');
+const now = new Date();
+
+// Extend the type to include optional draft property
+type BlogFrontmatter = {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  heroImage?: {
+    src: string;
+    width: number;
+    height: number;
+    format: "png" | "jpg" | "jpeg" | "tiff" | "webp" | "gif" | "svg" | "avif";
+  };
+  draft?: boolean;
+};
+
+// Filter at source:
+// • In dev: include everything
+// • In prod: exclude draft:true and exclude future-dated posts
+const blogPosts = await getCollection(
+  'blog',
+  ({ data }: { data: BlogFrontmatter }) =>
+    import.meta.env.DEV ||
+    (!data.draft && new Date(data.pubDate).valueOf() <= now.valueOf())
+);
+
 const externalPosts = await getCollection('external');
 
-// Merge and normalize posts
-const allPosts = [
+type PostListItem = {
+  title: string;
+  description: string;
+  pubDate: Date;
+  slug: string;
+  external: boolean;
+  image?: string;
+};
+
+const allPosts: PostListItem[] = [
   ...blogPosts.map((post) => ({
     title: post.data.title,
     description: post.data.description,
     pubDate: post.data.pubDate,
-    slug: `/blog/${post.slug}`, // <-- removed trailing slash
+    slug: `/blog/${post.slug}`,
     external: false,
+    image: post.data.heroImage?.src ?? undefined,
   })),
   ...externalPosts.map((post) => ({
     title: post.data.title,
@@ -25,6 +59,7 @@ const allPosts = [
     pubDate: post.data.pubDate,
     slug: post.data.url,
     external: true,
+    image: undefined,
   })),
 ].sort((a, b) => new Date(b.pubDate).valueOf() - new Date(a.pubDate).valueOf());
 ---
@@ -67,6 +102,18 @@ const allPosts = [
                   </a>
                 </h2>
                 <p>{post.description}</p>
+                {post.image && (
+                  <img
+                    src={post.image}
+                    alt=""
+                    class="post-thumb"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+                {import.meta.env.DEV && (post as any).draft && (
+                  <p class="visually-hidden">Draft</p>
+                )}
               </div>
             </li>
           ))}
