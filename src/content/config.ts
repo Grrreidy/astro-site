@@ -5,11 +5,15 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    pubDate: z.date(),
-    updatedDate: z.date().optional(),
-    image: z.string().optional(),      // simplified image field
-    author: z.string().optional(),
-    draft: z.boolean().optional(),     // draft flag
+    pubDate: z.coerce.date(),        // <-- coerce string → Date
+    updatedDate: z.coerce.date().optional(),
+    draft: z.boolean().optional(),
+    heroImage: z.object({
+      src: z.string(),
+      width: z.number(),
+      height: z.number(),
+      format: z.enum(['png','jpg','jpeg','tiff','webp','gif','svg','avif']),
+    }).optional(),
   }),
 });
 
@@ -18,7 +22,7 @@ const external = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    pubDate: z.date(),
+    pubDate: z.coerce.date(),        // <-- coerce here too if you use it
     url: z.string().url(),
   }),
 });
