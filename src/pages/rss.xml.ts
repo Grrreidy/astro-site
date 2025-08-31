@@ -1,37 +1,26 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 
-export async function GET() {
-  // 1) Load posts, ignore drafts if present
-  const all = await getCollection('blog');
-  const blog = all
-    .filter(({ data }) => !('draft' in data && (data as any).draft === true))
+export async function GET(context) {
+  // Load internal blog posts only
+  const posts = (await getCollection('blog'))
+    // hide drafts in production feed
+    .filter((post) => post.data.draft !== true)
+    // hide future-dated posts
+    .filter((post) => post.data.pubDate <= new Date())
     // newest first
-    .sort((a, b) => +new Date(b.data.pubDate) - +new Date(a.data.pubDate));
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-  const site = 'https://gerireid.com';
-  const lastBuildDate = new Date().toUTCString();
-
-  // 2) Build the feed
-  const feed = await rss({
-    title: 'Geri Reid Blog',
-    description: 'Writing on accessibility, design systems, and UX.',
-    site,
-    items: blog.map((post) => ({
+  return rss({
+    title: 'Geri Reid',
+    description: 'Accessibility, design systems, and UX',
+    site: context.site, // e.g. https://gerireid.netlify.app
+    items: posts.map((post) => ({
       title: post.data.title,
-      pubDate: post.data.pubDate,
       description: post.data.description,
+      pubDate: post.data.pubDate,
       link: `/blog/${post.slug}`,
-      customData: `<guid isPermaLink="true">${site}/blog/${post.slug}</guid>`,
     })),
-    customData: [
-      `<language>en-gb</language>`,
-      `<lastBuildDate>${lastBuildDate}</lastBuildDate>`,
-      `<ttl>10</ttl>`
-    ].join('\n')
+    stylesheet: '/rss/styles.xsl', 
   });
-
-  // 3) Cache headers
-  feed.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300, must-revalidate');
-  return feed;
 }
