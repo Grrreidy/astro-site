@@ -1,19 +1,15 @@
 import { defineCollection, z } from 'astro:content';
 
 const blog = defineCollection({
-  type: 'content',
+  type: 'content',   // <-- this must be present!
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    pubDate: z.coerce.date(),        // <-- coerce string → Date
+    pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     draft: z.boolean().optional(),
-    heroImage: z.object({
-      src: z.string(),
-      width: z.number(),
-      height: z.number(),
-      format: z.enum(['png','jpg','jpeg','tiff','webp','gif','svg','avif']),
-    }).optional(),
+    image: z.string().optional(),
+    author: z.string().optional(),
   }),
 });
 
@@ -22,7 +18,7 @@ const external = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    pubDate: z.coerce.date(),        // <-- coerce here too if you use it
+    pubDate: z.coerce.date(),
     url: z.string().url(),
   }),
 });
