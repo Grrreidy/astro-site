@@ -9,20 +9,20 @@ draft: false
 
 # Add an Accessibility Nutrition Label
 
-Apple is about to drop [Accessibility Nutrition labels](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/overview-of-accessibility-nutrition-labels/) on the App Store, giving users transparency about which accessibility features apps support. I've just completed an audit for one of these labels. Here's what I learned.
+Apple is about to drop [Accessibility Nutrition labels](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/overview-of-accessibility-nutrition-labels/) on the App Store, offering users transparency about which accessibility features apps support. I've just completed an audit for one of these labels. Here's what I learned.
 
 ---
 
-## What's a nutrition label?
+## Accessibility Nutrition Label?
 
 It's exactly what it sounds like, minus the calories. A label that shows up on your app's product page telling people which accessibility features it supports.
 
 If someone needs VoiceOver to navigate, Larger Text to read, or prefers Dark Mode, they will be able to determine if your app works for them before downloading.
 
-The labels start as voluntary, but Apple is making them mandatory for new apps and updates eventually. Translation: get ahead of this.
+The labels start as voluntary, but will eventually become mandatory for new apps and updates. Translation: get ahead of this.
 
 ![A screenshot from the Apple App Store showing an Accessibility Nutrition Label](/images/apple-nutrition-label.png)
-<span class="figcaption">*How the label appears on the app store, showing which accessibility features the app supports.*</span>
+<span class="figcaption">*How the label appears on the App Store, showing supported accessibility features.*</span>
 
 This is a fantastic initiative that should push teams to consider the needs of their disabled and older users. My only gripe? They called it a Nutrition Label. Google "Apple Nutrition Label" and you'll get a wall of apple nutrition facts. Plain language matters. I also think it would be helpful to show users the features an app doesn't support. 
 
@@ -73,7 +73,7 @@ Take checkout for example. To check out an order in your app, users might need t
 
 ### 4. Test each step with accessibility features enabled
 
-Apple's [developer docs](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/overview-of-accessibility-nutrition-labels/) run through a list of accessibility features you need to test your journeys against. Check the evaluation criteria to establish if you pass.
+Apple's [developer docs](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/overview-of-accessibility-nutrition-labels/) outlines a list of accessibility features you need to test your journeys against. Check the evaluation criteria to establish if you pass.
 
 Here are the accessibility features you need to test. You can enable these on your device in Settings > Accessibility:
 
@@ -105,7 +105,7 @@ If you haven’t done an end-to-end accessibility assessment of your app, this p
 
 I regularly test with VoiceOver, but I'd never put Voice Control through a complete user journey. This assessment uncovered a couple of Voice Control bugs you would never notice in isolation. From an empathy perspective, there were a few areas that worked functionally and weren't technical fails, but could be improved. The app I assessed doesn’t feature video or audio so I omitted these assessments.
 
-## Adding the label to the app store
+## Adding the label to the App Store
 
 This part is straightforward. Log into your developer account, find the accessibility section, check off what you support, and add a link to your accessibility statement. There is a guide that steps you through the [process of adding a label](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/manage-accessibility-nutrition-labels).
 
@@ -120,7 +120,7 @@ Don't have an accessibility statement? Write one. They are now required by law i
 
 ---
 
-This audit process goes beyond adding a label to your app store page - it's a comprehensive review that could uncover accessibility issues that you weren't aware of. You'll likely discover features that work in isolation but break down during real user journeys. These insights don't just help you check compliance boxes. They guide you toward building experiences that genuinely work for everyone, making your app better for all users in the process.
+This audit process goes beyond adding a label to your App Store page: it's a comprehensive review that could uncover accessibility issues that you weren't aware of. You'll likely discover features that work in isolation but break down during real user journeys. These insights don't just help you check compliance boxes. They guide you toward building experiences that genuinely work for everyone, making your app better for all users in the process.
 
 
 **Have thoughts? Wave at me on [BlueSky](https://bsky.app/profile/gerireid.com)** 👋
