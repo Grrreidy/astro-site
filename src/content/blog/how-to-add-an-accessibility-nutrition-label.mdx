@@ -1,0 +1,128 @@
+---
+title: "Add an Accessibility Nutrition Label"
+description: "I've just completed an app audit for an iOS accessibility nutrition label. Here's what I learned."
+pubDate: 2025-09-09
+image: "/images/open-graph.png"
+author: "Geri Reid"
+draft: false
+---
+
+# Add an Accessibility Nutrition Label
+
+Apple is about to drop [Accessibility Nutrition labels](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/overview-of-accessibility-nutrition-labels/) on the App Store, giving users transparency about which accessibility features apps support. I've just completed an audit for one of these labels. Here's what I learned.
+
+---
+
+## What's a nutrition label?
+
+It's exactly what it sounds like, minus the calories. A label that shows up on your app's product page telling people which accessibility features it supports.
+
+If someone needs VoiceOver to navigate, Larger Text to read, or prefers Dark Mode, they will be able to determine if your app works for them before downloading.
+
+The labels start as voluntary, but Apple is making them mandatory for new apps and updates eventually. Translation: get ahead of this.
+
+![A screenshot from the Apple App Store showing an Accessibility Nutrition Label](/images/apple-nutrition-label.png)
+<span class="figcaption">*How the label appears on the app store, showing which accessibility features the app supports.*</span>
+
+This is a fantastic initiative that should push teams to consider the needs of their disabled and older users. My only gripe? They called it a Nutrition Label. Google "Apple Nutrition Label" and you'll get a wall of apple nutrition facts. Plain language matters. I also think it would be helpful to show users the features an app doesn't support. 
+
+## How to audit your app
+
+### 1. Watch Apple's explainer video
+
+<iframe width="624" height="351" src="https://www.youtube.com/embed/wfTU7O7bJSU?si=q3FKbjEuW6f-ZM7I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+This video steps you through the audit process using a made-up app. The whole process is self-assessed and relies on the auditor to be honest about results. 
+
+The key takeaway: you can't claim support unless you FULLY support a feature. Like, if only part of your app responds to Larger Text settings, you can't claim to support Larger Text. I sincerely hope companies don't overstate their support, because the point of these labels is helping users with access needs.
+
+Don't be that company. 
+
+---
+
+### 2. Map out your core user journeys
+
+Step into your user's shoes. What are the main tasks they do on your app? Identify these core user journeys. For the e-commerce app I audited, I focused on these critical flows:
+
+* Launch experience
+* Account creation/login
+* Browse the catalogue
+* Search
+* Add items to the cart
+* Checkout
+* Post-purchase confirmation and help
+
+---
+
+### 3. Break each journey into steps
+
+Take checkout for example. To check out an order in your app, users might need to:
+
+* Navigate the checkout interface
+* Add/edit personal details
+* Add/edit delivery addresses
+* Add/edit order notes
+* Select delivery options
+* Apply discount codes
+* Choose payment method
+* Review order summary
+* Complete payment
+
+---
+
+### 4. Test each step with accessibility features enabled
+
+Apple's [developer docs](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/overview-of-accessibility-nutrition-labels/) run through a list of accessibility features you need to test your journeys against. Check the evaluation criteria to establish if you pass.
+
+Here are the accessibility features you need to test. You can enable these on your device in Settings > Accessibility:
+
+* [VoiceOver](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/voiceover-evaluation-criteria)
+* [Voice Control](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/voice-control-evaluation-criteria)
+* [Larger Text](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/larger-text-evaluation-criteria)
+* [Dark Interface](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/dark-interface-evaluation-criteria)
+* [Reduced Motion](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/reduced-motion-evaluation-criteria)
+
+You also need to check for:
+
+* [Sufficient contrast](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/sufficient-contrast-evaluation-criteria)
+* [Differentiate without colour alone](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/differentiate-without-color-alone-evaluation-criteria)
+* [Captions](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/captions-evaluation-criteria)
+* [Audio descriptions](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/audio-descriptions-evaluation-criteria)
+
+I struggled to find the right tool to record this exercise. Apple's docs suggest you create a matrix. I started in a spreadsheet, but I wanted to paste in screen shots and videos to flag issues as I progressed. I ended up setting up a table in a Miro board that allowed a selection of pass, fail, pass with issues and N/A like this:
+
+![Miro board showing a matrix to mark off accessibility settings](/images/a11y-miro.png)
+
+This allowed me to check off criteria as I tested and paste in screens that had areas for improvement.
+
+![Miro board showing a series of screens from an app audit](/images/a11y-miro2.png)
+
+
+## What this process taught me
+
+If you haven’t done an end-to-end accessibility assessment of your app, this provides an excellent opportunity. Components and features are regularly developed in isolation and this systematic approach exposes gaps.
+
+I regularly test with VoiceOver, but I'd never put Voice Control through a complete user journey. This assessment uncovered a couple of Voice Control bugs you would never notice in isolation. From an empathy perspective, there were a few areas that worked functionally and weren't technical fails, but could be improved. The app I assessed doesn’t feature video or audio so I omitted these assessments.
+
+## Adding the label to the app store
+
+This part is straightforward. Log into your developer account, find the accessibility section, check off what you support, and add a link to your accessibility statement. There is a guide that steps you through the [process of adding a label](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/manage-accessibility-nutrition-labels).
+
+Don't have an accessibility statement? Write one. They are now required by law in some European markets. Read [my guide on how to write an accessibility statement](https://gerireid.com/blog/how-to-write-an-accessibility-statement/) if you need a template.
+
+## Tips for your own audit
+
+* **Test on real devices, not simulators.** The experience is noticeably different, especially for VoiceOver and Voice Control.
+* **Don't rush it.** Give yourself proper time to experience each journey as a user would.
+* **Document everything visually.** Screenshots and screen recordings were invaluable when explaining issues to the team later and writing tickets. 
+* **Test edge cases too.** What happens when someone uses Larger Text AND VoiceOver together? Does your dark mode have sufficient contrast?
+
+---
+
+This audit process goes beyond adding a label to your app store page - it's a comprehensive review that could uncover accessibility issues that you weren't aware of. You'll likely discover features that work in isolation but break down during real user journeys. These insights don't just help you check compliance boxes. They guide you toward building experiences that genuinely work for everyone, making your app better for all users in the process.
+
+
+**Have thoughts? Wave at me on [BlueSky](https://bsky.app/profile/gerireid.com)** 👋
+
+
