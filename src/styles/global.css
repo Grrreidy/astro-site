@@ -161,10 +161,39 @@ a {
   text-decoration: underline;
 }
 
-a:is(:hover, :focus) {
-  color: var(--color-red);
+/* main content links */
+.container a:hover {
+  color: var(--color-white);
+  background-color: var(--color-red);
+  text-decoration: none;
 }
 
+.container a:focus {
+  color: var(--color-red);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+/* heading links inside main content */
+.container :is(h1, h2, h3, h4, h5, h6) a {
+  color: var(--color-red);
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.container :is(h1, h2, h3, h4, h5, h6) a:hover {
+  color: var(--color-red);
+  text-decoration: underline;
+  background-color: transparent;
+}
+
+.container :is(h1, h2, h3, h4, h5, h6) a:focus {
+  color: var(--color-red);
+  text-decoration: none;
+  background-color: transparent;
+}
+
+/* global focus styles */
 :focus {
   outline: none;
 }
@@ -185,7 +214,7 @@ a.button {
   color: var(--color-white);
   background-color: var(--color-red);
   border: 2px solid var(--color-red);
-  border-radius: var(--radius); /* uses your existing design token */
+  border-radius: var(--radius); /* design token */
   padding: 0.75em 1em;
   cursor: pointer;
   text-decoration: none; 
@@ -207,18 +236,18 @@ a.button svg {
   height: 1em;
 }
 
-
 [tabindex="-1"]:focus-visible {
   outline: none;
 }
 
 ::-moz-selection { 
-  background: var(--color-beige)
+  background: var(--color-beige);
 }
 
 ::selection {
-  background: var(--color-beige)
+  background: var(--color-beige);
 }
+
 
 /* 
    HEADER & NAVIGATION
@@ -290,7 +319,7 @@ nav a.active {
   transform: translateY(0);
 }
 
- /* 
+/* 
    FOOTER
 =================================================== */
 
@@ -358,11 +387,19 @@ footer a {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-footer a:hover,
-footer a:focus {
+footer a:hover {
   color: var(--color-white);
   background-color: var(--color-red);
   text-decoration: none;
+}
+
+/* focus state: white text, no background, white ring */
+footer a:focus {
+  color: var(--color-white);
+  background-color: transparent;
+  text-decoration: none;
+  outline: 0.125em solid var(--color-white);
+  outline-offset: 2px;
 }
 
 footer ul {
@@ -387,7 +424,6 @@ footer ::-moz-selection {
   color: var(--color-blue);
   background: var(--color-beige);
 }
-
 
 /* 
    POSTS (used for blog + speaking)
