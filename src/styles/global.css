@@ -712,3 +712,17 @@ article th {
   white-space: nowrap;
   border: 0;
 }
+
+
+/* 
+   HIDE ON MOBILE
+=================================================== */
+.goth-toggle-wrapper {
+  display: none;
+}
+
+@media (width >= 700px) {
+  .goth-toggle-wrapper {
+    display: block;
+  }
+}
