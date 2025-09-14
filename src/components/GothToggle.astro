@@ -17,15 +17,100 @@ const label = "Goth mode";
     const KEY = "theme:goth";
     const cb = document.getElementById("goth-toggle");
 
+    // --- Cursor trail config ---
+    const TRAIL_CLASS = "goth-trail";
+    const TRAIL_MAX = 72;              // more particles
+    const TRAIL_TTL_MS = 900;          // longer life
+    const TRAIL_THROTTLE_MS = 14;      // ~70fps cap
+    let trailOn = false;
+    let lastSpawn = 0;
+    let live = 0;
+
+    function prefersReducedMotion() {
+      return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+
+    function makeParticle(x, y) {
+      const el = document.createElement("span");
+      el.className = TRAIL_CLASS;
+
+      const isComet = Math.random() < 0.13; // occasional comet
+      const size = isComet ? 22 + Math.random() * 16 : 12 + Math.random() * 12;
+      const rot = Math.floor(Math.random() * 360);
+      const hueBase = 270 + Math.floor(Math.random() * 60); // purple→magenta
+      const hueShift = 30 + Math.floor(Math.random() * 60); // head→tail shift
+      const sat = 88 + Math.floor(Math.random() * 10);
+      const light1 = 65 + Math.floor(Math.random() * 10);
+      const light2 = 55 + Math.floor(Math.random() * 10);
+
+      const c1 = `hsl(${hueBase} ${sat}% ${light1}%)`;
+      const c2 = `hsl(${hueBase + hueShift} ${sat}% ${light2}%)`;
+
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+      el.style.width = size + "px";
+      el.style.height = size + "px";
+      el.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
+      el.style.setProperty("--c1", c1);
+      el.style.setProperty("--c2", c2);
+
+      if (isComet) el.classList.add("goth-trail--comet");
+
+      document.body.appendChild(el);
+      live++;
+
+      setTimeout(function () {
+        el.remove();
+        live = Math.max(0, live - 1);
+      }, isComet ? TRAIL_TTL_MS + 300 : TRAIL_TTL_MS);
+    }
+
+    function onMove(e) {
+      const now = performance.now();
+      if (now - lastSpawn < TRAIL_THROTTLE_MS) return;
+      lastSpawn = now;
+      if (live >= TRAIL_MAX) return;
+
+      const jx = e.pageX + (Math.random() * 10 - 5);
+      const jy = e.pageY + (Math.random() * 10 - 5);
+      makeParticle(jx, jy);
+    }
+
+    function onPop(e) {
+      if (live >= TRAIL_MAX - 10) return;
+      const count = 10;
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + Math.random() * 0.3;
+        const r = 12 + Math.random() * 22;
+        makeParticle(e.pageX + Math.cos(angle) * r, e.pageY + Math.sin(angle) * r);
+      }
+    }
+
+    function startTrail() {
+      if (trailOn || prefersReducedMotion()) return;
+      trailOn = true;
+      window.addEventListener("mousemove", onMove, { passive: true });
+      window.addEventListener("pointerdown", onPop, { passive: true });
+    }
+
+    function stopTrail() {
+      if (!trailOn) return;
+      trailOn = false;
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("pointerdown", onPop);
+      document.querySelectorAll("." + TRAIL_CLASS).forEach(function (n) { n.remove(); });
+      live = 0;
+    }
+
     function ensureCssLink() {
       let el = document.getElementById(LINK_ID);
       if (!el) {
         el = document.createElement("link");
         el.id = LINK_ID;
-        (el as HTMLLinkElement).rel = "stylesheet";
-        (el as HTMLLinkElement).href = CSS_HREF;
-        (el as HTMLLinkElement).media = "all";
-        (el as HTMLLinkElement).disabled = true;
+        el.rel = "stylesheet";
+        el.href = CSS_HREF;
+        el.media = "all";
+        el.disabled = true;
         document.head.appendChild(el);
       }
       return el;
@@ -41,7 +126,9 @@ const label = "Goth mode";
         wrap.id = WRAP_ID;
         wrap.innerHTML = html;
         document.body.appendChild(wrap);
-      } catch {}
+      } catch (err) {
+        /* ignore network errors */
+      }
     }
 
     function unmountDecor() {
@@ -49,18 +136,58 @@ const label = "Goth mode";
       if (el) el.remove();
     }
 
-    function setOn(on: boolean) {
+    function setOn(on) {
       const link = ensureCssLink();
-      (link as HTMLLinkElement).disabled = !on;
+      link.disabled = !on;
       localStorage.setItem(KEY, on ? "on" : "off");
-      if (cb) (cb as HTMLInputElement).checked = on;
-      if (on) mountDecor(); else unmountDecor();
+      if (cb) cb.checked = on;
+
+      if (on) {
+        mountDecor();
+        startTrail();
+      } else {
+        stopTrail();
+        unmountDecor();
+      }
     }
 
+    // --- URL pre-enable support
+    function shouldEnableFromUrl() {
+      const params = new URLSearchParams(location.search);
+      const q = params.get("theme");
+      const hash = (location.hash || "").replace("#", "").toLowerCase();
+      if (q === "goth" || hash === "goth") return true;
+      if (q === "default") return false;
+      return null;
+    }
+
+    function cleanUrl() {
+      const params = new URLSearchParams(location.search);
+      let changed = false;
+      if (params.has("theme")) { params.delete("theme"); changed = true; }
+      if ((location.hash || "").toLowerCase() === "#goth") { changed = true; }
+      if (changed && history.replaceState) {
+        const qs = params.toString();
+        history.replaceState({}, "", location.pathname + (qs ? "?" + qs : ""));
+      }
+    }
+    // --- end URL pre-enable
+
     ensureCssLink();
-    setOn(localStorage.getItem(KEY) === "on");
+
+    const urlChoice = shouldEnableFromUrl();
+    if (urlChoice !== null) {
+      setOn(urlChoice);
+      cleanUrl();
+    } else {
+      setOn(localStorage.getItem(KEY) === "on");
+    }
+
     if (cb) {
-      cb.addEventListener("change", (e) => setOn((e.target as HTMLInputElement).checked));
+      cb.addEventListener("change", function (e) {
+        const t = e.target;
+        if (t && "checked" in t) setOn(t.checked);
+      });
     }
   })();
 </script>
@@ -96,11 +223,10 @@ const label = "Goth mode";
     block-size: 1.6rem;
     border-radius: 999px;
     border: 2px solid var(--color-white);
-    background-color: var(--goth-purple); /* OFF background */
-    overflow: hidden;                      /* mask moving stripes */
+    background-color: var(--goth-purple);
+    overflow: hidden;
   }
 
-  /* Thumb on top */
   .goth-switch .slider::before {
     content: "";
     position: absolute;
@@ -109,13 +235,11 @@ const label = "Goth mode";
     inline-size: 1.1rem;
     block-size: 1.1rem;
     border-radius: 50%;
-    background-color: #fff;     /* white thumb */
-    /* no border, no shadow */
-    z-index: 2;                 /* above stripes */
+    background-color: #fff;
+    z-index: 2;
     transition: transform .2s;
   }
 
-  /* Stripe layer underneath */
   .goth-switch .slider::after {
     content: "";
     position: absolute;
@@ -131,9 +255,9 @@ const label = "Goth mode";
         #ffffff           calc(var(--stripe-w) * 2)
       );
     transform: translateX(-66%);
-    opacity: 0;                 /* hidden when OFF */
+    opacity: 0;
     will-change: transform;
-    z-index: 1;                 /* under the thumb */
+    z-index: 1;
     pointer-events: none;
   }
 
@@ -142,19 +266,18 @@ const label = "Goth mode";
     outline-offset: 2px;
   }
 
-  /* ON state */
   .goth-switch input:checked + .slider::after {
     opacity: 1;
     animation: stripes-marquee 1.2s linear infinite;
   }
 
   .goth-switch input:checked + .slider::before {
-    transform: translateX(1.2rem); /* move thumb right */
+    transform: translateX(1.2rem);
   }
 
   @keyframes stripes-marquee {
     from { transform: translateX(-66%); }
-    to   { transform: translateX(-33%); } /* loop off-screen */
+    to   { transform: translateX(-33%); }
   }
 
   .switch-label {

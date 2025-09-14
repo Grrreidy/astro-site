@@ -95,13 +95,11 @@ a {
   color: #B147FE;
 }
 
-/* 
-   Blog list heading links
-=================================================== */
+/* Blog list heading links */
 .post-item h2 a,
 .post-item h3 a,
 .post-title a {
-  color: #B147FE;              /* default in goth */
+  color: #B147FE;
   text-decoration: none;
   background: transparent;
 }
@@ -112,8 +110,8 @@ a {
 .post-item h2 a:focus,
 .post-item h3 a:focus,
 .post-title a:focus {
-  color: #fff;                 /* white on hover/focus */
-  text-decoration: underline;  /* keep underline if you like */
+  color: #fff;
+  text-decoration: underline;
   background: transparent;
 }
 
@@ -171,14 +169,13 @@ nav a.active {
 hr,
 .section-divider {
   border: none;
-  height: 42px; /* match your GIF’s height */
+  height: 42px; 
   background: url("/themes/goth/gifs/divider.gif") no-repeat center;
-  background-size: auto 100%; /* scale image height, keep natural width */
+  background-size: auto 100%;
   max-width: var(--measure-loose);
   margin-inline: auto;
   margin-block: var(--space-m);
 }
-
 
 /* 
    LISTS
@@ -239,7 +236,7 @@ article td {
 
 article th {
   background: #111;
-  color: #ff0033;
+  color: #B147FE;
   font-weight: bold;
 }
 
@@ -461,4 +458,122 @@ article th {
 header, main, footer {
   position: relative;
   z-index: 1;
+}
+
+/* 
+   Image goth effect
+   Applies to all images except those in the footer or with .no-goth-img
+=================================================== */
+
+img:not(.no-goth-img) {
+  /* Tint + punch */
+  filter:
+    sepia(0.18)
+    hue-rotate(300deg)     /* purple tint */
+    saturate(1.05)
+    contrast(1.08)
+    brightness(0.98)
+    drop-shadow(0 2px 8px rgba(177, 71, 254, 0.24))
+    drop-shadow(0 0 24px rgba(177, 71, 254, 0.18));
+  outline: 1px solid rgba(255, 255, 255, 0.06);
+  outline-offset: -2px;
+  border-radius: 6px;
+  transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+  will-change: transform, filter;
+  backface-visibility: hidden;
+}
+
+/* Optional ornate frame for figures and post images */
+:where(.blog-content, article, .post-item, .container) img:not(.no-goth-img) {
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,0.03),
+    0 0 0 1px rgba(0,0,0,0.6),
+    0 10px 24px rgba(0,0,0,0.35);
+  border-radius: 10px;
+}
+
+/* Footer images: no effect */
+footer img {
+  filter: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+  border-radius: 0; /* or keep your own footer styling */
+}
+
+/* Escape hatch for specific images anywhere */
+.no-goth-img {
+  filter: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  transform: none !important;
+}
+
+/* Reduced motion users: keep it static */
+@media (prefers-reduced-motion: reduce) {
+  img:not(.no-goth-img) {
+    transition: none;
+    transform: none !important;
+  }
+}
+
+
+/* 
+   CURSOR TRAIL
+=================================================== */
+.goth-trail {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(closest-side at 50% 50%, var(--c1) 0%, transparent 70%),
+    conic-gradient(from 0deg,
+      var(--c1) 0 12.5%,
+      transparent 0 25%,
+      var(--c2) 0 37.5%,
+      transparent 0 50%,
+      var(--c1) 0 62.5%,
+      transparent 0 75%,
+      var(--c2) 0 87.5%,
+      transparent 0 100%);
+  clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+  border-radius: 3px;
+  mix-blend-mode: screen;
+  filter:
+    drop-shadow(0 0 6px var(--c1))
+    drop-shadow(0 0 14px var(--c2));
+  animation:
+    goth-trail-fade 0.9s ease-out forwards,
+    goth-trail-twinkle 0.9s ease-in-out infinite;
+}
+
+/* Comet variant with a trailing blur */
+.goth-trail--comet { isolation: isolate; }
+.goth-trail--comet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translate(-10%, -50%) scaleX(2.2);
+  background: linear-gradient(to left, transparent 0%, var(--c2) 40%, var(--c1) 100%);
+  filter: blur(6px);
+  opacity: 0.85;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+@keyframes goth-trail-fade {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.55); }
+}
+
+@keyframes goth-trail-twinkle {
+  0%,100% { filter: drop-shadow(0 0 6px var(--c1)) drop-shadow(0 0 14px var(--c2)); }
+  50%     { filter: drop-shadow(0 0 10px var(--c1)) drop-shadow(0 0 20px var(--c2)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goth-trail, .goth-trail--comet::after { animation: none !important; }
+  .goth-trail { display: none !important; }
 }
