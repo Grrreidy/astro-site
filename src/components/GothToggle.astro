@@ -1,0 +1,168 @@
+---
+const label = "Goth mode";
+---
+
+<label class="goth-switch">
+  <input type="checkbox" id="goth-toggle" aria-label={label} />
+  <span class="slider" aria-hidden="true"></span>
+  <span class="switch-label">Fantasy Goth Mode 🔮</span>
+</label>
+
+<script>
+  (function () {
+    const LINK_ID = "goth-css";
+    const CSS_HREF = "/themes/goth/goth.css";
+    const DECOR_URL = "/themes/goth/decor.html";
+    const WRAP_ID = "goth-decor-wrapper";
+    const KEY = "theme:goth";
+    const cb = document.getElementById("goth-toggle");
+
+    function ensureCssLink() {
+      let el = document.getElementById(LINK_ID);
+      if (!el) {
+        el = document.createElement("link");
+        el.id = LINK_ID;
+        (el as HTMLLinkElement).rel = "stylesheet";
+        (el as HTMLLinkElement).href = CSS_HREF;
+        (el as HTMLLinkElement).media = "all";
+        (el as HTMLLinkElement).disabled = true;
+        document.head.appendChild(el);
+      }
+      return el;
+    }
+
+    async function mountDecor() {
+      if (document.getElementById(WRAP_ID)) return;
+      try {
+        const res = await fetch(DECOR_URL, { credentials: "same-origin" });
+        if (!res.ok) return;
+        const html = await res.text();
+        const wrap = document.createElement("div");
+        wrap.id = WRAP_ID;
+        wrap.innerHTML = html;
+        document.body.appendChild(wrap);
+      } catch {}
+    }
+
+    function unmountDecor() {
+      const el = document.getElementById(WRAP_ID);
+      if (el) el.remove();
+    }
+
+    function setOn(on: boolean) {
+      const link = ensureCssLink();
+      (link as HTMLLinkElement).disabled = !on;
+      localStorage.setItem(KEY, on ? "on" : "off");
+      if (cb) (cb as HTMLInputElement).checked = on;
+      if (on) mountDecor(); else unmountDecor();
+    }
+
+    ensureCssLink();
+    setOn(localStorage.getItem(KEY) === "on");
+    if (cb) {
+      cb.addEventListener("change", (e) => setOn((e.target as HTMLInputElement).checked));
+    }
+  })();
+</script>
+
+<style>
+  /* 
+     SWITCH
+  =================================================== */
+  .goth-switch {
+    --stripe-w: 5px;
+    --goth-purple: #A73DF8;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: var(--space-l);
+    cursor: pointer;
+    color: var(--color-white);
+    font-size: var(--font-m);
+    user-select: none;
+  }
+
+  .goth-switch input {
+    position: absolute;
+    opacity: 0;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  .goth-switch .slider {
+    position: relative;
+    inline-size: 2.8rem;
+    block-size: 1.6rem;
+    border-radius: 999px;
+    border: 2px solid var(--color-white);
+    background-color: var(--goth-purple); /* OFF background */
+    overflow: hidden;                      /* mask moving stripes */
+  }
+
+  /* Thumb on top */
+  .goth-switch .slider::before {
+    content: "";
+    position: absolute;
+    top: .15rem;
+    left: .15rem;
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+    border-radius: 50%;
+    background-color: #fff;     /* white thumb */
+    /* no border, no shadow */
+    z-index: 2;                 /* above stripes */
+    transition: transform .2s;
+  }
+
+  /* Stripe layer underneath */
+  .goth-switch .slider::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    inline-size: 320%;
+    block-size: 100%;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        var(--goth-purple) 0,
+        var(--goth-purple) var(--stripe-w),
+        #ffffff           var(--stripe-w),
+        #ffffff           calc(var(--stripe-w) * 2)
+      );
+    transform: translateX(-66%);
+    opacity: 0;                 /* hidden when OFF */
+    will-change: transform;
+    z-index: 1;                 /* under the thumb */
+    pointer-events: none;
+  }
+
+  .goth-switch input:focus-visible + .slider {
+    outline: 0.125em solid var(--color-white);
+    outline-offset: 2px;
+  }
+
+  /* ON state */
+  .goth-switch input:checked + .slider::after {
+    opacity: 1;
+    animation: stripes-marquee 1.2s linear infinite;
+  }
+
+  .goth-switch input:checked + .slider::before {
+    transform: translateX(1.2rem); /* move thumb right */
+  }
+
+  @keyframes stripes-marquee {
+    from { transform: translateX(-66%); }
+    to   { transform: translateX(-33%); } /* loop off-screen */
+  }
+
+  .switch-label {
+    color: var(--color-white);
+    font-family: 'Twilight', "Times New Roman", serif;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .goth-switch input:checked + .slider::after { animation: none; }
+  }
+</style>

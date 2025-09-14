@@ -1,0 +1,441 @@
+/* 
+   GOTH THEME
+   Emo / Twilight / Geocities throwback
+   Loads only when goth mode is enabled
+=================================================== */
+
+
+/* 
+   FONT
+=================================================== */
+@import url('https://fonts.cdnfonts.com/css/twilight');
+
+
+/* 
+   BACKGROUND
+=================================================== */
+html, body {
+  background:
+    url("/themes/goth/background.png") repeat fixed,
+    radial-gradient(1200px 600px at 70% -10%, rgba(176,0,32,0.12), transparent 60%),
+    linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+  background-size: auto, cover, cover;
+  color: #e5e5e5;
+}
+
+
+/* 
+   PANELS
+=================================================== */
+.container,
+.article,
+.blog,
+.post-item,
+.blog-content {
+  background: #1d0149;
+}
+
+header {
+  background: #A73DF8;
+}
+
+
+/* 
+   HEADINGS
+=================================================== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Twilight', "Times New Roman", "Baskerville", serif;
+  letter-spacing: 0.02em;
+  color: #B147FE;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.footer-columns h3 {
+  font-family: 'Twilight', "Times New Roman", "Baskerville", serif;
+}
+
+
+/* 
+   LINKS
+=================================================== */
+a {
+  color: #B147FE;
+  text-decoration: underline;
+  text-decoration-color: #B147FE;
+  text-underline-offset: 0.18em;
+}
+
+.container a:hover {
+  color: #fff;
+  background-color: #A73DF8;
+  text-decoration: none;
+}
+
+.container a:focus {
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 0.125em solid #fff;
+}
+
+/* Heading links */
+:where(h1, h2, h3, h4, h5, h6) a {
+  color: #B147FE;
+  text-decoration: none;
+  background: transparent;
+}
+
+:where(h1, h2, h3, h4, h5, h6) a:hover {
+  text-decoration: underline wavy #B147FE;
+}
+
+/* Heading links inside main content */
+.container :is(h1, h2, h3, h4, h5, h6) a {
+  color: #B147FE;
+}
+
+/* Footer links */
+footer a {
+  color: #e5e5e5;
+  text-decoration: underline;
+  text-decoration-color: #B147FE;
+}
+
+footer a:hover {
+  color: #fff;
+  background-color: #A73DF8;
+  text-decoration: none;
+}
+
+
+/* 
+   NAVIGATION
+=================================================== */
+nav a {
+  color: #fff;
+}
+
+a:is(:hover, :focus) {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+nav a.active {
+  border-bottom-color: #fff;
+}
+
+.HeaderLink {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.logo {
+  color: #fff;
+}
+
+.logo:hover,
+.logo:focus {
+  color: var(--color-blue);
+}
+
+
+/* 
+   DIVIDERS
+=================================================== */
+hr,
+.section-divider {
+  border: none;
+  height: 42px; /* match your GIF’s height */
+  background: url("/themes/goth/gifs/divider.gif") no-repeat center;
+  background-size: auto 100%; /* scale image height, keep natural width */
+  max-width: var(--measure-loose);
+  margin-inline: auto;
+  margin-block: var(--space-m);
+}
+
+
+/* 
+   LISTS
+=================================================== */
+.blog-content ul,
+ul.post-list {
+  list-style: url("/themes/goth/bat-bullet.gif") outside;
+}
+
+
+/* 
+   BUTTONS
+=================================================== */
+button,
+input[type="button"],
+input[type="submit"],
+a.button {
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.15), rgba(0,0,0,0.4));
+  background-color: #111;
+  border: 2px solid #B147FE;
+  color: #e5e5e5;
+  text-shadow: 0 1px 0 #000;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+a.button:hover {
+  background-color: #B147FE;
+  color: #fff;
+}
+
+
+/* 
+   BLOCKQUOTES
+=================================================== */
+blockquote {
+  border-left: 4px solid #B147FE;
+  font-style: italic;
+  color: #ccc;
+}
+
+
+/* 
+   TABLES
+=================================================== */
+article table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+article th,
+article td {
+  border: 1px solid #333;
+  padding: 0.3rem 0.6rem;
+}
+
+article th {
+  background: #111;
+  color: #ff0033;
+  font-weight: bold;
+}
+
+
+/* 
+   SELECTION
+=================================================== */
+::selection {
+  color: #fff;
+  background: #B147FE;
+}
+
+::-moz-selection {
+  color: #fff;
+  background: #B147FE;
+}
+
+
+/* 
+   TOGGLE (GOTH SWITCH)
+=================================================== */
+.goth-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: var(--space-s);
+  cursor: pointer;
+  color: #fff;
+  font-size: var(--font-m);
+  user-select: none;
+}
+
+.goth-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.goth-switch .slider {
+  position: relative;
+  inline-size: 2.8rem;
+  block-size: 1.6rem;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background-color: #444;
+  overflow: hidden;
+  transition: background-color .2s;
+}
+
+.goth-switch .slider::before {
+  content: "";
+  position: absolute;
+  top: .15rem;
+  left: .15rem;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #000; /* outline for contrast */
+  box-shadow: 0 0 6px rgba(163, 0, 255, 0.6);
+  transition: transform .2s, box-shadow .3s;
+  z-index: 2;
+}
+
+.goth-switch .slider::after {
+  content: "🦇";
+  position: absolute;
+  top: 50%;
+  left: .55rem;
+  transform: translate(-50%, -50%);
+  font-size: .95rem;
+  opacity: 0;
+  transition: opacity .2s, left .2s;
+  z-index: 3;
+}
+
+.goth-switch input:focus-visible + .slider {
+  outline: 0.125em solid #fff;
+  outline-offset: 2px;
+}
+
+/* Checked state with thinner animated stripes */
+.goth-switch input:checked + .slider {
+  background: repeating-linear-gradient(
+    45deg,
+    #B147FE,
+    #B147FE 5px,
+    #ffffff 5px,
+    #ffffff 10px
+  );
+  background-size: 20px 20px;
+  animation: stripe-slide 0.7s linear infinite;
+}
+
+.goth-switch input:checked + .slider::before {
+  transform: translateX(1.2rem);
+  animation: thumb-pulse 1.2s ease-in-out infinite;
+}
+
+.goth-switch input:checked + .slider::after {
+  opacity: 1;
+  left: 2.25rem;
+}
+
+@keyframes stripe-slide {
+  from { background-position: 0 0; }
+  to   { background-position: 20px 20px; }
+}
+
+@keyframes thumb-pulse {
+  0%,100% { box-shadow: 0 0 6px rgba(163, 0, 255, 0.6); }
+  50%     { box-shadow: 0 0 12px rgba(163, 0, 255, 1); }
+}
+
+.switch-label {
+  color: #fff;
+  font-family: 'Twilight', "Times New Roman", serif;
+}
+
+
+/* 
+   DECORATIVE GIF LAYER
+=================================================== */
+.goth-decor {
+  position: fixed;
+  inset: 0;
+  z-index: 0; /* above wallpaper, below content */
+  pointer-events: none;
+  contain: layout paint;
+}
+
+.goth-item {
+  position: absolute;
+}
+
+.goth-decor img,
+.goth-decor .goth-gif {
+  display: block;
+  max-width: min(22vmin, 220px);
+  border: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  background: transparent;
+  image-rendering: auto;
+  will-change: transform;
+}
+
+
+/* 
+   SIDE STRIPS
+=================================================== */
+.goth-side {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100px; /* adjust width */
+  background-repeat: repeat-y;
+  background-position: top;
+  background-size: contain;
+  z-index: -1;
+}
+
+.goth-side-left {
+  left: 0;
+  background-image: url("/themes/goth/gifs/rose-left.png");
+}
+
+.goth-side-right {
+  right: 0;
+  background-image: url("/themes/goth/gifs/rose-right.png");
+}
+
+
+/* 
+   MOTION UTILITIES
+=================================================== */
+@keyframes swayX {
+  0%,100% { transform: translateX(0) }
+  50% { transform: translateX(var(--amp-x, 18px)) }
+}
+
+@keyframes swayY {
+  0%,100% { transform: translateY(0) }
+  50% { transform: translateY(var(--amp-y, -16px)) }
+}
+
+@keyframes driftXY {
+  0%   { transform: translate(0, 0) }
+  25%  { transform: translate(var(--amp-x, 20px), var(--amp-y, -14px)) }
+  50%  { transform: translate(calc(var(--amp-x, 20px) * -0.6), calc(var(--amp-y, -14px) * -0.6)) }
+  75%  { transform: translate(calc(var(--amp-x, 20px) * 0.4),  calc(var(--amp-y, -14px) * 0.9)) }
+  100% { transform: translate(0, 0) }
+}
+
+@keyframes orbit {
+  0%   { transform: translate(var(--amp-x, 24px), 0) rotate(0deg) }
+  25%  { transform: translate(0, var(--amp-y, 24px)) rotate(90deg) }
+  50%  { transform: translate(calc(var(--amp-x, 24px) * -1), 0) rotate(180deg) }
+  75%  { transform: translate(0, calc(var(--amp-y, 24px) * -1)) rotate(270deg) }
+  100% { transform: translate(var(--amp-x, 24px), 0) rotate(360deg) }
+}
+
+/* Apply with utility classes */
+.sway-x     { animation: swayX 5.5s ease-in-out infinite; }
+.sway-y     { animation: swayY 6.2s ease-in-out infinite; }
+.drift      { animation: driftXY 9s ease-in-out infinite; }
+.orbit-slow { animation: orbit 18s linear infinite; }
+.orbit-fast { animation: orbit 10s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sway-x, .sway-y, .drift, .orbit-slow, .orbit-fast { animation: none !important; }
+}
+
+
+/* 
+   CONTENT ABOVE DECOR
+=================================================== */
+header, main, footer {
+  position: relative;
+  z-index: 1;
+}

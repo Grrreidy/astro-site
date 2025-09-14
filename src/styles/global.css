@@ -419,10 +419,16 @@ footer li {
   color: var(--color-lightblue);
 }
 
-footer ::selection,
-footer ::-moz-selection {
+footer::selection,
+footer *::selection {
   color: var(--color-blue);
-  background: var(--color-beige);
+  background-color: var(--color-lightblue);
+}
+
+footer::-moz-selection,
+footer *::-moz-selection {
+  color: var(--color-blue);
+  background-color: var(--color-lightblue);
 }
 
 /* 
