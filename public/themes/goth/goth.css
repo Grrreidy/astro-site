@@ -1,6 +1,6 @@
 /* 
    GOTH THEME
-   Emo / Twilight / Geocities throwback
+   Fantasy goth / Geocities throwback
    Loads only when goth mode is enabled
 =================================================== */
 
@@ -94,6 +94,29 @@ a {
 .container :is(h1, h2, h3, h4, h5, h6) a {
   color: #B147FE;
 }
+
+/* 
+   Blog list heading links
+=================================================== */
+.post-item h2 a,
+.post-item h3 a,
+.post-title a {
+  color: #B147FE;              /* default in goth */
+  text-decoration: none;
+  background: transparent;
+}
+
+.post-item h2 a:hover,
+.post-item h3 a:hover,
+.post-title a:hover,
+.post-item h2 a:focus,
+.post-item h3 a:focus,
+.post-title a:focus {
+  color: #fff;                 /* white on hover/focus */
+  text-decoration: underline;  /* keep underline if you like */
+  background: transparent;
+}
+
 
 /* Footer links */
 footer a {
