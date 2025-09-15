@@ -354,7 +354,7 @@ article th {
 
 .switch-label {
   color: #fff;
-  font-family: 'Twilight', "Times New Roman", serif;
+  font-family: 'Twilight', 'WorkSans', system-ui, sans-serif;
 }
 
 

@@ -30,7 +30,7 @@ const label = "Goth mode";
       return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     }
 
-    function makeParticle(x, y) {
+    function makeParticle(x: number, y: number) {
       const el = document.createElement("span");
       el.className = TRAIL_CLASS;
 
@@ -65,7 +65,7 @@ const label = "Goth mode";
       }, isComet ? TRAIL_TTL_MS + 300 : TRAIL_TTL_MS);
     }
 
-    function onMove(e) {
+    function onMove(e: MouseEvent) {
       const now = performance.now();
       if (now - lastSpawn < TRAIL_THROTTLE_MS) return;
       lastSpawn = now;
@@ -76,7 +76,7 @@ const label = "Goth mode";
       makeParticle(jx, jy);
     }
 
-    function onPop(e) {
+    function onPop(e: MouseEvent) {
       if (live >= TRAIL_MAX - 10) return;
       const count = 10;
       for (let i = 0; i < count; i++) {
@@ -106,11 +106,11 @@ const label = "Goth mode";
       let el = document.getElementById(LINK_ID);
       if (!el) {
         el = document.createElement("link");
-        el.id = LINK_ID;
-        el.rel = "stylesheet";
-        el.href = CSS_HREF;
-        el.media = "all";
-        el.disabled = true;
+        (el as HTMLLinkElement).id = LINK_ID;
+        (el as HTMLLinkElement).rel = "stylesheet";
+        (el as HTMLLinkElement).href = CSS_HREF;
+        (el as HTMLLinkElement).media = "all";
+        (el as HTMLLinkElement).disabled = true;
         document.head.appendChild(el);
       }
       return el;
@@ -136,11 +136,11 @@ const label = "Goth mode";
       if (el) el.remove();
     }
 
-    function setOn(on) {
+    function setOn(on: boolean) {
       const link = ensureCssLink();
-      link.disabled = !on;
+      (link as HTMLLinkElement).disabled = !on;
       localStorage.setItem(KEY, on ? "on" : "off");
-      if (cb) cb.checked = on;
+      if (cb) (cb as HTMLInputElement).checked = on;
 
       if (on) {
         mountDecor();
@@ -186,7 +186,7 @@ const label = "Goth mode";
     if (cb) {
       cb.addEventListener("change", function (e) {
         const t = e.target;
-        if (t && "checked" in t) setOn(t.checked);
+        if (t && "checked" in t) setOn((t as HTMLInputElement).checked);
       });
     }
   })();
@@ -282,7 +282,8 @@ const label = "Goth mode";
 
   .switch-label {
     color: var(--color-white);
-    font-family: 'Twilight', "Times New Roman", serif;
+    font-size: var(--font-s);
+    font-family: 'Twilight', 'WorkSans', system-ui, sans-serif;
   }
 
   @media (prefers-reduced-motion: reduce) {
