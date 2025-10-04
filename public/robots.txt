@@ -2,6 +2,12 @@
 User-agent: *
 Disallow: /*.pdf 
 Disallow: /images 
+Disallow: /blog/leaving-newskit-design-system/
+Disallow: /blog/designing-an-accessible-future/
+Disallow: /blog/scaling-accessibility-with-a-design-system/
+Disallow: /blog/what-i-learned-building-constellation-design-system/
+Disallow: /blog/halifax-digital-rebrand/
+Disallow: /blog/building-constellation-design-system/
 
 # Point to your sitemap
 Sitemap: https://gerireid.com/sitemap.xml
