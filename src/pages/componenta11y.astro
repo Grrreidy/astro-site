@@ -8,12 +8,29 @@ import Footer from '../components/Footer.astro';
 <html lang="en">
   <head>
     <BaseHead title="Componenta11y" description="Generate cross-platform accessibility guidance for a component" />
+    <script is:inline>
+      (function () {
+        const KEY = "theme:goth";
+        const LINK_ID = "goth-css";
+        const CSS_HREF = "/themes/goth/goth.css";
+        try {
+          if (localStorage.getItem(KEY) === "on" && !document.getElementById(LINK_ID)) {
+            const el = document.createElement("link");
+            el.id = LINK_ID;
+            el.rel = "stylesheet";
+            el.href = CSS_HREF;
+            el.media = "all";
+            document.head.appendChild(el);
+          }
+        } catch {}
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
-    <header>
-      <Header />
-    </header>
+
+    <!-- Use the same structure as other pages -->
+    <Header />
 
     <main id="main-content" class="container blog">
       <h1 class="h1-small">Generate accessibility guidance for a component</h1>
@@ -46,9 +63,7 @@ import Footer from '../components/Footer.astro';
       </p>
     </main>
 
-    <footer>
-      <Footer />
-    </footer>
+    <Footer />
 
     <style>
       [hidden] { display: none !important; }
@@ -59,7 +74,7 @@ import Footer from '../components/Footer.astro';
         top: 0;
         padding: 0.5rem 0.75rem;
         background: var(--color-blue, #0b5fff);
-        color: #fff;
+        color: var(--color-white, #fff);
         border-radius: 6px;
       }
       .skip-link:focus {
@@ -82,10 +97,10 @@ import Footer from '../components/Footer.astro';
 
       .a11y-result { margin-block-start: var(--space-l); }
       .a11y-result .blog-content {
-        background: #ffffff;
+        background: var(--color-surface, var(--color-white, #ffffff));
         padding: 1rem;
         border-radius: 12px;
-        border: 2px dashed var(--color-blue);
+        border: 2px dashed var(--color-blue, #0b5fff);
       }
       #output ul, #output ol { margin: 0 0 var(--space-m) 1rem; }
       #output h2, #output h3 { margin-top: var(--space-m); }
@@ -93,13 +108,13 @@ import Footer from '../components/Footer.astro';
 
       .status-message {
         margin-top: var(--space-m);
-        color: var(--color-blue, inherit);
+        color: var(--color-blue, currentColor);
         min-height: 1.5rem;
       }
 
       .field-error {
         font-size: inherit;
-        color: var(--color-red);
+        color: var(--color-red, #d00);
         display: inline-flex;
         align-items: center;
         gap: .4rem;
@@ -117,14 +132,14 @@ import Footer from '../components/Footer.astro';
         margin-left: 0.5em;
         width: 1em;
         height: 1em;
-        border: 0.2em solid var(--color-white);
+        border: 0.2em solid var(--color-white, #fff);
         border-top: 0.2em solid transparent;
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
         vertical-align: middle;
       }
       .default-button:hover .btn-spinner {
-        border-color: var(--color-red);
+        border-color: var(--color-red, #d00);
         border-top-color: transparent;
       }
 

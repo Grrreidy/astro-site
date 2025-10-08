@@ -7,7 +7,6 @@
 
 /* 
    THEME COLOR TOKENS
-   (Prefer shared tokens from src/styles/design-tokens.css when available)
 =================================================== */
 :root {
   /* Shared base tokens */
@@ -612,4 +611,48 @@ footer img {
 @media (prefers-reduced-motion: reduce) {
   .goth-trail, .goth-trail--comet::after { animation: none !important; }
   .goth-trail { display: none !important; }
+}
+
+/* 
+   GOTH MODE FORM/GUIDANCE AND GENERATED CONTENT OVERRIDES
+   - Ensure help and error text are legible on dark theme
+   - Ensure generated content backgrounds are transparent
+=================================================== */
+.field-help {
+  color: var(--goth-white);
+}
+
+/* Common error message hooks */
+.error,
+.error-message,
+.validation-error,
+[aria-live="polite"],
+[aria-live="assertive"] {
+  color: var(--goth-white);
+  background: transparent;
+}
+
+/* Generated content blocks (a11y docs output) */
+.a11y-result {
+  color: var(--goth-white);
+}
+
+.a11y-result pre {
+  background: transparent;
+  color: var(--goth-white);
+}
+
+/* Strengthen generated output overrides */
+.a11y-result .blog-content {
+  color: var(--goth-white);
+  background: transparent;
+  border-color: var(--goth-white);
+}
+
+#output,
+#output p,
+#output li,
+#output div {
+  color: var(--goth-white);
+  background: transparent;
 }
