@@ -1,7 +1,7 @@
 ---
 title: "Don't leave the screen reader hungry"
 description: "Screen readers don’t always match what’s visually on screen. This article explores that gap—through the medium of burritos."
-pubDate: "2025-10-19"
+pubDate: "2025-12-30"
 author: Geri Reid
 draft: true
 ---
@@ -29,7 +29,7 @@ What I'm highlighting here is screen readers don't consistently announce what yo
 
 Documenting and recording screen reader requirements is also problematic, so it sometimes falls through the gaps between design and code. I’ve got some ideas to help solve this.
 
-You hungry? 
+### You hungry? 
 
 Since you're probably craving Mexican food by now, we're going to frame this through the medium of burritos. Put your apron on, taquero - it's time to get cooking. 
 
@@ -94,10 +94,12 @@ These ingredients look tasty but behave unpredictably under heat. Use with cauti
 
 ---
 
-## Help! My burrito is busted (what should announce?)
+## Help! My burrito is busted!
 
 - If you're second-guessing what should announce, TetraLogical recently released a [detailed guide to screen reader announcements](https://github.com/TetraLogical/screen-reader-HTML-support?tab=readme-ov-file) along with an [HTML Element test file](https://stevefaulkner.github.io/AT-browser-tests/)  you can run your screen reader over to test elements in isolation.
+
 - If you’re looking for video examples of how elements and components announce, check out the [HTML section of atomica11y](https://www.atomica11y.com/accessible-web/). 
+
 - If you work on a Mac and need to test on Windows screen readers, try [AssistivLabs](https://assistivlabs.com/) or set up an [emulator like UTM](https://getutm.app/). You can run NVDA for free and JAWS has a free 40 minute developer mode which is sufficient for testing. [40% of the screen reader market uses JAWS](https://webaim.org/projects/screenreadersurvey10/#primary) so if you only test on VoiceOver you might miss issues.
 
 ---
@@ -106,11 +108,15 @@ These ingredients look tasty but behave unpredictably under heat. Use with cauti
 
 If you're building a website, you need a consistent way to document screen reader announcements. Don't leave it up to chance. Current design tools don't have space for accessibility information and much of it is non-visual, so it easily gets overlooked during implementation.
 
+### Documenting with design annotation kits
+
 Visual annotation kits for Figma, Sketch or Penpot offer a solution. There are plenty of excellent open-source examples shared in community files that you can tailor to your organisation's needs. If you're looking for inspiration, Jan Maarten and Daniel Henderson-Ede did a talk showcasing how [different design teams annotate for accessibility](https://www.youtube.com/live/O1GmngpGokU?si=Y6uxWmX1Z6pxfRDD) at this year's Inclusive Design 24.
 
 As a designer, I find it helpful to pair with an engineer and mark up design files together to capture all the accessibility requirements. 
 
 A problem with sticky note annotations is that they often die in design files once development begins. Developers don't revisit design files, designers move on and the accessibility details you've spent time documenting get lost. Even if they are used effectively in implementation, you end up rewriting a similar set of notes for subsequent projects.
+
+### Documenting with text
 
 Text-based documentation in machine-readable formats (YAML, JSON, markdown tables, or structured specifications) solves this. Instead of static notes trapped in design files, if you record your annotations as text you can create queryable records that travel. Think of it like your restaurant having a digital ordering system instead of handwritten tickets. The kitchen gets the exact burrito order every time, with all the special instructions intact. 
 
@@ -120,16 +126,17 @@ The long game: shift to living documentation that can be queried on demand. Some
 
 ---
 
-### Let's wrap up! 
+## Let's wrap up! 🌯
 
 - HTML gives you a tortilla full of free fillings: headings, lists, buttons, form controls, tables. However, some elements require you to add a topping to make them meaningful. 
+
 - Document which toppings are needed so they don't get lost between design and development. Without clear documentation, developers have to guess at the requirements or skip them entirely, leaving accessibility as an afterthought rather than an integral part of the build.
 
 Get it right and your screen reader users get a memorable burrito. Get it wrong and they're left with a stain on their shirt. Remember that good burrito, like good markup, is about knowing which toppings to add and when to stop.
 
 ---
 
-#### Screen reader testing on:
+### Screen reader testing on:
 
 - JAWS (2025) with Chrome Version 140.0.7339.128 (Official Build) (64-bit) on Windows 11
 - NVDA (2025) with Chrome Version 140.0.7339.128 (Official Build) (64-bit) on Windows 11
