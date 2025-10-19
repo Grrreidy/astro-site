@@ -43,7 +43,7 @@
 /* 
    FONT
 =================================================== */
-@import url('https://fonts.cdnfonts.com/css/twilight');
+@import url('https://fonts.cdnfonts.com/css/twilight.font');
 
 
 /* 
@@ -78,15 +78,23 @@ header {
 /* 
    HEADINGS
 =================================================== */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Twilight', "Times New Roman", "Baskerville", serif;
-  letter-spacing: 0.02em;
-  color: var(--goth-purple);
-  text-shadow: 1px 1px 2px var(--goth-black);
+/* Force Twilight font on all headings in goth mode */
+html h1, html h2, html h3, html h4, html h5, html h6,
+body h1, body h2, body h3, body h4, body h5, body h6,
+.container h1, .container h2, .container h3, .container h4, .container h5, .container h6,
+main h1, main h2, main h3, main h4, main h5, main h6,
+article h1, article h2, article h3, article h4, article h5, article h6,
+.blog-content h1, .blog-content h2, .blog-content h3, .blog-content h4, .blog-content h5, .blog-content h6,
+.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 {
+  font-family: 'Twilight', "Times New Roman", "Baskerville", serif !important;
+  letter-spacing: 0.02em
+  color: var(--goth-purple) 
+  text-shadow: 1px 1px 2px var(--goth-black)
 }
 
 .footer-columns h3 {
   font-family: 'Twilight', "Times New Roman", "Baskerville", serif;
+  color: var(--goth-white);
 }
 
 
@@ -212,14 +220,6 @@ hr,
   margin-block: var(--space-m);
 }
 
-/* 
-   LISTS
-=================================================== */
-.blog-content ul,
-ul.post-list {
-  list-style: url("/themes/goth/bat-bullet.gif") outside;
-}
-
 
 /* 
    BUTTONS
@@ -273,6 +273,15 @@ article th {
   background: var(--goth-grey-verydark);
   color: var(--goth-purple);
   font-weight: bold;
+}
+
+code {
+  background-color: var(--color-blue);
+  color: var(--color-white);
+  font-family: monospace;
+  font-size: 0.95em;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
 }
 
 

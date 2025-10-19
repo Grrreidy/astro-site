@@ -527,6 +527,15 @@ ul.post-list {
   margin-bottom: var(--space-m);
 }
 
+code {
+  background-color: #ffffff;
+  font-family: monospace;
+  font-size: 0.95em;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+
 
 /* 
    TABLE
@@ -546,6 +555,32 @@ article td {
   text-align: left;
   vertical-align: top;
   word-break: break-word;
+}
+
+/* Ensure consistent column widths for screen reader comparison tables */
+article table th:nth-child(1),
+article table td:nth-child(1) {
+  min-width: 100px; /* Element column */
+}
+
+article table th:nth-child(2),
+article table td:nth-child(2) {
+  min-width: 100px; /* JAWS says column */
+}
+
+article table th:nth-child(3),
+article table td:nth-child(3) {
+  min-width: 100px; /* NVDA says column */
+}
+
+article table th:nth-child(4),
+article table td:nth-child(4) {
+  min-width: 100px; /* Mac OS VoiceOver says column */
+}
+
+article table th:nth-child(5),
+article table td:nth-child(5) {
+  min-width: 100px; /* Annotation column - wider for longer text */
 }
 
 article th {
