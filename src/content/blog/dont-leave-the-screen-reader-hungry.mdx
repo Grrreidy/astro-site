@@ -11,15 +11,15 @@ draft: true
 
 ## The burrito you can't order
 
-A customer complained they couldn't order a burrito. "My local sandwich shop advertises burritos, but my screen reader won't let me order one!"
+A customer complained they couldn't order a burrito. "The menu advertises burritos, but my screen reader won't let me order one!"
 
-I was baffled. The menu page was about as Mexican as a Yorkshire pudding. There was no mention of a burrito. 
+I was baffled. The menu was about as Mexican as a Yorkshire pudding. There was no mention of a burrito. 
 
 After a lot of searching, I discovered someone had dropped an emoji into the heading:
 
 `<h2>Sandwiches 🌯</h2>`
 
-Visually, it looks decorative. But screen readers don't read an emoji as decoration, they announce its Unicode character name. So screen reader users heard: "Sandwiches, Burrito."
+Visually, it looks decorative and *kind of* like a sandwich. But screen readers don't read an emoji as decoration, they announce its Unicode character name. So screen reader users heard: "Sandwiches, Burrito."
 
 That little emoji isn't just sitting in your markup looking pretty. It's making promises your website can't keep. One tiny flourish in your heading tag and suddenly your sandwich bar sounds like a taqueria.
 
