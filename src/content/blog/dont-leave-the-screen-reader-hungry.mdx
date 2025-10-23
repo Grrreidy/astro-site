@@ -9,6 +9,8 @@ draft: true
 
 # Don't leave the screen reader hungry
 
+by [Geri Reid](https://gerireid.com)
+
 ## The burrito you can't order
 
 A customer complained they couldn't order a burrito. "The menu advertises burritos, but my screen reader won't let me order one!"
@@ -74,7 +76,7 @@ Here’s where you roll up your sleeves. These elements stay silent or may not a
 | `<img src="burrito.png">`                                 | "Unlabelled graphic"                     | "Unlabelled graphic"                    | “Unlabelled image” or "burrito.png" | Add alt text describing the image. Or use `alt=""` if decorative.           |
 | `<button aria-disabled="true">Not taking orders</button>` | “Not taking orders, button, unavailable” | “Button unavailable, Not taking orders” | “Not taking orders, dimmed, button” | Add 'disabled' styling. Still focusable so may confuse screen reader users. |
 | `<button><svg>burrito svg icon</svg></button>`       | “unlabelled button”                      | “button”                                | “button”                            | Add accessible name via `aria-label` or `aria-labelledby`.                  |
-| `<iframe src="promo.html"></iframe>`                      | “frame”                                  | “frame”                                 | “frame”                             | Add a descriptive title for context.                                        |
+| `<iframe src="#"></iframe>`                      | “frame”, or “frame 2 of 4” if multiple                                 | “frame”, or “frame 2 of 4” if multiple                                 | “frame”                             | Add a descriptive title for context.                                        |
 
 The trick: add the toppings that matter, but don't overload the burrito. An overstuffed burrito can fall into your lap, potentially ruining a first date.
 
@@ -134,9 +136,22 @@ The long game: shift to living documentation that can be queried on demand. Some
 
 - Document which toppings are needed so they don't get lost between design and development. Without clear documentation, developers have to guess at the requirements or skip them entirely, leaving accessibility as an afterthought rather than an integral part of the build.
 
-Get it right and your screen reader users get a memorable burrito. Get it wrong and they're left with a stain on their shirt. Remember that good burrito, like good markup, is about knowing which toppings to add and when to stop.
+Remember that a good burrito, like good markup, is about knowing which toppings to add and when to stop. Get it right and your screen reader users get a memorable burrito. Get it wrong and they're left with a stain on their shirt. 
 
 ---
+
+### About Geri Reid
+
+Geri is an accessibility and design systems nerd from London. As design and accessibility lead on design systems at News UK and Lloyds Banking Group, she helped some of the UK’s largest media and banking brands to design at scale. She is currently Lead Accessibility Specialist at Just Eat Takeaway. 
+
+- Blog: [gerireid.com](https://gerireid.com)
+- Bluesky: [@gerireid.com](https://bsky.app/profile/gerireid.com)
+- LinkedIn: [@gerireid](https://www.linkedin.com/in/gerireid/)
+
+
+---
+
+
 
 ### Screen reader testing on:
 
