@@ -21,7 +21,7 @@ After a lot of searching, I discovered someone had dropped an emoji into the hea
 
 `<h2>Sandwiches 🌯</h2>`
 
-Visually, it looks decorative and *kind of* like a sandwich. But screen readers don't read an emoji as decoration, they announce its Unicode character name. So screen reader users heard: "Sandwiches, Burrito."
+Visually, it looks decorative and *kind of like a sandwich*. But screen readers don't read an emoji as decoration, they announce its <a href="https://unicode.org/emoji/charts/full-emoji-list.html">Unicode character name</a>. So screen reader users heard: "Sandwiches, Burrito."
 
 That little emoji isn't just sitting in your markup looking pretty. It's making promises your website can't keep. One tiny flourish in your heading tag and suddenly your sandwich bar sounds like a taqueria.
 
@@ -76,7 +76,7 @@ Here’s where you roll up your sleeves. These elements stay silent or may not a
 | `<img src="burrito.png">`                                 | "Unlabelled graphic"                     | "Unlabelled graphic"                    | “Unlabelled image” or "burrito.png" | Add alt text describing the image. Or use `alt=""` if decorative.           |
 | `<button aria-disabled="true">Not taking orders</button>` | “Not taking orders, button, unavailable” | “Button unavailable, Not taking orders” | “Not taking orders, dimmed, button” | Add 'disabled' styling. Still focusable so may confuse screen reader users. |
 | `<button><svg>burrito svg icon</svg></button>`       | “unlabelled button”                      | “button”                                | “button”                            | Add accessible name via `aria-label` or `aria-labelledby`.                  |
-| `<iframe src="#"></iframe>`                      | “frame”, or “frame 2 of 4” if multiple                                 | “frame”, or “frame 2 of 4” if multiple                                 | “frame”                             | Add a descriptive title for context.                                        |
+| `<iframe src="#"></iframe>`                      | “frame”, or “frame 2 of 4” if multiple                                 | “frame”, or “frame 2 of 4” if multiple                                 | “frame”                             | Add a descriptive `title` for context.                                        |
 
 The trick: add the toppings that matter, but don't overload the burrito. An overstuffed burrito can fall into your lap, potentially ruining a first date.
 
@@ -153,7 +153,7 @@ Geri is an accessibility and design systems nerd from London. As design and acce
 
 
 
-### Screen reader testing on:
+#### Screen reader testing on:
 
 - JAWS (2025) with Chrome Version 140.0.7339.128 (Official Build) (64-bit) on Windows 11
 - NVDA (2025) with Chrome Version 140.0.7339.128 (Official Build) (64-bit) on Windows 11
