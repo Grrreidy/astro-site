@@ -1,13 +1,17 @@
-// netlify/functions/componenta11y.js
+// netlify/functions/RAG-componenta11y.js
+
 import {
   recognisedComponentsURL,
   invalidComponentMsgHtml,
   linkPolicyBullets
 } from "./shared/a11y-shared.js";
+import fs from "fs";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+const knowledgePath = "./netlify/data/a11y-knowledge.json";
 
+// Utility: fetch with timeout safeguard
 async function fetchWithTimeout(resource, options = {}, ms = 28000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), ms);
@@ -18,11 +22,11 @@ async function fetchWithTimeout(resource, options = {}, ms = 28000) {
   }
 }
 
+// Main Netlify Function
 export async function handler(event) {
   try {
-    let body = {};
-    try { body = JSON.parse(event.body || "{}"); } catch {}
-    const component = typeof body.component === "string" ? body.component.trim() : "";
+    const body = JSON.parse(event.body || "{}");
+    const component = (body.component || "").trim().toLowerCase();
 
     if (!OPENAI_API_KEY) {
       return {
@@ -30,9 +34,30 @@ export async function handler(event) {
         body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" })
       };
     }
+
     if (!component) {
       return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
+
+    // --- Retrieve verified data for RAG ---
+    const kb = JSON.parse(fs.readFileSync(knowledgePath, "utf8"));
+    const info = kb[component];
+
+    if (!info) {
+      return {
+        statusCode: 200,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html: invalidComponentMsgHtml })
+      };
+    }
+
+    const context = `
+Component: ${component}
+ARIA Authoring Practices: ${info.ariaPatterns || "none"}
+Apple HIG: ${info.appleHIG || "none"}
+Material 3: ${info.material3 || "none"}
+Notes: ${info.notes || ""}
+`;
 
     const prompt = [
       `You are writing cross-platform accessibility documentation for the "${component}" component.`,
@@ -52,43 +77,27 @@ export async function handler(event) {
       "…and nothing else.",
 
       "",
+      "Verified data from accessibility knowledge base:",
+      context,
+
+      "",
       "Section order and exact headings",
       `1) <h2>${component}</h2>`,
       "2) <h3>Definition</h3>",
-      "   - One sentence describing the component’s purpose.",
       "3) <h3>Usage</h3>",
-      "   - When to use, when not to, common variants and states.",
       "4) <h3>Guidelines</h3>",
-      "   - List applicable WCAG 2.2 AA criteria by number and name (e.g., \"2.4.7 Focus visible\") with one line on what it means for this component.",
-      "   - Link each criterion per Link policy. Only use tested links; never invent links.",
+      "   - List applicable WCAG 2.2 AA criteria with one-line summaries.",
+      "   - Use verified links only; never invent links.",
       "5) <h3>Checklist</h3>",
-      "   - Actionable items a designer/engineer can verify.",
       "6) <h3>Keyboard and focus</h3>",
-      "   - Typical keyboard interactions and expected focus order (if not interactive, state that clearly).",
-      "   - For mobile, add common assistive-tech gestures where relevant.",
       "7) <h3>ARIA</h3>",
-      "   - Summary of ARIA roles, states and properties relevant to this component across platforms. For example, a pagination component response would include:",
-      " - Wrap pagination in a <nav aria-label=Pagination> element to define a navigation region",
-      " - Put structure items inside an unordered list <ul>",
-      " - Active page includes <aria-current=page> and distinct visual styling",
-      " - Disabled Previous or Next links include <aria-disabled=true> and are not focusable",
-      " - Provide descriptive labels for arrow controls <aria-label=previous page> and <aria-label=Next page>",
-      "   - Reference the matching ARIA Authoring Practices pattern name and link to it.",
-      "   - Summary of Swift or Kotlin accessibility labels relevant to this component across platforms.",
       "8) <h3>Acceptance criteria</h3>",
-      "   - Concise, testable statements (reflect relevant Atomic A11y items where applicable).",
       "9) <h3>Who this helps</h3>",
-      "   - Short bullets naming affected groups (e.g., \"People with visual impairments\") with a brief note on how this guidance helps.",
-
       "10) <h2>Platform specifics</h2>",
       "11) <h3>Web</h3>",
-      "   - Notes for web implementations, including relevant ARIA Authoring Practices pattern(s) and any WCAG nuances.",
       "12) <h3>iOS</h3>",
-      "   - Notes for iOS with links to the relevant Apple Human Interface Guidelines component page(s). Here is an example URL of a Apple Human Interface Guidelines component: https://developer.apple.com/design/human-interface-guidelines/components. Do not invent links",
       "13) <h3>Android</h3>",
-      "   - Notes for Android with links to the relevant Material 3 component page(s); reference MCAG where it adds mobile-specific considerations. Here is an example URL of a Material 3 component: https://m3.material.io/components. Do not invent links",
       "14) <h3>Design</h3>",
-      "   - System-level advice on content design, naming, semantics, states, contrast and error prevention. Avoid platform code specifics.",
 
       "",
       "Link policy (use only these domains; never invent or use other sources)",
@@ -97,11 +106,8 @@ export async function handler(event) {
       "",
       "Style rules",
       "- Concise, direct, GOV.UK-style tone.",
-      "- No code fences, no markdown, no placeholders like “TBD”.",
-      "- Do not include content outside the sections and headings listed above.",
-
-      "",
-      "Return only the HTML fragment."
+      "- No markdown, placeholders, or commentary.",
+      "- Return only the HTML fragment."
     ].join("\n");
 
     const resp = await fetchWithTimeout(OPENAI_URL, {

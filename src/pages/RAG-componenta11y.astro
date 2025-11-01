@@ -2,77 +2,155 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <BaseHead title="RAG Componenta11y" description="Generate cross-platform accessibility guidance using RAG" />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <Header />
 
     <main id="main-content" class="container blog">
-      <h1>Accessibility helper v2</h1>
-      <p>Generate accessibility guidance for your components. Use the RAG+validated endpoint to reduce hallucinations.</p>
+      <h1 class="h1-small">Generate accessibility guidance for a component (RAG)</h1>
 
       <form id="a11y-form" class="a11y-form" novalidate>
         <div class="form-field">
-          <label for="component">Component name</label>
-          <input id="component" name="component" type="text" required />
+          <label for="component">Component</label>
+          <input id="component" name="component" required aria-describedby="component-help component-error" />
+          <p id="component-help" class="field-help">Try: Accordion, Card, Button, Tooltip or Modal</p>
+          <p id="component-error" class="field-error" hidden>Enter a component</p>
         </div>
 
-        <label class="form-field">
-          <input type="checkbox" id="use-rag" /> Use RAG+validated endpoint
-        </label>
-
-        <div class="form-field">
-          <button type="submit">Generate guidance</button>
-        </div>
+        <button id="generate-btn" type="submit" class="default-button">
+          <span class="btn-text">Generate guidance</span>
+          <span id="btn-spinner" class="btn-spinner" aria-hidden="true" hidden></span>
+        </button>
       </form>
 
-      <section id="result" class="result"></section>
+      <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
+
+      <section id="result" class="a11y-result blog-content" hidden aria-busy="false" aria-labelledby="result-heading">
+        <h2 id="result-heading" class="sr-only">Generated results</h2>
+        <div id="output" class="blog-content"></div>
+      </section>
+
+      <p class="field-help" style="margin-top: var(--space-xl);">
+        Made with <a href="https://platform.openai.com/">OpenAI</a> and 
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.  
+        This page uses retrieval-augmented generation (RAG). Review generated content before use.
+      </p>
     </main>
 
     <Footer />
 
-    <script>
-      // @ts-check
+    <style>
+      [hidden] { display: none !important; }
+      .skip-link { position: absolute; left: -9999px; top: 0; padding: 0.5rem 0.75rem; background: var(--color-blue, #0b5fff); color: #fff; border-radius: 6px; }
+      .skip-link:focus { left: 0.5rem; top: 0.5rem; z-index: 1000; }
 
-      document.addEventListener('DOMContentLoaded', () => {
-        /** @type {HTMLElement|null} */
-        const result = document.getElementById('result');
-        const formEl = document.getElementById('a11y-form');
-        const componentEl = document.getElementById('component');
-        const ragEl = document.getElementById('use-rag');
+      .a11y-result { margin-block-start: var(--space-l); }
+      .a11y-result .blog-content {
+        background: var(--color-surface, #fff);
+        padding: 1rem;
+        border-radius: 12px;
+        border: 2px dashed var(--color-blue, #0b5fff);
+      }
+      #output ul, #output ol { margin: 0 0 var(--space-m) 1rem; }
+      #output h2, #output h3 { margin-top: var(--space-m); }
+      .status-message { margin-top: var(--space-m); color: var(--color-blue, currentColor); min-height: 1.5rem; }
+      .field-error { color: var(--color-red, #d00); margin-top: .25rem; display: inline-flex; align-items: center; gap: .4rem; }
+      .field-error::before { content: "⚠︎"; }
+      .btn-spinner { display: inline-block; margin-left: 0.5em; width: 1em; height: 1em; border: 0.2em solid #fff; border-top: 0.2em solid transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .btn-spinner { animation: none; } }
+    </style>
 
-        if (!(formEl instanceof HTMLFormElement)) return;
-        if (!(componentEl instanceof HTMLInputElement)) return;
-        if (!(ragEl instanceof HTMLInputElement)) return;
-        if (!(result instanceof HTMLElement)) return;
+    <script type="module" is:inline>
+      const form = document.getElementById('a11y-form');
+      const btn = document.getElementById('generate-btn');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const statusEl = document.getElementById('status');
+      const resultSection = document.getElementById('result');
+      const outEl = document.getElementById('output');
+      const componentInput = document.getElementById('component');
+      const componentError = document.getElementById('component-error');
 
-        formEl.addEventListener('submit', async (e) => {
-          e.preventDefault();
+      let isLoading = false;
 
-          const component = componentEl.value.trim();
-          const endpoint = ragEl.checked
-            ? '/.netlify/functions/componenta11y-rag'
-            : '/.netlify/functions/componenta11y';
+      function announce(msg) { statusEl.textContent = msg; }
+      function focusResult() {
+        const firstHeading = outEl.querySelector('h1, h2, h3');
+        const target = firstHeading || resultSection;
+        target.setAttribute('tabindex', '-1');
+        target.focus();
+        target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
+      }
 
-          const resp = await fetch(endpoint, {
+      function showLoading() {
+        isLoading = true;
+        announce('Generating accessibility guidance, please wait...');
+        btnSpinner.hidden = false;
+        btn.setAttribute('aria-disabled', 'true');
+        form.setAttribute('aria-busy', 'true');
+        resultSection.setAttribute('aria-busy', 'true');
+      }
+      function clearLoading() {
+        isLoading = false;
+        btnSpinner.hidden = true;
+        btn.removeAttribute('aria-disabled');
+        form.removeAttribute('aria-busy');
+        resultSection.setAttribute('aria-busy', 'false');
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (isLoading) return;
+
+        componentError.hidden = true;
+        const component = componentInput.value.trim();
+        if (!component) {
+          componentError.hidden = false;
+          return;
+        }
+
+        showLoading();
+        resultSection.hidden = true;
+        outEl.innerHTML = '';
+
+        try {
+          const res = await fetch('/.netlify/functions/RAG-componenta11y', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ component })
           });
 
-          const payload = await resp.json();
-          const { html, error } = payload || {};
+          const text = await res.text();
+          let data; try { data = JSON.parse(text); } catch { data = { error: text }; }
 
-          result.innerHTML = error
-            ? `<p class="error">${String(error)}</p>`
-            : (html || '<p>No content returned.</p>');
-        });
+          if (!res.ok) {
+            announce(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
+            return;
+          }
+
+          const { html } = data;
+          outEl.innerHTML = html || '';
+          resultSection.hidden = !html;
+
+          if (html) {
+            announce('Guidance ready below.');
+            focusResult();
+          } else {
+            announce('No content returned.');
+          }
+        } catch (err) {
+          console.error(err);
+          announce('Generation failed. Check console for details.');
+        } finally {
+          clearLoading();
+        }
       });
     </script>
   </body>
