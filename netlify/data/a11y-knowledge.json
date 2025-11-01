@@ -1,0 +1,15 @@
+// netlify/data/a11y-knowledge.json
+{
+  "pagination": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/pagination/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/pagination",
+    "material3": "https://m3.material.io/components/pagination/overview",
+    "notes": "Pagination controls move between discrete content pages."
+  },
+  "card": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/card/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/cards",
+    "material3": "https://m3.material.io/components/cards/overview",
+    "notes": "Cards group related information in a container."
+  }
+}
