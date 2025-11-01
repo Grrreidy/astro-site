@@ -87,7 +87,7 @@ export async function handler(event) {
       "14) <h3>Design</h3>",
       "   - System-level advice on content design, naming, semantics, states, contrast and error prevention. Avoid platform code specifics.",
       "15) <h2>ARIA and labels</h2>",
-      "   - Summary of ARIA roles, states and properties relevant to this component across platforms.",
+      "   - Summary of ARIA roles, states and properties relevant to this component across platforms. For example, a pagination component response would include: Wrap pagination in a <nav aria-label=Pagination> element to define a navigation region, put structure items inside an unordered list <ul>, Active page includes <aria-current=page> and distinct visual styling, Disabled Previous or Next links include <aria-disabled=true> and are not focusable, Provide descriptive labels for arrow controls <aria-label=previous page> and <aria-label=Next page>",
       "   - Summary of Swift or Kotlin accessibility labels relevant to this component across platforms.",
       "",
       "Link policy (use only these domains; never invent or use other sources)",
