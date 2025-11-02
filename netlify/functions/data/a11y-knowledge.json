@@ -1,8 +1,238 @@
 {
+  "accordion": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/accordion/",
+    "GDS": "https://design-system.service.gov.uk/components/accordion/",
+    "material3": "https://m3.material.io/components/expansion-panels/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-accordion",
+    "helios": "https://helios.hashicorp.design/components/accordion?tab=accessibility",
+    "notes": "Accordions expand and collapse content sections; focus moves to the heading of the opened panel."
+  },
+  "banner": {
+    "GDS": "https://design-system.service.gov.uk/components/banner/",
+    "material3": "https://m3.material.io/components/banner/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-feedback.html#kssref-feedback-banner",
+    "notes": "Banners communicate site-wide or high-level information; ensure they are dismissible and announced politely."
+  },
+  "breadcrumbs": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/",
+    "GDS": "https://design-system.service.gov.uk/components/breadcrumbs/",
+    "material3": "https://m3.material.io/components/breadcrumbs/overview",
+    "hashi": "https://helios.hashicorp.design/components/breadcrumb?tab=accessibility",
+    "notes": "Breadcrumbs show users their location in a hierarchy; mark up as a nav region with aria-label='Breadcrumb'."
+  },
   "button": {
     "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/button/",
+    "GDS": "https://design-system.service.gov.uk/components/button/",
     "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/buttons",
-    "material3": "https://m3.material.io/components/buttons/accessibility",
-    "notes": "Buttons trigger actions or events."
-  }
+    "material3": "https://m3.material.io/components/buttons/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-buttons",
+    "atomica11yWeb": "https://www.atomica11y.com/accessible-web/button/",
+    "hashi": "https://helios.hashicorp.design/components/button?tab=accessibility",
+    "notes": "Buttons trigger actions or events; provide visible and programmatic focus feedback."
+  },
+  "card": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/article/",
+    "GDS": "https://design-system.service.gov.uk/components/card/",
+    "material3": "https://m3.material.io/components/cards/overview",
+    "atomica11yWeb": "https://www.atomica11y.com/accessible-web/card/",
+    "notes": "Cards group related content and actions; preserve heading structure and logical reading order."
+  },
+  "caption": {
+    "GDS": "https://design-system.service.gov.uk/styles/typography/#headings",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/typography",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-media.html#kssref-media-captions",
+    "notes": "Captions accompany media or figures; ensure text alternatives are synchronised and accessible to assistive tech."
+  },
+  "character count": {
+    "GDS": "https://design-system.service.gov.uk/components/character-count/",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-character-count",
+    "notes": "Character counts should update live and be announced via polite ARIA live regions."
+  },
+  "checkbox": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/",
+    "GDS": "https://design-system.service.gov.uk/components/checkboxes/",
+    "material3": "https://m3.material.io/components/checkbox/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-checkboxes",
+    "hashi": "https://helios.hashicorp.design/components/form/checkbox?tab=accessibility",
+    "notes": "Checkboxes allow one or more independent selections; ensure label association and clear state."
+  },
+  "date time": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/datepicker/",
+    "GDS": "https://design-system.service.gov.uk/components/date-input/",
+    "material3": "https://m3.material.io/components/date-pickers/overview",
+    "notes": "Date and time inputs must be properly labelled and expose values programmatically; respect locale formats."
+  },
+  "divider": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/separator/",
+    "material3": "https://m3.material.io/components/divider/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-divider",
+    "notes": "Dividers visually separate content; use semantic <hr> elements and sufficient contrast."
+  },
+  "form": {
+    "GDS": "https://design-system.service.gov.uk/components/form-group/",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html",
+    "hashi": "https://helios.hashicorp.design/components/form?tab=accessibility",
+    "notes": "Forms group related input elements and communicate validation feedback; use semantic grouping."
+  },
+  "grid": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/grid/",
+    "GDS": "https://design-system.service.gov.uk/styles/layout/#grid-system",
+    "material3": "https://m3.material.io/foundations/layout/understanding-layout",
+    "notes": "Grids arrange content in rows and columns; maintain reading and focus order for keyboard users."
+  },
+  "headline": {
+    "GDS": "https://design-system.service.gov.uk/styles/typography/#headings",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/typography",
+    "material3": "https://m3.material.io/styles/typography/overview",
+    "notes": "Headlines introduce sections; use semantic heading levels rather than visual styling alone."
+  },
+  "inline message": {
+    "GDS": "https://design-system.service.gov.uk/components/error-message/",
+    "material3": "https://m3.material.io/components/snackbar/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-feedback.html#kssref-feedback-inline",
+    "notes": "Inline messages communicate validation or status; associate them with the relevant form field via aria-describedby."
+  },
+  "layout": {
+    "GDS": "https://design-system.service.gov.uk/styles/layout/",
+    "material3": "https://m3.material.io/foundations/layout/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-layout",
+    "notes": "Layout defines spacing and hierarchy; ensure consistent heading levels and avoid absolute positioning that disrupts flow."
+  },
+  "link": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/link/",
+    "GDS": "https://design-system.service.gov.uk/styles/typography/#links",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/links",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-links",
+    "hashi": "https://helios.hashicorp.design/components/link/inline?tab=accessibility",
+    "notes": "Links navigate between pages or views; ensure descriptive link text and visible focus indicators."
+  },
+  "media": {
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/media-playback",
+    "material3": "https://m3.material.io/components/video/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-media.html",
+    "notes": "Media components like audio or video require captions, transcripts, and keyboard controls."
+  },
+  "menu": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/menu/",
+    "GDS": "https://design-system.service.gov.uk/components/header/",
+    "material3": "https://m3.material.io/components/menus/overview",
+    "notes": "Menus present navigation options or commands; support arrow-key navigation and correct aria roles."
+  },
+  "modal": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+    "GDS": "https://design-system.service.gov.uk/components/dialog/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/modality",
+    "material3": "https://m3.material.io/components/dialogs/overview",
+    "atomica11yWeb": "https://www.atomica11y.com/accessible-web/dialog/",
+    "hashi": "https://helios.hashicorp.design/components/modal?tab=accessibility",
+    "notes": "Modals trap focus within their region and must be dismissible via keyboard and accessible controls."
+  },
+  "navigation": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/navigation/",
+    "GDS": "https://design-system.service.gov.uk/components/header/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/navigation",
+    "material3": "https://m3.material.io/components/navigation-bar/overview",
+    "notes": "Navigation regions group links and menus; provide landmarks with aria-labels for quick screen reader navigation."
+  },
+  "ordered list": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/list/",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-ordered-list",
+    "notes": "Ordered lists (<ol>) communicate sequence; ensure list items are marked up semantically with <li>."
+  },
+  "pagination": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/pagination/",
+    "GDS": "https://design-system.service.gov.uk/components/pagination/",
+    "material3": "https://m3.material.io/components/pagination/overview",
+    "atomica11yWeb": "https://www.atomica11y.com/accessible-web/pagination/",
+    "hashi": "https://helios.hashicorp.design/components/pagination?tab=accessibility",
+    "notes": "Pagination divides content across pages; use aria-current for the active page and disable inactive controls."
+  },
+  "progress indicator": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/progressbar/",
+    "GDS": "https://design-system.service.gov.uk/components/progress-indicator/",
+    "material3": "https://m3.material.io/components/progress-indicators/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-feedback.html#kssref-feedback-progress",
+    "notes": "Progress indicators convey ongoing processes; use aria-valuenow and aria-valuetext for updates."
+  },
+  "radio button": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/radio/",
+    "GDS": "https://design-system.service.gov.uk/components/radios/",
+    "material3": "https://m3.material.io/components/radio-button/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-radio-buttons",
+    "hashi": "https://helios.hashicorp.design/components/form/radio?tab=accessibility",
+    "notes": "Radio buttons present mutually exclusive choices; use fieldset and legend for group labelling."
+  },
+  "scroll": {
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/scroll-views",
+    "material3": "https://m3.material.io/foundations/layout/scrolling",
+    "notes": "Scrolling regions must not trap focus; ensure keyboard and touch users can reach all content."
+  },
+  "select": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/listbox/",
+    "GDS": "https://design-system.service.gov.uk/components/select/",
+    "material3": "https://m3.material.io/components/menus/overview",
+    "hashi": "https://helios.hashicorp.design/components/form/select?tab=accessibility",
+    "notes": "Select elements expose a list of options; maintain keyboard navigation and visual focus state."
+  },
+  "standfirst": {
+    "GDS": "https://design-system.service.gov.uk/styles/typography/",
+    "notes": "Standfirsts are introductory paragraphs; visually distinct but coded as normal paragraphs for assistive tech."
+  },
+  "tabs": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/tabs/",
+    "GDS": "https://design-system.service.gov.uk/components/tabs/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/tab-views",
+    "material3": "https://m3.material.io/components/tabs/overview",
+    "atomica11yWeb": "https://www.atomica11y.com/accessible-web/tabs/",
+    "hashi": "https://helios.hashicorp.design/components/tabs?tab=accessibility",
+    "notes": "Tabs group content into sections; ensure correct tablist, tab, and tabpanel roles and keyboard handling."
+  },
+  "tag": {
+    "GDS": "https://design-system.service.gov.uk/components/tag/",
+    "material3": "https://m3.material.io/components/chips/overview",
+    "hashi": "https://helios.hashicorp.design/components/tag?tab=accessibility",
+    "notes": "Tags or chips categorise content; ensure sufficient colour contrast and programmatic labelling."
+  },
+  "text block": {
+    "GDS": "https://design-system.service.gov.uk/styles/typography/",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-text",
+    "hashi": "https://helios.hashicorp.design/components/text?tab=accessibility",
+    "notes": "Text blocks form body content; ensure sufficient contrast, line length, and spacing for readability."
+  },
+  "text blockquote": {
+    "GDS": "https://design-system.service.gov.uk/styles/typography/#quotes",
+    "notes": "Blockquotes mark up quoted content; use <blockquote> and <cite> elements to identify sources."
+  },
+  "text field": {
+    "GDS": "https://design-system.service.gov.uk/components/text-input/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/text-fields",
+    "material3": "https://m3.material.io/components/text-fields/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-textfields",
+    "hashi": "https://helios.hashicorp.design/components/form/text-input?tab=accessibility",
+    "notes": "Text fields capture user input; provide clear labels, error messaging, and visible focus indicators."
+  },
+  "title bar": {
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/navigation-bars",
+    "material3": "https://m3.material.io/components/top-app-bar/overview",
+    "notes": "Title bars or app bars display page or section titles; they provide navigation and actions at the top of the viewport."
+  },
+  "toast": {
+    "material3": "https://m3.material.io/components/snackbar/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-feedback.html#kssref-feedback-toast",
+    "hashi": "https://helios.hashicorp.design/components/toast?tab=accessibility",
+    "notes": "Toasts provide transient feedback; ensure they do not take focus and are announced in a polite live region."
+  },
+  "tooltip": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/",
+    "GDS": "https://design-system.service.gov.uk/components/tooltip/",
+    "material3": "https://m3.material.io/components/tooltips/overview",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-tooltips",
+    "hashi": "https://helios.hashicorp.design/components/tooltip?tab=accessibility",
+    "notes": "Tooltips provide supplementary information on hover or focus; never rely on hover-only activation."
+  },
+  "unordered list": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/list/",
+    "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-unordered-list",
+    "notes": "Unordered lists (<ul>) group related items without implying sequence; maintain semantic list structure."
+  },
 }

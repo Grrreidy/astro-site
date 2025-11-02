@@ -33,14 +33,12 @@ import Footer from '../components/Footer.astro';
       <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
       <section id="result" class="a11y-result blog-content" hidden aria-busy="false" aria-labelledby="result-heading">
-        <h2 id="result-heading" class="sr-only">Generated results</h2>
         <div id="output" class="blog-content"></div>
       </section>
 
       <p class="field-help" style="margin-top: var(--space-xl);">
         Made with <a href="https://platform.openai.com/">OpenAI</a> and 
-        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>.  
-        This page uses retrieval-augmented generation (RAG). Review generated content before use.
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a> functions. This is an experiment using retrieval-augmented generation (RAG). Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
       </p>
     </main>
 
