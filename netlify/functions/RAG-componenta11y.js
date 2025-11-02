@@ -10,7 +10,10 @@ import fs from "fs";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 import path from "path";
-const knowledgePath = path.join(path.dirname(new URL(import.meta.url).pathname), "data", "a11y-knowledge.json");
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const knowledgePath = path.join(__dirname, "data", "a11y-knowledge.json");
+
 
 
 // Utility: timeout-safe fetch
