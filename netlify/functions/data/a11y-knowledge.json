@@ -4,5 +4,5 @@
     "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/buttons",
     "material3": "https://m3.material.io/components/buttons/accessibility",
     "notes": "Buttons trigger actions or events."
-  },
+  }
 }
