@@ -10,7 +10,8 @@ import fs from "fs";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 import path from "path";
-const knowledgePath = path.join(process.cwd(), "netlify", "data", "a11y-knowledge.json");
+const knowledgePath = path.join(path.dirname(new URL(import.meta.url).pathname), "data", "a11y-knowledge.json");
+
 
 // Utility: timeout-safe fetch
 async function fetchWithTimeout(resource, options = {}, ms = 28000) {
