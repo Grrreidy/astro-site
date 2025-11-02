@@ -91,6 +91,12 @@ Notes: ${info.notes || ""}
       "5) <h3>Checklist</h3>",
       "6) <h3>Keyboard and focus</h3>",
       "7) <h3>ARIA</h3>",
+<<<<<<< HEAD
+=======
+      "   - Summary of ARIA roles, states and properties relevant to this component across platforms. For example, a pagination component response would include: Wrap pagination in a <nav aria-label=Pagination> element to define a navigation region, put structure items inside an unordered list <ul>, Active page includes <aria-current=page> and distinct visual styling, Disabled Previous or Next links include <aria-disabled=true> and are not focusable, Provide descriptive labels for arrow controls <aria-label=previous page> and <aria-label=Next page>",
+      "   - Reference the matching ARIA Authoring Practices pattern name and link to it.",
+      "   - Summary of Swift or Kotlin accessibility labels relevant to this component across platforms.",
+>>>>>>> parent of 9384578 (Update componenta11y.js)
       "8) <h3>Acceptance criteria</h3>",
       "9) <h3>Who this helps</h3>",
       "10) <h2>Platform specifics</h2>",
