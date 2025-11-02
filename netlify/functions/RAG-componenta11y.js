@@ -6,15 +6,13 @@ import {
   linkPolicyBullets
 } from "./shared/a11y-shared.js";
 import fs from "fs";
+import path from "path";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-import path from "path";
-import { fileURLToPath } from "url";
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// CommonJS-safe path resolution (works in Netlify Functions)
 const knowledgePath = path.join(__dirname, "data", "a11y-knowledge.json");
-
-
 
 // Utility: timeout-safe fetch
 async function fetchWithTimeout(resource, options = {}, ms = 28000) {
@@ -29,7 +27,7 @@ async function fetchWithTimeout(resource, options = {}, ms = 28000) {
 
 // Lambda handler
 export async function handler(event) {
-  // Serve an HTML input form when accessed via GET
+  // Serve a minimal test form when accessed via GET
   if (event.httpMethod === "GET") {
     const html = `
       <!DOCTYPE html>
@@ -64,7 +62,8 @@ export async function handler(event) {
               body: JSON.stringify({ component })
             });
             const data = await res.json();
-            document.getElementById('result').innerHTML = data.html || '<p><strong>Error:</strong> ' + (data.error || 'No output') + '</p>';
+            document.getElementById('result').innerHTML =
+              data.html || '<p><strong>Error:</strong> ' + (data.error || 'No output') + '</p>';
           });
         </script>
       </body>
@@ -77,7 +76,7 @@ export async function handler(event) {
     };
   }
 
-  // Handle POST requests from the form or API
+  // Handle POST requests
   try {
     const body = JSON.parse(event.body || "{}");
     const component = (body.component || "").trim().toLowerCase();
@@ -88,6 +87,7 @@ export async function handler(event) {
         body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" })
       };
     }
+
     if (!component) {
       return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
@@ -96,7 +96,6 @@ export async function handler(event) {
     const kb = JSON.parse(fs.readFileSync(knowledgePath, "utf8"));
     const info = kb[component];
 
-    // Handle unrecognised component
     if (!info) {
       return {
         statusCode: 200,
@@ -105,7 +104,6 @@ export async function handler(event) {
       };
     }
 
-    // Inject retrieved knowledge into context
     const context = `
 Component: ${component}
 ARIA Authoring Practices: ${info.ariaPatterns || "none"}
@@ -114,7 +112,7 @@ Material 3: ${info.material3 || "none"}
 Notes: ${info.notes || ""}
 `;
 
-    // Main LLM prompt (same style and tone as original file)
+    // Prompt for OpenAI
     const prompt = [
       `You are writing cross-platform accessibility documentation for the "${component}" component.`,
 
@@ -164,7 +162,6 @@ Notes: ${info.notes || ""}
       "- Concise, direct, GOV.UK-style tone.",
       "- No code fences, no markdown, no placeholders like “TBD”.",
       "- Do not include content outside the sections and headings listed above.",
-
       "",
       "Return only the HTML fragment."
     ].join("\n");
@@ -178,7 +175,10 @@ Notes: ${info.notes || ""}
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
-          { role: "system", content: "You are an expert accessibility technical writer. Follow instructions exactly and be concise." },
+          {
+            role: "system",
+            content: "You are an expert accessibility technical writer. Follow instructions exactly and be concise."
+          },
           { role: "user", content: prompt }
         ],
         temperature: 0.2,
@@ -194,6 +194,10 @@ Notes: ${info.notes || ""}
 
     let html = (data.choices?.[0]?.message?.content || "").trim();
     html = html.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+    if (!html) {
+      html = `<p>No output returned from model.</p>`;
+    }
 
     return {
       statusCode: 200,
