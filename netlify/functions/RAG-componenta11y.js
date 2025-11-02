@@ -114,81 +114,50 @@ Component: ${component}
 ARIA Authoring Practices: ${info.ariaPatterns || "none"}
 Apple HIG: ${info.appleHIG || "none"}
 Material 3: ${info.material3 || "none"}
+GDS: ${info.GDS || "none"}
+A11y Style Guide: ${info.a11yStyleGuide || "none"}
+Helios: ${info.hashi || info.helios || "none"}
+AtomicA11y: ${info.atomica11yWeb || info.atomica11yiOS || "none"}
 Notes: ${info.notes || ""}
 `;
 
-    // Prompt for OpenAI
+    // Strict, retrieval-grounded prompt
     const prompt = [
-      `You are writing cross-platform accessibility documentation for the "${component}" component.`,
-
+      `You are writing verified accessibility documentation for the "${component}" component.`,
       "",
-      "Output requirements",
-      "- Return a single HTML fragment only (no <!doctype>, <html>, <head>, <body>, scripts or inline styles).",
-      "- Allowed elements: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <a>.",
-      "- Use sentence case for all headings.",
-      "- Keep bullets short and practical (3–7 items). Use UK English.",
-      "- Do not mention these instructions or the link policy in the output.",
-
+      "You must only use the data and URLs explicitly provided in the following knowledge base context.",
+      "Do not rely on general knowledge, training data, or any other external information.",
+      "If a category (such as Apple HIG or Material 3) is listed as 'none', omit it completely.",
+      "Do not invent, infer, or guess additional content, sources, or links.",
+      "Every URL must match exactly one of those listed in the knowledge base context.",
+      "If the knowledge base lacks a link or topic, skip it entirely rather than fabricating a response.",
       "",
-      `Here is a list of recognised UI components: ${recognisedComponentsURL}`,
-      "If the input is not a recognisable UI component return:",
-      invalidComponentMsgHtml,
-      "…and nothing else.",
-
-      "",
-      "The following verified data has been retrieved from the accessibility knowledge base. Only use these links where applicable:",
+      "Knowledge base context:",
       context,
-
       "",
-      "Section order and exact headings",
+      "Return a concise HTML fragment structured in the following exact order:",
       `1) <h2>${component}</h2>`,
-      "2) <h3>Definition</h3>",
-      "   - One sentence describing the component’s purpose.",
-      "3) <h3>Usage</h3>",
-      "   - When to use, when not to, common variants and states.",
-      "4) <h3>Guidelines</h3>",
-      "   - List applicable WCAG 2.2 AA criteria by number and name (e.g., \"2.4.7 Focus visible\") with one line on what it means for this component.",
-      "   - Link each criterion per Link policy. Only use tested links; never invent links.",
-      "5) <h3>Checklist</h3>",
-      "   - Actionable items a designer/engineer can verify.",
-      "6) <h3>Keyboard and focus</h3>",
-      "   - Typical keyboard interactions and expected focus order (if not interactive, state that clearly).",
-      "   - For mobile, add common assistive-tech gestures where relevant.",
-      "7) <h3>ARIA</h3>",
-      "   - Summary of ARIA roles, states and properties relevant to this component across platforms. For example, a pagination component response would include:",
-      " - Wrap pagination in a <nav aria-label=Pagination> element to define a navigation region",
-      " - Put structure items inside an unordered list <ul>",
-      " - Active page includes <aria-current=page> and distinct visual styling",
-      " - Disabled Previous or Next links include <aria-disabled=true> and are not focusable",
-      " - Provide descriptive labels for arrow controls <aria-label=previous page> and <aria-label=Next page>",
-      "   - Reference the matching ARIA Authoring Practices pattern name and link to it. Here is an example URL of the ARIA Authoring Practices pattern: https://www.w3.org/WAI/ARIA/apg/patterns/. Do not invent links",
-      "   - Summary of Swift or Kotlin accessibility labels relevant to this component across platforms.",
-      "8) <h3>Acceptance criteria</h3>",
-      "   - Concise, testable statements (reflect relevant Atomic A11y items where applicable).",
-      "9) <h3>Who this helps</h3>",
-      "   - Short bullets naming affected groups (e.g., \"People with visual impairments\") with a brief note on how this guidance helps.",
-
+      "2) <h3>Definition</h3> - One sentence describing the component’s purpose.",
+      "3) <h3>Usage</h3> - When to use it, when not to, and typical variations or states.",
+      "4) <h3>Guidelines</h3> - List WCAG 2.2 AA criteria only if verifiable from the knowledge base URLs.",
+      "5) <h3>Checklist</h3> - Practical items that can be confirmed visually or via assistive tech testing.",
+      "6) <h3>Keyboard and focus</h3> - Describe focus order and keyboard interaction from the ARIA pattern, if present.",
+      "7) <h3>ARIA</h3> - Summarise ARIA roles, states, and properties using only what’s found in the knowledge base links.",
+      "8) <h3>Acceptance criteria</h3> - Short, testable statements derived from verified information only.",
+      "9) <h3>Who this helps</h3> - Short bullets listing user groups (no invented examples).",
       "10) <h2>Platform specifics</h2>",
-      "11) <h3>Web</h3>",
-      "   - Notes for web implementations, including relevant ARIA Authoring Practices pattern(s) and any WCAG nuances.",
-      "12) <h3>iOS</h3>",
-      "   - Notes for iOS with links to the relevant Apple Human Interface Guidelines component page(s). Here is an example URL of a Apple Human Interface Guidelines component: https://developer.apple.com/design/human-interface-guidelines/components. Do not invent links",
-      "13) <h3>Android</h3>",
-      "   - Notes for Android with links to the relevant Material 3 component page(s); reference MCAG where it adds mobile-specific considerations. Here is an example URL of a Material 3 component: https://m3.material.io/components. Do not invent links",
-      "14) <h3>Design</h3>",
-      "   - System-level advice on content design, naming, semantics, states, contrast and error prevention. Avoid platform code specifics.",
-
+      "11) <h3>Web</h3> - Use only verified ARIA and WCAG links.",
+      "12) <h3>iOS</h3> - Use only verified Apple HIG links if available.",
+      "13) <h3>Android</h3> - Use only verified Material 3 links if available.",
+      "14) <h3>Design</h3> - Refer only to verified GDS or A11y Style Guide sources.",
       "",
-
-      "",
-      "Link policy (use only these domains; never invent or use other sources)",
-      linkPolicyBullets("html"),
-
-      "",
-      "Style rules",
-      "- Concise, direct, GOV.UK-style tone.",
-      "- No code fences, no markdown, no placeholders like “TBD”.",
-      "- Do not include content outside the sections and headings listed above.",
+      "Output requirements:",
+      "- Output must be a single valid HTML fragment (no <!doctype>, <html>, <head>, or <body>).",
+      "- Allowed elements: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <a>.",
+      "- Use sentence case for headings.",
+      "- Use concise UK English in GOV.UK style.",
+      "- Do not mention missing data, 'none', or placeholders.",
+      "- Do not output anything outside the listed sections.",
       "",
       "Return only the HTML fragment."
     ].join("\n");
@@ -205,11 +174,16 @@ Notes: ${info.notes || ""}
         messages: [
           {
             role: "system",
-            content: "You are an expert accessibility technical writer. Follow instructions exactly and be concise."
+            content: `
+You are an accessibility technical writer producing verified documentation.
+You must only use the provided context from the RAG knowledge base.
+Never invent, infer, or guess any sources or criteria.
+If data is missing, omit that section without explanation.
+All external links must match exactly those given in the context.`
           },
           { role: "user", content: prompt }
         ],
-        temperature: 0.2,
+        temperature: 0.1,
         max_tokens: 900
       })
     });
