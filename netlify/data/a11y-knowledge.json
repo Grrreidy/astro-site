@@ -1,15 +1,32 @@
-// netlify/data/a11y-knowledge.json
 {
   "pagination": {
     "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/pagination/",
     "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/pagination",
     "material3": "https://m3.material.io/components/pagination/overview",
-    "notes": "Pagination controls move between discrete content pages."
+    "notes": "Pagination lets users move between pages of related content such as product lists or articles."
   },
   "card": {
     "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/card/",
     "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/cards",
     "material3": "https://m3.material.io/components/cards/overview",
-    "notes": "Cards group related information in a container."
+    "notes": "Cards group related content and actions in a single visual container."
+  },
+  "button": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/button/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/buttons",
+    "material3": "https://m3.material.io/components/buttons/overview",
+    "notes": "Buttons trigger actions or events. They can be text, icon, or composite."
+  },
+  "tooltip": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/tooltips",
+    "material3": "https://m3.material.io/components/tooltips/overview",
+    "notes": "Tooltips display informative text when users hover, focus, or tap an element."
+  },
+  "modal": {
+    "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+    "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/modality",
+    "material3": "https://m3.material.io/components/dialogs/overview",
+    "notes": "Modals temporarily interrupt interaction to capture attention for a focused task or decision."
   }
 }
