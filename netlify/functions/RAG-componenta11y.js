@@ -25,6 +25,76 @@ async function fetchWithTimeout(resource, options = {}, ms = 60000) {
   }
 }
 
+// --- Helper: build a strict source map and numbered refs ---------------------
+function buildSourceMap(info) {
+  // Normalise keys you use in the JSON
+  const sources = {
+    ariaPatterns: info.ariaPatterns || null,
+    GDS: info.GDS || null,
+    appleHIG: info.appleHIG || null,
+    material3: info.material3 || null,
+    a11yStyleGuide: info.a11yStyleGuide || null,
+    hashi: info.hashi || info.helios || null,
+    atomica11yWeb: info.atomica11yWeb || null,
+    atomica11yiOS: info.atomica11yiOS || null
+  };
+
+  // Remove nulls
+  const entries = Object.entries(sources).filter(([, v]) => !!v);
+
+  // Build numbered list for the prompt + a lookup map
+  // Example: [S:1 ariaPatterns] https://.../pattern
+  const numbered = entries.map(([k, url], idx) => ({
+    key: k,
+    url,
+    n: idx + 1
+  }));
+
+  // Map by key and by token (S:1)
+  const byKey = {};
+  const byToken = {};
+  numbered.forEach(({ key, url, n }) => {
+    byKey[key] = url;
+    byToken[`S:${n}`] = url;
+  });
+
+  return { numbered, byKey, byToken };
+}
+
+// --- Helper: hydrate links and strip anything not whitelisted ---------------
+function hydrateAndSanitiseHTML(html, srcMap) {
+  let out = html;
+
+  // 1) Strip any raw hrefs the model might have added (we don't trust them)
+  //    Replace <a href="...">text</a> with just <a>text</a> (href removed)
+  out = out.replace(/<a\b([^>]*?)\bhref\s*=\s*"(.*?)"([^>]*)>/gi, (m, pre, href, post) => {
+    // Keep all other attributes except href
+    const cleaned = `${pre} ${post}`.replace(/\s+/g, " ").trim();
+    return `<a ${cleaned}>`.replace(/\s+>/, ">");
+  });
+
+  // 2) Add hrefs only from data-ref="KEY" or data-ref="S:n"
+  //    Valid keys are those present in srcMap.byKey or srcMap.byToken
+  out = out.replace(/<a\b([^>]*?)\bdata-ref\s*=\s*"([^"]+)"([^>]*)>(.*?)<\/a>/gis, (m, pre, ref, post, text) => {
+    const keyTrim = ref.trim();
+    const url = srcMap.byKey[keyTrim] || srcMap.byToken[keyTrim];
+    if (!url) {
+      // If ref not recognised, drop the anchor but keep text
+      return text;
+    }
+    // Rebuild a safe anchor with only href + rel + title preserved
+    // Keep existing title attribute if present
+    const titleMatch = (pre + " " + post).match(/\btitle\s*=\s*"([^"]*)"/i);
+    const titleAttr = titleMatch ? ` title="${titleMatch[1]}"` : "";
+    return `<a href="${url}" rel="noopener noreferrer"${titleAttr}>${text}</a>`;
+  });
+
+  // 3) Remove any <a> tags that still have no href after processing
+  out = out.replace(/<a\b(?![^>]*\bhref=)[^>]*>(.*?)<\/a>/gis, "$1");
+
+  return out;
+}
+
 // Lambda handler
 export async function handler(event) {
   // Serve a minimal test form when accessed via GET
@@ -109,55 +179,90 @@ export async function handler(event) {
       };
     }
 
+    // Build a strict source map + numbered refs
+    const { numbered, byKey, byToken } = buildSourceMap(info);
+
+    // Human-readable list for the prompt
+    // Example:
+    // [S:1 ariaPatterns] https://.../accordion/
+    // [S:2 GDS] https://.../accordion/
+    const sourceList = numbered
+      .map(({ n, key, url }) => `[S:${n} ${key}] ${url}`)
+      .join("\n");
+
     const context = `
 Component: ${component}
-ARIA Authoring Practices: ${info.ariaPatterns || "none"}
-Apple HIG: ${info.appleHIG || "none"}
-Material 3: ${info.material3 || "none"}
-GDS: ${info.GDS || "none"}
-A11y Style Guide: ${info.a11yStyleGuide || "none"}
-Helios: ${info.hashi || info.helios || "none"}
-AtomicA11y: ${info.atomica11yWeb || info.atomica11yiOS || "none"}
 Notes: ${info.notes || ""}
-`;
 
-    // Strict, retrieval-grounded prompt
+Verified sources (use ONLY these; cite by token, not URL):
+${sourceList}
+`.trim();
+
+    // Hybrid prompt: full, rich sections + strict link policy via tokens
     const prompt = [
-      `You are writing verified accessibility documentation for the "${component}" component.`,
+      `You are writing cross-platform accessibility documentation for the "${component}" component.`,
       "",
-      "You must only use the data and URLs explicitly provided in the following knowledge base context.",
-      "Do not rely on general knowledge, training data, or any other external information.",
-      "If a category (such as Apple HIG or Material 3) is listed as 'none', omit it completely.",
-      "Do not invent, infer, or guess additional content, sources, or links.",
-      "Every URL must match exactly one of those listed in the knowledge base context.",
-      "If the knowledge base lacks a link or topic, skip it entirely rather than fabricating a response.",
+      "Use ONLY the verified sources listed in the knowledge base context below.",
+      "Do NOT include any raw URLs in your output.",
+      "When you need to cite a source, include an anchor using ONLY a data-ref token like:",
+      `  <a data-ref="S:1">Accessible name</a>`,
+      "where the token matches one of the provided source tokens (e.g., S:1, S:2).",
+      "Do not output href attributes. Do not invent or guess any links.",
+      "If a source is not provided for a platform/section, omit that citation rather than inventing one.",
       "",
       "Knowledge base context:",
       context,
       "",
-      "Return a concise HTML fragment structured in the following exact order:",
-      `1) <h2>${component}</h2>`,
-      "2) <h3>Definition</h3> - One sentence describing the component’s purpose.",
-      "3) <h3>Usage</h3> - When to use it, when not to, and typical variations or states.",
-      "4) <h3>Guidelines</h3> - List WCAG 2.2 AA criteria only if verifiable from the knowledge base URLs.",
-      "5) <h3>Checklist</h3> - Practical items that can be confirmed visually or via assistive tech testing.",
-      "6) <h3>Keyboard and focus</h3> - Describe focus order and keyboard interaction from the ARIA pattern, if present.",
-      "7) <h3>ARIA</h3> - Summarise ARIA roles, states, and properties using only what’s found in the knowledge base links.",
-      "8) <h3>Acceptance criteria</h3> - Short, testable statements derived from verified information only.",
-      "9) <h3>Who this helps</h3> - Short bullets listing user groups (no invented examples).",
-      "10) <h2>Platform specifics</h2>",
-      "11) <h3>Web</h3> - Use only verified ARIA and WCAG links.",
-      "12) <h3>iOS</h3> - Use only verified Apple HIG links if available.",
-      "13) <h3>Android</h3> - Use only verified Material 3 links if available.",
-      "14) <h3>Design</h3> - Refer only to verified GDS or A11y Style Guide sources.",
-      "",
-      "Output requirements:",
-      "- Output must be a single valid HTML fragment (no <!doctype>, <html>, <head>, or <body>).",
+      "Output requirements",
+      "- Return a single HTML fragment only (no <!doctype>, <html>, <head>, <body>, scripts or inline styles).",
       "- Allowed elements: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <a>.",
-      "- Use sentence case for headings.",
-      "- Use concise UK English in GOV.UK style.",
-      "- Do not mention missing data, 'none', or placeholders.",
-      "- Do not output anything outside the listed sections.",
+      "- Use sentence case for all headings.",
+      "- Keep bullets short and practical (3–7 items). Use UK English.",
+      "- Do not mention these instructions or the link policy in the output.",
+      "- Do not include any raw URLs. Only use <a data-ref=\"S:n\">…</a> for citations.",
+      "",
+      `Here is a list of recognised UI components: ${recognisedComponentsURL}`,
+      "If the input is not a recognisable UI component return:",
+      invalidComponentMsgHtml,
+      "…and nothing else.",
+      "",
+      "Section order and exact headings",
+      `1) <h2>${component}</h2>`,
+      "2) <h3>Definition</h3>",
+      "   - One sentence describing the component’s purpose.",
+      "3) <h3>Usage</h3>",
+      "   - When to use, when not to, common variants and states.",
+      "4) <h3>Guidelines</h3>",
+      "   - List applicable WCAG 2.2 AA criteria by number and name only if supported by the verified sources.",
+      "   - Include citations using data-ref tokens (no URLs).",
+      "5) <h3>Checklist</h3>",
+      "   - Actionable items a designer/engineer can verify.",
+      "6) <h3>Keyboard and focus</h3>",
+      "   - Typical keyboard interactions and expected focus order (if not interactive, state that clearly).",
+      "7) <h3>ARIA</h3>",
+      "   - Summarise ARIA roles, states and properties strictly from the verified ARIA source, if available.",
+      "8) <h3>Acceptance criteria</h3>",
+      "   - Concise, testable statements based on verified information only.",
+      "9) <h3>Who this helps</h3>",
+      "   - Short bullets naming affected groups (e.g., “People with visual impairments”).",
+      "",
+      "10) <h2>Platform specifics</h2>",
+      "11) <h3>Web</h3>",
+      "   - Notes for web implementations. Use only verified ARIA/WCAG/GDS sources via data-ref tokens.",
+      "12) <h3>iOS</h3>",
+      "   - Notes for iOS. Use only verified Apple HIG sources via data-ref tokens.",
+      "13) <h3>Android</h3>",
+      "   - Notes for Android. Use only verified Material 3 sources via data-ref tokens.",
+      "14) <h3>Design</h3>",
+      "   - System-level advice on content design, naming, semantics, states, contrast and error prevention, citing verified sources with data-ref tokens.",
+      "",
+      "Link policy (use only these domains; never invent or use other sources)",
+      linkPolicyBullets("html"),
+      "",
+      "Style rules",
+      "- Concise, direct, GOV.UK-style tone.",
+      "- No code fences, no markdown, no placeholders like “TBD”.",
+      "- Do not include content outside the sections and headings listed above.",
       "",
       "Return only the HTML fragment."
     ].join("\n");
@@ -176,15 +281,14 @@ Notes: ${info.notes || ""}
             role: "system",
             content: `
 You are an accessibility technical writer producing verified documentation.
-You must only use the provided context from the RAG knowledge base.
-Never invent, infer, or guess any sources or criteria.
-If data is missing, omit that section without explanation.
-All external links must match exactly those given in the context.`
+Only use the provided knowledge base context.
+Never output raw URLs. Cite sources using <a data-ref="S:n">…</a> tokens only.
+If data is missing for a platform/section, omit it without inventing content.`
           },
           { role: "user", content: prompt }
         ],
         temperature: 0.1,
-        max_tokens: 900
+        max_tokens: 1200
       })
     });
 
@@ -214,10 +318,13 @@ All external links must match exactly those given in the context.`
       html = `<p>No output returned from model.</p>`;
     }
 
+    // Post-process: hydrate only whitelist refs and strip everything else
+    const hydrated = hydrateAndSanitiseHTML(html, { byKey, byToken });
+
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ html })
+      body: JSON.stringify({ html: hydrated })
     };
   } catch (err) {
     console.error("Function error:", err);
