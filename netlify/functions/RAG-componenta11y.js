@@ -11,11 +11,11 @@ import path from "path";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
-// CommonJS-safe path resolution (works in Netlify Functions)
+// Correct path resolution for Netlify Functions
 const knowledgePath = path.join(__dirname, "data", "a11y-knowledge.json");
 
 // Utility: timeout-safe fetch
-async function fetchWithTimeout(resource, options = {}, ms = 28000) {
+async function fetchWithTimeout(resource, options = {}, ms = 60000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), ms);
   try {
@@ -61,7 +61,10 @@ export async function handler(event) {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ component })
             });
-            const data = await res.json();
+            const text = await res.text();
+            let data;
+            try { data = JSON.parse(text); }
+            catch { data = { error: text }; }
             document.getElementById('result').innerHTML =
               data.html || '<p><strong>Error:</strong> ' + (data.error || 'No output') + '</p>';
           });
@@ -93,10 +96,12 @@ export async function handler(event) {
     }
 
     // --- RAG retrieval step ---
+    console.log("Reading knowledge base from:", knowledgePath);
     const kb = JSON.parse(fs.readFileSync(knowledgePath, "utf8"));
     const info = kb[component];
 
     if (!info) {
+      console.log("Component not found in KB:", component);
       return {
         statusCode: 200,
         headers: { "Content-Type": "application/json" },
@@ -166,6 +171,7 @@ Notes: ${info.notes || ""}
       "Return only the HTML fragment."
     ].join("\n");
 
+    // Make the API request
     const resp = await fetchWithTimeout(OPENAI_URL, {
       method: "POST",
       headers: {
@@ -186,7 +192,20 @@ Notes: ${info.notes || ""}
       })
     });
 
-    const data = await resp.json();
+    const raw = await resp.text();
+    console.log("OpenAI raw response:", raw.slice(0, 500));
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (e) {
+      console.error("JSON parse error:", e);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: `Invalid JSON from OpenAI: ${raw.slice(0, 300)}` })
+      };
+    }
+
     if (!resp.ok) {
       console.error("OpenAI error:", data);
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
