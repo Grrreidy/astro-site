@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
-async function fetchWithTimeout(resource, options = {}, ms = 28000) {
+async function fetchWithTimeout(resource, options = {}, ms = 35000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), ms);
   try {
@@ -49,7 +49,7 @@ export async function handler(event) {
     const componentData = knowledgeData[component];
     const ragContext = componentData
       ? `Below is trusted RAG DATA for the "${component}" component.
-These are verified, authoritative references. 
+These are verified, authoritative references.
 You must use every URL listed in this data in the “Sources” section, and link to relevant ones in the body where they apply.
 
 ${JSON.stringify(componentData, null, 2)}`
@@ -73,8 +73,8 @@ Include:
 - A practical checklist of design and engineering best practices.
 - A concise “Sources” section listing every URL from the RAG data.
 
+Return only valid HTML using <h2>, <h3>, <p>, <ul>, <ol>, <li>, and <a>.
 The first heading (<h2>) must contain only the component name, e.g. <h2>${component}</h2>.
-Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>, <li>, and <a>.
 `;
 
     // --- API request -------------------------------------------------------
@@ -87,7 +87,7 @@ Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>
       body: JSON.stringify({
         model: "gpt-4o-mini",
         temperature: 0,
-        max_tokens: 1300,
+        max_tokens: 2000,
         messages: [
           {
             role: "system",
@@ -102,11 +102,11 @@ You must:
 
 Only use authoritative accessibility sources:
 WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple Human Interface Guidelines, Material 3,
-GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech,
-axesslab, A11y Style Guide, and the provided RAG data.
+GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech, axesslab, A11y Style Guide, and the provided RAG data.
 
 If uncertain, state “No official guidance found.” Never invent content, WCAG numbers, or links.
 Be concise and factual in a GOV.UK-style tone.
+Output must always contain HTML markup.
 `
           },
           { role: "user", content: userPrompt }
@@ -115,14 +115,23 @@ Be concise and factual in a GOV.UK-style tone.
     });
 
     const data = await resp.json();
+
+    // Log for debugging
+    console.log("OpenAI raw response:", JSON.stringify(data, null, 2));
+
     if (!resp.ok) {
       console.error("OpenAI error:", data);
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
-    // --- Clean output ------------------------------------------------------
     let html = (data.choices?.[0]?.message?.content || "").trim();
 
+    if (!html) {
+      console.error("No text returned from OpenAI");
+      return { statusCode: 200, body: JSON.stringify({ html: "" }) };
+    }
+
+    // --- Clean output ------------------------------------------------------
     html = html.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "");
     html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
     html = html.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").replace(/[ \t]+$/gm, "");
