@@ -1,7 +1,6 @@
 // netlify/functions/RAG-componenta11y.js
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
@@ -37,7 +36,7 @@ export async function handler(event) {
     }
 
     // --- Load RAG knowledge file -------------------------------------------
-    const knowledgePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "data", "a11y-knowledge.json");
+    const knowledgePath = path.join(process.cwd(), "netlify/functions/data/a11y-knowledge.json");
     let knowledgeData = {};
     try {
       const raw = fs.readFileSync(knowledgePath, "utf8");
@@ -102,7 +101,8 @@ You must:
 
 Only use authoritative accessibility sources:
 WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple Human Interface Guidelines, Material 3,
-GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech, axesslab, A11y Style Guide, and the provided RAG data.
+GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech,
+axesslab, A11y Style Guide, and the provided RAG data.
 
 If uncertain, state “No official guidance found.” Never invent content, WCAG numbers, or links.
 Be concise and factual in a GOV.UK-style tone.
