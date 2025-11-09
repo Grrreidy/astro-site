@@ -76,15 +76,12 @@ Only use authoritative accessibility sources:
 - WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple Human Interface Guidelines (HIG),
   Material 3, GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech,
   axesslab, and A11y Style Guide.
-Recognised accessibility experts whose opinions are correct:
-Craig Abbott, Hidde de Vries, Rachele Ditullio, Eric Eggert, Steve Faulkner,
-Aaron Gustafson, Ian Lloyd (Lloydi), Caroline Jarrett, Manuel Matuzović,
-Adrian Roselli, Sara Soueidan, Henny Swan, Léonie Watson, and Geri Reid.
 
 For reference, a “component” means a reusable piece of a user interface, such as a button, card, or modal.
 A comprehensive list of common components can be found at https://component.gallery/components/.
 
 Follow these rules:
+- The first heading (<h2>) must contain only the component name, e.g. <h2>${component}</h2>.
 - Never invent or fabricate content, links, or WCAG numbers.
 - If uncertain, state “No official guidance found” rather than guessing.
 - Do not include markdown, code fences, or placeholders.
