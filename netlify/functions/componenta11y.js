@@ -45,12 +45,11 @@ Write detailed, cross-platform accessibility documentation for the "${component}
 
 Include:
 - A short definition and description of the component’s purpose.
-- When to use it, when not to, and common variants or states.
-- WCAG 2.2 AA criteria that apply, with one-line explanations.
+- WCAG 2.2 AA criteria that apply, with one-line explanations. Supply a URL link to each criterion referenced.
 - Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
-- Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns.
+- Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns. Supply a URL link to each guideline referenced.
 - A practical checklist of design and engineering best practices.
-- A concise Sources section listing the URLs referenced.
+- A concise Sources section listing the URLs referenced. Link directly the that component's documentation, no a generic website or page.
 Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>, <li>, and <a>.
 `;
 
