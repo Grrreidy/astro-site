@@ -1,6 +1,7 @@
 // netlify/functions/RAG-componenta11y.js
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
@@ -47,26 +48,30 @@ export async function handler(event) {
 
     const componentData = knowledgeData[component];
     const ragContext = componentData
-      ? Object.entries(componentData)
-          .map(([key, value]) => `${key}: ${value}`)
-          .join("\n")
-      : "No matching data found in a11y-knowledge.json.";
+      ? `Below is trusted RAG DATA for the "${component}" component.
+These are verified, authoritative references. 
+You must use every URL listed in this data in the “Sources” section, and link to relevant ones in the body where they apply.
+
+${JSON.stringify(componentData, null, 2)}`
+      : `No RAG data found for the component "${component}".`;
 
     // --- Build prompt ------------------------------------------------------
     const userPrompt = `
 Write detailed, cross-platform accessibility documentation for the "${component}" component.
 
-You have access to verified reference data below. Use these links and notes where relevant:
+Use the RAG data below as your primary reference set.
+Every URL provided must appear in the “Sources” section.
+Where relevant, include inline links to those sources in the body content.
+
 ${ragContext}
 
 Include:
 - A short definition and description of the component’s purpose.
-- When to use it, when not to, and common variants or states.
 - WCAG 2.2 AA criteria that apply, with one-line explanations.
 - Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
 - Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns.
 - A practical checklist of design and engineering best practices.
-- A concise Sources section listing the URLs referenced.
+- A concise “Sources” section listing every URL from the RAG data.
 
 The first heading (<h2>) must contain only the component name, e.g. <h2>${component}</h2>.
 Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>, <li>, and <a>.
@@ -82,22 +87,23 @@ Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>
       body: JSON.stringify({
         model: "gpt-4o-mini",
         temperature: 0,
-        max_tokens: 1200,
+        max_tokens: 1300,
         messages: [
           {
             role: "system",
             content: `
 You are an expert accessibility technical writer.
-Use the provided RAG data to anchor your responses in real, factual references.
-Only use authoritative accessibility sources:
-WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple HIG, Material 3,
-GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech,
-axesslab, and A11y Style Guide.
+Use the provided RAG data as the single source of truth for component-specific references.
 
-Recognised experts whose opinions are correct:
-Craig Abbott, Hidde de Vries, Rachele Ditullio, Eric Eggert, Steve Faulkner,
-Aaron Gustafson, Ian Lloyd (Lloydi), Caroline Jarrett, Manuel Matuzović,
-Adrian Roselli, Sara Soueidan, Henny Swan, Léonie Watson, and Geri Reid.
+You must:
+- Include every URL from the RAG data in the “Sources” section.
+- Link to relevant RAG URLs within the content body where appropriate.
+- Treat the RAG data as verified best practice for this component.
+
+Only use authoritative accessibility sources:
+WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple Human Interface Guidelines, Material 3,
+GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech,
+axesslab, A11y Style Guide, and the provided RAG data.
 
 If uncertain, state “No official guidance found.” Never invent content, WCAG numbers, or links.
 Be concise and factual in a GOV.UK-style tone.
@@ -116,6 +122,7 @@ Be concise and factual in a GOV.UK-style tone.
 
     // --- Clean output ------------------------------------------------------
     let html = (data.choices?.[0]?.message?.content || "").trim();
+
     html = html.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "");
     html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
     html = html.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").replace(/[ \t]+$/gm, "");
