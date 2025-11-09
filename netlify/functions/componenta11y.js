@@ -95,7 +95,7 @@ export async function handler(event) {
       "12) <h3>Design</h3>",
       "   - System-level advice on content design, naming, semantics, states, contrast, and error prevention.",
       "13) <h3>Sources</h3>",
-      "   - List all referenced sources with working links (only from trusted domains). Sources should be specific to this component, not generic links to WCAG or the HIG",
+      "   - List all referenced sources with working links (only from trusted domains). Sources should be specific to this component, not generic links to WCAG or the HIG.",
 
       "",
       "Link policy (use only these domains; never invent or alter URLs):",
@@ -118,16 +118,17 @@ export async function handler(event) {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
+        temperature: 0, // fully deterministic for factual accuracy
+        max_tokens: 1200,
         messages: [
           {
             role: "system",
             content:
-              "You are an expert accessibility technical writer. Follow instructions exactly and output clean, standards-based HTML only."
+              "You are an expert accessibility technical writer. Follow instructions exactly and output clean, standards-based HTML only. " +
+              "If a detail is uncertain, omit it rather than guessing. Never invent sources, URLs, or WCAG criteria."
           },
           { role: "user", content: prompt }
-        ],
-        temperature: 0.2,
-        max_tokens: 900
+        ]
       })
     });
 
@@ -140,16 +141,20 @@ export async function handler(event) {
     // --- Clean output -------------------------------------------------------
     let html = (data.choices?.[0]?.message?.content || "").trim();
 
-    // Strip markdown fences if any
-    html = html.replace(/^```(?:html)?/gi, "").replace(/```$/gi, "");
+    // Remove code fences if present
+    html = html.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "");
 
-    // Convert markdown-style links to <a> if model accidentally uses them
+    // Fix markdown links to HTML
     html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
 
-    // Remove excessive whitespace and blank lines
-    html = html.replace(/\s{2,}/g, " ");
-    html = html.replace(/\n{2,}/g, "\n");
-    html = html.trim();
+    // Normalise spacing safely (do NOT remove all multiple spaces or line breaks)
+    html = html
+      .replace(/\r\n/g, "\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .replace(/[ \t]+$/gm, "");
+
+    // Guard against rogue partial tags like "</"
+    if (html.endsWith("</")) html = html.slice(0, -2);
 
     // --- Return -------------------------------------------------------------
     return {
