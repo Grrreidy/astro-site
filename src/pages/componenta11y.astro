@@ -46,7 +46,7 @@ import Footer from '../components/Footer.astro';
 
         <button id="generate-btn" type="submit" class="default-button">
           <span class="btn-text">Generate guidance</span>
-          <span id="btn-spinner" class="btn-spinner" aria-hidden="true" hidden></span>
+          <span id="btn-spinner" class="btn-spinner" aria-hidden="true"></span>
         </button>
       </form>
 
@@ -135,10 +135,17 @@ import Footer from '../components/Footer.astro';
         border: 0.2em solid var(--color-white, #fff);
         border-top: 0.2em solid transparent;
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
         vertical-align: middle;
+        opacity: 0;
+        transition: opacity 0.2s ease;
       }
-      .default-button:hover .btn-spinner {
+
+      .btn-spinner.active {
+        opacity: 1;
+        animation: spin 0.8s linear infinite;
+      }
+
+      .default-button:hover .btn-spinner.active {
         border-color: var(--color-red, #d00);
         border-top-color: transparent;
       }
@@ -173,14 +180,15 @@ import Footer from '../components/Footer.astro';
       function showLoading() {
         isLoading = true;
         announce('This references A LOT of material so might take up to 30 seconds.');
-        btnSpinner.hidden = false;
+        btnSpinner.classList.add('active');
         btn.setAttribute('aria-disabled', 'true');
         form.setAttribute('aria-busy', 'true');
         resultSection.setAttribute('aria-busy', 'true');
       }
+
       function clearLoading() {
         isLoading = false;
-        btnSpinner.hidden = true;
+        btnSpinner.classList.remove('active');
         btn.removeAttribute('aria-disabled');
         form.removeAttribute('aria-busy');
         resultSection.setAttribute('aria-busy', 'false');
