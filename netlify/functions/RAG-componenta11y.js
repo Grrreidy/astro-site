@@ -23,8 +23,10 @@ export async function handler(event) {
     } catch {}
 
     const component = typeof body.component === "string" ? body.component.trim().toLowerCase() : "";
+    console.log("Incoming component:", component);
 
     if (!OPENAI_API_KEY) {
+      console.error("Missing OPENAI_API_KEY");
       return {
         statusCode: 500,
         body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" })
@@ -32,11 +34,14 @@ export async function handler(event) {
     }
 
     if (!component) {
+      console.warn("No component provided");
       return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
 
     // --- Load RAG knowledge file -------------------------------------------
     const knowledgePath = path.join(process.cwd(), "netlify/functions/data/a11y-knowledge.json");
+    console.log("Loading RAG data from:", knowledgePath);
+
     let knowledgeData = {};
     try {
       const raw = fs.readFileSync(knowledgePath, "utf8");
@@ -46,6 +51,10 @@ export async function handler(event) {
     }
 
     const componentData = knowledgeData[component];
+    if (!componentData) {
+      console.warn("No RAG entry found for component:", component);
+    }
+
     const ragContext = componentData
       ? `Below is trusted RAG DATA for the "${component}" component.
 These are verified, authoritative references.
@@ -115,8 +124,6 @@ Output must always contain HTML markup.
     });
 
     const data = await resp.json();
-
-    // Log for debugging
     console.log("OpenAI raw response:", JSON.stringify(data, null, 2));
 
     if (!resp.ok) {
@@ -138,6 +145,7 @@ Output must always contain HTML markup.
     if (html.endsWith("</")) html = html.slice(0, -2);
 
     // --- Return -------------------------------------------------------------
+    console.log("Returning HTML length:", html.length);
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
