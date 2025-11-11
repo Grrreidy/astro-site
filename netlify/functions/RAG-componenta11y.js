@@ -144,7 +144,6 @@ Output must always contain HTML markup.
     html = html.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").replace(/[ \t]+$/gm, "");
     if (html.endsWith("</")) html = html.slice(0, -2);
 
-    // --- Return -------------------------------------------------------------
     console.log("Returning HTML length:", html.length);
     return {
       statusCode: 200,

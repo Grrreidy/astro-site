@@ -7,6 +7,25 @@ import Footer from '../components/Footer.astro';
 <html lang="en">
   <head>
     <BaseHead title="RAG Componenta11y" description="Generate accessibility guidance powered by RAG data" />
+    <style>
+      .btn-spinner {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        margin-left: 0.5em;
+        border: 0.2em solid currentColor;
+        border-top: 0.2em solid transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        visibility: hidden;
+      }
+      .btn-spinner.active {
+        visibility: visible;
+      }
+      @keyframes spin {
+        100% { transform: rotate(360deg); }
+      }
+    </style>
   </head>
   <body>
     <Header />
@@ -41,24 +60,43 @@ import Footer from '../components/Footer.astro';
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const component = form.component.value.trim().toLowerCase();
+        if (!component) return alert('Please enter a component name');
+
         spinner.classList.add('active');
         result.hidden = true;
         out.innerHTML = '';
+        console.log('Submitting component:', component);
 
-        const component = form.component.value.trim().toLowerCase();
-        const res = await fetch('/.netlify/functions/RAG-componenta11y', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ component })
-        });
-        const data = await res.json();
-        spinner.classList.remove('active');
+        try {
+          const res = await fetch('/.netlify/functions/RAG-componenta11y', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ component })
+          });
+          console.log('Response status:', res.status);
 
-        if (data.html) {
-          out.innerHTML = data.html;
-          result.hidden = false;
-        } else {
-          out.textContent = 'No guidance returned.';
+          const text = await res.text();
+          console.log('Raw response:', text);
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch {
+            data = { error: text };
+          }
+
+          spinner.classList.remove('active');
+          if (data.html) {
+            out.innerHTML = data.html;
+            result.hidden = false;
+          } else {
+            out.textContent = data.error || 'No guidance returned.';
+            result.hidden = false;
+          }
+        } catch (err) {
+          spinner.classList.remove('active');
+          console.error('Fetch error:', err);
+          out.textContent = 'Error: could not reach Netlify function.';
           result.hidden = false;
         }
       });
