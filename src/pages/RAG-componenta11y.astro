@@ -7,25 +7,6 @@ import Footer from '../components/Footer.astro';
 <html lang="en">
   <head>
     <BaseHead title="RAG Componenta11y" description="Generate accessibility guidance powered by RAG data" />
-    <style>
-      .btn-spinner {
-        display: inline-block;
-        width: 1em;
-        height: 1em;
-        margin-left: 0.5em;
-        border: 0.2em solid currentColor;
-        border-top: 0.2em solid transparent;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-        visibility: hidden;
-      }
-      .btn-spinner.active {
-        visibility: visible;
-      }
-      @keyframes spin {
-        100% { transform: rotate(360deg); }
-      }
-    </style>
   </head>
   <body>
     <Header />
@@ -44,6 +25,7 @@ import Footer from '../components/Footer.astro';
           <span>Generate guidance</span>
           <span id="btn-spinner" class="btn-spinner" aria-hidden="true"></span>
         </button>
+        <p id="loading-msg">This references a lot of material, so it might take up to 30 seconds.</p>
       </form>
 
       <section id="result" class="a11y-result blog-content" hidden>
@@ -52,11 +34,41 @@ import Footer from '../components/Footer.astro';
     </main>
     <Footer />
 
+    <style>
+      .btn-spinner {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        margin-left: 0.5em;
+        border: 0.2em solid currentColor;
+        border-top: 0.2em solid transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        visibility: hidden;
+      }
+      .btn-spinner.active {
+        visibility: visible;
+      }
+      @keyframes spin {
+        100% { transform: rotate(360deg); }
+      }
+      #loading-msg {
+        margin-top: 0.5em;
+        font-size: var(--font-s);
+        color: var(--text-secondary, #555);
+        visibility: hidden;
+      }
+      #loading-msg.active {
+        visibility: visible;
+      }
+    </style>
+
     <script type="module" is:inline>
       const form = document.getElementById('a11y-form');
       const spinner = document.getElementById('btn-spinner');
       const result = document.getElementById('result');
       const out = document.getElementById('output');
+      const loadingMsg = document.getElementById('loading-msg');
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -64,6 +76,7 @@ import Footer from '../components/Footer.astro';
         if (!component) return alert('Please enter a component name');
 
         spinner.classList.add('active');
+        loadingMsg.classList.add('active');
         result.hidden = true;
         out.innerHTML = '';
         console.log('Submitting component:', component);
@@ -86,6 +99,8 @@ import Footer from '../components/Footer.astro';
           }
 
           spinner.classList.remove('active');
+          loadingMsg.classList.remove('active');
+
           if (data.html) {
             out.innerHTML = data.html;
             result.hidden = false;
@@ -95,6 +110,7 @@ import Footer from '../components/Footer.astro';
           }
         } catch (err) {
           spinner.classList.remove('active');
+          loadingMsg.classList.remove('active');
           console.error('Fetch error:', err);
           out.textContent = 'Error: could not reach Netlify function.';
           result.hidden = false;
