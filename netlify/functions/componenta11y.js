@@ -1,15 +1,11 @@
-// netlify/functions/componenta11y.js
-import {
-  recognisedComponentsURL,
-  invalidComponentMsgHtml,
-  linkPolicyBullets
-} from "./shared/a11y-shared.js";
+// netlify/functions/RAG-componenta11y.js
+import fs from "fs";
+import path from "path";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
-// Utility: safe fetch with timeout
-async function fetchWithTimeout(resource, options = {}, ms = 35000) {
+async function fetchWithTimeout(resource, options = {}, ms = 40000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), ms);
   try {
@@ -28,7 +24,7 @@ export async function handler(event) {
       console.error("Invalid JSON body received");
     }
 
-    const component = typeof body.component === "string" ? body.component.trim() : "";
+    const component = typeof body.component === "string" ? body.component.trim().toLowerCase() : "";
     console.log("Incoming component:", component);
 
     if (!OPENAI_API_KEY) {
@@ -44,22 +40,56 @@ export async function handler(event) {
       return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
 
-    // --- Prompt setup -------------------------------------------------------
+    // --- Load RAG knowledge file -------------------------------------------
+    const knowledgePath = path.join(process.cwd(), "netlify/functions/data/a11y-knowledge.json");
+    console.log("Loading RAG data from:", knowledgePath);
+
+    let knowledgeData = {};
+    try {
+      const raw = fs.readFileSync(knowledgePath, "utf8");
+      knowledgeData = JSON.parse(raw);
+    } catch (err) {
+      console.error("Failed to load RAG data:", err);
+    }
+
+    const componentData = knowledgeData[component];
+    if (!componentData) {
+      console.warn("No RAG entry found for component:", component);
+    }
+
+    const ragContext = componentData
+      ? `Below is trusted RAG DATA for the "${component}" component.
+These are verified, authoritative references.
+You must use every URL listed in this data in the “Sources” section, and link to relevant ones in the body where they apply.
+
+${JSON.stringify(componentData, null, 2)}`
+      : `No RAG data found for the component "${component}".`;
+
+    // --- Build prompt ------------------------------------------------------
     const userPrompt = `
 Write detailed, cross-platform accessibility documentation for the "${component}" component.
 
+Use the RAG data below as your primary reference set.
+Every URL provided must appear in the “Sources” section.
+Where relevant, include inline links to those sources in the body content.
+
+${ragContext}
+
 Include:
 - A short definition and description of the component’s purpose.
-- WCAG 2.2 AA criteria that apply, with one-line explanations. Supply a URL link to each criterion referenced.
+- WCAG 2.2 AA criteria that apply, with one-line explanations.
 - Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
-- Semantic structure of the component in web.
-- Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns. Supply a URL link to each guideline referenced.
+- Semantic structure of the component in web (show example HTML). 
+- Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns.
 - A practical checklist of design and engineering best practices.
-- A concise Sources section listing the URLs referenced. Link directly to that component’s documentation, not a generic website or page.
-Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>, <li>, and <a>.
+- A concise “Sources” section listing every URL from the RAG data.
+
+Return only valid HTML using <h2>, <h3>, <p>, <ul>, <ol>, <li>, <a>, <pre>, and <code>.
+The first heading (<h2>) must contain only the component name, e.g. <h2>${component}</h2>.
+Wrap any code examples in <pre><code> … </code></pre> for readability.
 `;
 
-    // --- OpenAI request -----------------------------------------------------
+    // --- API request -------------------------------------------------------
     const resp = await fetchWithTimeout(OPENAI_URL, {
       method: "POST",
       headers: {
@@ -69,29 +99,29 @@ Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>
       body: JSON.stringify({
         model: "gpt-4o-mini",
         temperature: 0,
-        max_tokens: 2000,
+        max_tokens: 3500,
+        response_format: { type: "text" },
         messages: [
           {
             role: "system",
             content: `
 You are an expert accessibility technical writer.
-Generate accurate, standards-based HTML documentation.
+Use the provided RAG data as the single source of truth for component-specific references.
+
+You must:
+- Include URLs from the RAG data in the “Sources” section.
+- Link to relevant RAG URLs within the content body where appropriate.
+- Treat the RAG data as verified best practice for this component.
 
 Only use authoritative accessibility sources:
-- WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple Human Interface Guidelines (HIG),
-  Material 3, GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech,
-  axesslab, and A11y Style Guide.
+WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple Human Interface Guidelines, Material 3,
+GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech,
+axesslab, A11y Style Guide, and the provided RAG data.
 
-For reference, a “component” means a reusable piece of a user interface, such as a button, card, or modal.
-A comprehensive list of common components can be found at https://component.gallery/components/.
-
-Follow these rules:
-- The first heading (<h2>) must contain only the component name, e.g. <h2>${component}</h2>.
-- Never invent or fabricate content, links, or WCAG numbers.
-- If uncertain, state “No official guidance found” rather than guessing.
-- Do not include markdown, code fences, or placeholders.
-- Be concise and factual, in GOV.UK-style tone.
-- Output one clean HTML fragment with proper headings in sentence case.
+If uncertain, state “No official guidance found.” Never invent content, WCAG numbers, or links.
+Be concise and factual in a GOV.UK-style tone.
+Output must always contain valid, readable HTML markup.
+Wrap example code or HTML inside <pre><code>…</code></pre> blocks.
 `
           },
           { role: "user", content: userPrompt }
@@ -103,18 +133,28 @@ Follow these rules:
     console.log("OpenAI raw response:", JSON.stringify(data, null, 2));
 
     if (!resp.ok) {
-      console.error("OpenAI API returned error:", data);
+      console.error("OpenAI error:", data);
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
-    let html = (data.choices?.[0]?.message?.content || "").trim();
+    const choice = data.choices?.[0];
+    const finish = choice?.finish_reason;
+    console.log("Finish reason:", finish);
+
+    let html = (choice?.message?.content || "").trim();
 
     if (!html) {
-      console.error("No text returned from OpenAI");
-      return { statusCode: 200, body: JSON.stringify({ html: "" }) };
+      console.error("Empty response: finish_reason =", finish || "unknown");
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          html: "",
+          error: "No output returned from OpenAI (possibly truncated or filtered)."
+        })
+      };
     }
 
-    // --- Clean output -------------------------------------------------------
+    // --- Clean output ------------------------------------------------------
     html = html
       .replace(/^```(?:html)?\s*/i, "")
       .replace(/\s*```$/i, "")
@@ -123,11 +163,15 @@ Follow these rules:
       .replace(/\n{3,}/g, "\n\n")
       .replace(/[ \t]+$/gm, "");
 
+    // Detect stray inline < or > sequences that look like HTML and wrap them
+    html = html.replace(
+      /(?<!<pre><code>)(<\s*\/?\s*\w+[^>]*>)(?!<\/code><\/pre>)/g,
+      match => `<pre><code>${match.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>`
+    );
+
     if (html.endsWith("</")) html = html.slice(0, -2);
 
     console.log("Returning HTML length:", html.length);
-
-    // --- Return -------------------------------------------------------------
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
@@ -137,8 +181,8 @@ Follow these rules:
     console.error("Function error:", err);
     const msg =
       err?.name === "AbortError"
-        ? "Upstream request timed out. Try increasing the timeout or check network connectivity."
-        : String(err);
+        ? "Upstream request timed out."
+        : `Unhandled error: ${err.message || err}`;
     return { statusCode: 500, body: JSON.stringify({ error: msg }) };
   }
 }
