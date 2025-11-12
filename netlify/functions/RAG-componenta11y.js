@@ -5,7 +5,7 @@ import path from "path";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
-async function fetchWithTimeout(resource, options = {}, ms = 35000) {
+async function fetchWithTimeout(resource, options = {}, ms = 40000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), ms);
   try {
@@ -20,7 +20,9 @@ export async function handler(event) {
     let body = {};
     try {
       body = JSON.parse(event.body || "{}");
-    } catch {}
+    } catch {
+      console.error("Invalid JSON body received");
+    }
 
     const component = typeof body.component === "string" ? body.component.trim().toLowerCase() : "";
     console.log("Incoming component:", component);
@@ -77,7 +79,7 @@ Include:
 - A short definition and description of the component’s purpose.
 - WCAG 2.2 AA criteria that apply, with one-line explanations.
 - Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
-- Semantic structure of the component in web. 
+- Semantic structure of the component in web.
 - Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns.
 - A practical checklist of design and engineering best practices.
 - A concise “Sources” section listing every URL from the RAG data.
@@ -96,7 +98,8 @@ The first heading (<h2>) must contain only the component name, e.g. <h2>${compon
       body: JSON.stringify({
         model: "gpt-4o-mini",
         temperature: 0,
-        max_tokens: 2000,
+        max_tokens: 3500,
+        response_format: { type: "text" },
         messages: [
           {
             role: "system",
@@ -132,17 +135,33 @@ Output must always contain HTML markup.
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
-    let html = (data.choices?.[0]?.message?.content || "").trim();
+    const choice = data.choices?.[0];
+    const finish = choice?.finish_reason;
+    console.log("Finish reason:", finish);
+
+    let html = (choice?.message?.content || "").trim();
 
     if (!html) {
-      console.error("No text returned from OpenAI");
-      return { statusCode: 200, body: JSON.stringify({ html: "" }) };
+      console.error("Empty response: finish_reason =", finish || "unknown");
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          html: "",
+          error:
+            "No output returned from OpenAI (possibly truncated or filtered). Check logs for details."
+        })
+      };
     }
 
     // --- Clean output ------------------------------------------------------
-    html = html.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "");
-    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
-    html = html.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").replace(/[ \t]+$/gm, "");
+    html = html
+      .replace(/^```(?:html)?\s*/i, "")
+      .replace(/\s*```$/i, "")
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>')
+      .replace(/\r\n/g, "\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .replace(/[ \t]+$/gm, "");
+
     if (html.endsWith("</")) html = html.slice(0, -2);
 
     console.log("Returning HTML length:", html.length);
@@ -153,7 +172,10 @@ Output must always contain HTML markup.
     };
   } catch (err) {
     console.error("Function error:", err);
-    const msg = err?.name === "AbortError" ? "Upstream request timed out." : String(err);
+    const msg =
+      err?.name === "AbortError"
+        ? "Upstream request timed out."
+        : `Unhandled error: ${err.message || err}`;
     return { statusCode: 500, body: JSON.stringify({ error: msg }) };
   }
 }

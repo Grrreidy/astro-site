@@ -9,7 +9,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
 // Utility: safe fetch with timeout
-async function fetchWithTimeout(resource, options = {}, ms = 28000) {
+async function fetchWithTimeout(resource, options = {}, ms = 35000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), ms);
   try {
@@ -24,11 +24,15 @@ export async function handler(event) {
     let body = {};
     try {
       body = JSON.parse(event.body || "{}");
-    } catch {}
+    } catch {
+      console.error("Invalid JSON body received");
+    }
 
     const component = typeof body.component === "string" ? body.component.trim() : "";
+    console.log("Incoming component:", component);
 
     if (!OPENAI_API_KEY) {
+      console.error("Missing OPENAI_API_KEY");
       return {
         statusCode: 500,
         body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" })
@@ -36,6 +40,7 @@ export async function handler(event) {
     }
 
     if (!component) {
+      console.warn("No component provided");
       return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
 
@@ -47,10 +52,10 @@ Include:
 - A short definition and description of the component’s purpose.
 - WCAG 2.2 AA criteria that apply, with one-line explanations. Supply a URL link to each criterion referenced.
 - Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
-- Semantic structure of the component in web. 
+- Semantic structure of the component in web.
 - Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns. Supply a URL link to each guideline referenced.
 - A practical checklist of design and engineering best practices.
-- A concise Sources section listing the URLs referenced. Link directly the that component's documentation, no a generic website or page.
+- A concise Sources section listing the URLs referenced. Link directly to that component’s documentation, not a generic website or page.
 Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>, <li>, and <a>.
 `;
 
@@ -64,7 +69,7 @@ Use UK English and return only valid HTML containing <h2>, <h3>, <p>, <ul>, <ol>
       body: JSON.stringify({
         model: "gpt-4o-mini",
         temperature: 0,
-        max_tokens: 1200,
+        max_tokens: 2000,
         messages: [
           {
             role: "system",
@@ -95,41 +100,45 @@ Follow these rules:
     });
 
     const data = await resp.json();
+    console.log("OpenAI raw response:", JSON.stringify(data, null, 2));
+
     if (!resp.ok) {
-      console.error("OpenAI error:", data);
+      console.error("OpenAI API returned error:", data);
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
-    // --- Clean output -------------------------------------------------------
     let html = (data.choices?.[0]?.message?.content || "").trim();
 
-    // Remove code fences if present
-    html = html.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "");
+    if (!html) {
+      console.error("No text returned from OpenAI");
+      return { statusCode: 200, body: JSON.stringify({ html: "" }) };
+    }
 
-    // Fix markdown links to HTML
-    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
-
-    // Normalise spacing safely (do NOT remove all multiple spaces or line breaks)
+    // --- Clean output -------------------------------------------------------
     html = html
+      .replace(/^```(?:html)?\s*/i, "")
+      .replace(/\s*```$/i, "")
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>')
       .replace(/\r\n/g, "\n")
       .replace(/\n{3,}/g, "\n\n")
       .replace(/[ \t]+$/gm, "");
 
-    // Guard against rogue partial tags like "</"
     if (html.endsWith("</")) html = html.slice(0, -2);
+
+    console.log("Returning HTML length:", html.length);
 
     // --- Return -------------------------------------------------------------
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store"
-      },
+      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
       body: JSON.stringify({ html })
     };
   } catch (err) {
     console.error("Function error:", err);
-    const msg = err?.name === "AbortError" ? "Upstream request timed out." : String(err);
+    const msg =
+      err?.name === "AbortError"
+        ? "Upstream request timed out. Try increasing the timeout or check network connectivity."
+        : String(err);
     return { statusCode: 500, body: JSON.stringify({ error: msg }) };
   }
 }
