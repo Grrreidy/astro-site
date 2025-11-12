@@ -47,6 +47,7 @@ Include:
 - A short definition and description of the component’s purpose.
 - WCAG 2.2 AA criteria that apply, with one-line explanations. Supply a URL link to each criterion referenced.
 - Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
+- Semantic structure of the component in web. 
 - Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns. Supply a URL link to each guideline referenced.
 - A practical checklist of design and engineering best practices.
 - A concise Sources section listing the URLs referenced. Link directly the that component's documentation, no a generic website or page.

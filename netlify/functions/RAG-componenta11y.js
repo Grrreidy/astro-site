@@ -77,6 +77,7 @@ Include:
 - A short definition and description of the component’s purpose.
 - WCAG 2.2 AA criteria that apply, with one-line explanations.
 - Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
+- Semantic structure of the component in web. 
 - Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns.
 - A practical checklist of design and engineering best practices.
 - A concise “Sources” section listing every URL from the RAG data.
@@ -104,7 +105,7 @@ You are an expert accessibility technical writer.
 Use the provided RAG data as the single source of truth for component-specific references.
 
 You must:
-- Include every URL from the RAG data in the “Sources” section.
+- Include URLs from the RAG data in the “Sources” section.
 - Link to relevant RAG URLs within the content body where appropriate.
 - Treat the RAG data as verified best practice for this component.
 
