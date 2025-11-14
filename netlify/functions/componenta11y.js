@@ -59,7 +59,7 @@ ${ragContext}
 Include:
 - A short definition
 - WCAG 2.2 AA criteria with URLs
-- A list of ARIA roles and states with links to relevant MDN docs
+- A list of ARIA roles and states with links to relevant MDN docs. A brief explaination of how ARIA roles and states are used in this component
 - Semantic HTML structure
 - Notes for web, iOS, Android
 - A checklist

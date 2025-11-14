@@ -8,23 +8,6 @@ import Footer from '../components/Footer.astro';
 <html lang="en">
   <head>
     <BaseHead title="Componenta11y" description="Generate cross-platform accessibility guidance for a component" />
-    <script is:inline>
-      (function () {
-        const KEY = "theme:goth";
-        const LINK_ID = "goth-css";
-        const CSS_HREF = "/themes/goth/goth.css";
-        try {
-          if (localStorage.getItem(KEY) === "on" && !document.getElementById(LINK_ID)) {
-            const el = document.createElement("link");
-            el.id = LINK_ID;
-            el.rel = "stylesheet";
-            el.href = CSS_HREF;
-            el.media = "all";
-            document.head.appendChild(el);
-          }
-        } catch {}
-      })();
-    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -58,8 +41,8 @@ import Footer from '../components/Footer.astro';
       </section>
 
       <p class="field-help" style="margin-top: var(--space-xl);">
-        Made with <a href="https://platform.openai.com/">OpenAI</a> and 
-        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
+        Made with <a href="https://platform.openai.com/">OpenAI</a>,  
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a> and RAG. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
       </p>
     </main>
 
