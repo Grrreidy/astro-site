@@ -1,4 +1,4 @@
-// netlify/functions/RAG-componenta11y.js
+// netlify/functions/componenta11y.js
 import fs from "fs";
 import path from "path";
 
@@ -59,35 +59,35 @@ export async function handler(event) {
 
     const ragContext = componentData
       ? `Below is trusted RAG DATA for the "${component}" component.
-These are verified, authoritative references.
-You must use every URL listed in this data in the “Sources” section, and link to relevant ones in the body where they apply.
+      These are verified, authoritative references.
+      You must use every URL listed in this data in the “Sources” section, and link to relevant ones in the body where they apply.
 
 ${JSON.stringify(componentData, null, 2)}`
       : `No RAG data found for the component "${component}".`;
 
     // --- Build prompt ------------------------------------------------------
     const userPrompt = `
-Write detailed, cross-platform accessibility documentation for the "${component}" component.
+    Write detailed, cross-platform accessibility documentation for the "${component}" component.
 
-Use the RAG data below as your primary reference set.
-Every URL provided must appear in the “Sources” section.
-Where relevant, include inline links to those sources in the body content.
+    Use the RAG data below as your primary reference set.
+    Every URL provided must appear in the “Sources” section.
+    Where relevant, include inline links to those sources in the body content.
 
 ${ragContext}
 
-Include:
-- A short definition and description of the component’s purpose.
-- WCAG 2.2 AA criteria that apply, with one-line explanations.
-- Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
-- Semantic structure of the component in web (show example HTML). 
-- Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns.
-- A practical checklist of design and engineering best practices.
-- A concise “Sources” section listing every URL from the RAG data.
+  Include:
+  - A short definition and description of the component’s purpose.
+  - WCAG 2.2 AA criteria that apply, with one-line explanations.
+  - Common ARIA roles, states, and properties, with correct focus and keyboard behaviour.
+  - Semantic structure of the component in web (show example HTML). 
+  - Notes for web, iOS, and Android implementations referencing official HIG, Material 3, and ARIA APG patterns.
+  - A practical checklist of design and engineering best practices.
+  - A concise “Sources” section listing every URL from the RAG data.
 
-Return only valid HTML using <h2>, <h3>, <p>, <ul>, <ol>, <li>, <a>, <pre>, and <code>.
-The first heading (<h2>) must contain only the component name, e.g. <h2>${component}</h2>.
-Wrap any code examples in <pre><code> … </code></pre> for readability.
-`;
+  Return only valid HTML using <h2>, <h3>, <p>, <ul>, <ol>, <li>, <a>, <pre>, and <code>.
+  The first heading (<h2>) must contain only the component name, e.g. <h2>${component}</h2>.
+  Wrap any code examples in <pre><code> … </code></pre> for readability.
+  `;
 
     // --- API request -------------------------------------------------------
     const resp = await fetchWithTimeout(OPENAI_URL, {
@@ -105,24 +105,23 @@ Wrap any code examples in <pre><code> … </code></pre> for readability.
           {
             role: "system",
             content: `
-You are an expert accessibility technical writer.
-Use the provided RAG data as the single source of truth for component-specific references.
+  You are an expert accessibility technical writer.
+  Use the provided RAG data as the single source of truth for component-specific references.
 
-You must:
-- Include URLs from the RAG data in the “Sources” section.
-- Link to relevant RAG URLs within the content body where appropriate.
-- Treat the RAG data as verified best practice for this component.
+  You must:
+  - Include URLs from the RAG data in the “Sources” section.
+  - Link to relevant RAG URLs within the content body where appropriate.
+  - Treat the RAG data as verified best practice for this component.
 
-Only use authoritative accessibility sources:
-WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple Human Interface Guidelines, Material 3,
-GOV.UK Design System, WebAIM, Retralogical, Deque, atomica11y, popetech,
-axesslab, A11y Style Guide, and the provided RAG data.
+  Only use authoritative accessibility sources:
+  WCAG 2.2, ARIA Authoring Practices Guide (APG), Apple Human Interface Guidelines, Material 3,
+  GOV.UK Design System, WebAIM, Tetralogical, Deque, atomica11y, Popetech, Axesslab, and the provided RAG data.
 
-If uncertain, state “No official guidance found.” Never invent content, WCAG numbers, or links.
-Be concise and factual in a GOV.UK-style tone.
-Output must always contain valid, readable HTML markup.
-Wrap example code or HTML inside <pre><code>…</code></pre> blocks.
-`
+  If uncertain, state “No official guidance found.” Never invent content, WCAG numbers, or links.
+  Be concise and factual in a GOV.UK-style tone.
+  Output must always contain valid, readable HTML markup.
+  Wrap example code or HTML inside <pre><code>…</code></pre> blocks.
+  `
           },
           { role: "user", content: userPrompt }
         ]
