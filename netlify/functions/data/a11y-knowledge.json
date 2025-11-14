@@ -1,10 +1,19 @@
 {
+  "aria": {
+  "aboutAria": "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Guides",
+   "ariaRoles": "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles",
+   "ariaAttributes": "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes",
+    "ariaLiveRegions": "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Guides/Live_regions",
+   "notes": "ARIA roles provide semantic meaning to content, allowing screen readers and other tools to present and support interaction with an object in a way that is consistent with user expectations of that type of object. ARIA roles can be used to describe elements that don't natively exist in HTML or exist but don't yet have full browser support."
+  },
   "accordion": {
     "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/accordion/",
     "GDS": "https://design-system.service.gov.uk/components/accordion/",
     "material3": "https://m3.material.io/components/expansion-panels/overview",
     "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-accordion",
     "helios": "https://helios.hashicorp.design/components/accordion?tab=accessibility",
+    "saraSoueidan": "https://www.sarasoueidan.com/blog/accordion-markup/",
+    "adrianroselli": "https://adrianroselli.com/2023/08/progressively-enhanced-html-accordion.html",
     "notes": "Accordions expand and collapse content sections; focus moves to the heading of the opened panel."
   },
   "banner": {
@@ -28,10 +37,19 @@
     "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-buttons",
     "atomica11yWeb": "https://www.atomica11y.com/accessible-web/button/",
     "hashi": "https://helios.hashicorp.design/components/button?tab=accessibility",
+    "saraSoueidan": "https://www.sarasoueidan.com/blog/accessible-icon-buttons/",
     "notes": "Buttons trigger actions or events; provide visible and programmatic focus feedback."
   },
   "card": {
     "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/article/",
+    "GDS": "https://design-system.service.gov.uk/components/card/",
+    "material3": "https://m3.material.io/components/cards/overview",
+    "atomica11yWeb": "https://www.atomica11y.com/accessible-web/card/",
+    "adrianRoselli": "https://adrianroselli.com/2020/02/block-links-cards-clickable-regions-etc.html",    
+    "notes": "Cards group related content and actions; preserve heading structure and logical reading order."
+  },
+  "carousel": {
+    "saraSoueidan": "https://www.sarasoueidan.com/blog/css-carousels-accessibility/",
     "GDS": "https://design-system.service.gov.uk/components/card/",
     "material3": "https://m3.material.io/components/cards/overview",
     "atomica11yWeb": "https://www.atomica11y.com/accessible-web/card/",
@@ -56,11 +74,22 @@
     "hashi": "https://helios.hashicorp.design/components/form/checkbox?tab=accessibility",
     "notes": "Checkboxes allow one or more independent selections; ensure label association and clear state."
   },
-  "date time": {
+    "cookieBanner": {
+    "SheriByrneHaber": "https://uxdesign.cc/cookie-banners-and-accessibility-d476bf9ee4fc",
+    "quentinBellanger": "https://quentin-bellanger.com/blog/accessible-cookies-banner/"
+  },
+    "combobox": {
+    "spectrum": "https://react-spectrum.adobe.com/blog/building-a-combobox.html",
+    "popetech": "https://blog.pope.tech/2024/07/01/create-an-accessible-combobox-using-aria/",
+    "notes": "ComboBoxes combine a text entry with a picker menu, allowing users to filter longer lists to only the selections matching a query."
+  },
+  "date time picker": {
     "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/datepicker/",
     "GDS": "https://design-system.service.gov.uk/components/date-input/",
     "material3": "https://m3.material.io/components/date-pickers/overview",
-    "notes": "Date and time inputs must be properly labelled and expose values programmatically; respect locale formats."
+    "adrianRoselli": "https://adrianroselli.com/2019/07/maybe-you-dont-need-a-date-picker.html",
+    "Duet": "https://www.duetds.com/components/date-picker/",
+    "notes": "Date and Time Picker lets user pick a single date or a date range or time,"
   },
   "divider": {
     "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/separator/",
@@ -104,6 +133,7 @@
     "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/links",
     "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-links",
     "hashi": "https://helios.hashicorp.design/components/link/inline?tab=accessibility",
+    "kittyGiraudel": "https://kittygiraudel.com/2020/12/10/accessible-icon-links/",
     "notes": "Links navigate between pages or views; ensure descriptive link text and visible focus indicators."
   },
   "media": {
@@ -145,6 +175,7 @@
     "material3": "https://m3.material.io/components/pagination/overview",
     "atomica11yWeb": "https://www.atomica11y.com/accessible-web/pagination/",
     "hashi": "https://helios.hashicorp.design/components/pagination?tab=accessibility",
+    "adrianRoselli": "https://adrianroselli.com/2024/07/feedback-on-a-pagination-pattern.html",    
     "notes": "Pagination divides content across pages; use aria-current for the active page and disable inactive controls."
   },
   "progress indicator": {
@@ -185,6 +216,7 @@
     "material3": "https://m3.material.io/components/tabs/overview",
     "atomica11yWeb": "https://www.atomica11y.com/accessible-web/tabs/",
     "hashi": "https://helios.hashicorp.design/components/tabs?tab=accessibility",
+    "adrianRoselli": "https://adrianroselli.com/2013/02/aria-tabs.html", 
     "notes": "Tabs group content into sections; ensure correct tablist, tab, and tabpanel roles and keyboard handling."
   },
   "tag": {
@@ -228,6 +260,10 @@
     "material3": "https://m3.material.io/components/tooltips/overview",
     "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-tooltips",
     "hashi": "https://helios.hashicorp.design/components/tooltip?tab=accessibility",
+    "notes": "Tooltips provide supplementary information on hover or focus; never rely on hover-only activation."
+  },
+  "toggle": {
+    "SaraSoueidan": "https://www.sarasoueidan.com/blog/toggle-switch-design/",
     "notes": "Tooltips provide supplementary information on hover or focus; never rely on hover-only activation."
   },
   "unordered list": {

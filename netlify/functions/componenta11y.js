@@ -59,7 +59,7 @@ ${ragContext}
 Include:
 - A short definition
 - WCAG 2.2 AA criteria with URLs
-- A list of ARIA roles and states with links to relevant MDN docs. A brief explaination of how ARIA roles and states are used in this component
+- A list of ARIA roles and states with links to relevant MDN docs. A brief explanation of how ARIA roles and states are used in this component
 - Semantic HTML structure
 - Notes for web, iOS, Android
 - A checklist
@@ -84,8 +84,24 @@ Return valid HTML only.
             role: "system",
             content: `
 You are an expert accessibility technical writer.
-Use only verified accessibility sources and the RAG data.
-Never invent content or links.
+Use only verified accessibility sources AND the RAG data.
+
+Trusted sources include:
+- WCAG 2.2
+- ARIA Authoring Practices Guide (APG)
+- Apple Human Interface Guidelines
+- Material 3 Guidelines
+- GOV.UK Design System
+- WebAIM
+- Tetralogical
+- Deque
+- atomica11y
+- Popetech
+- Axesslab
+- A11y Style Guide
+- MDN (developer.mozilla.org) for ARIA roles, states, properties
+
+Never invent content, links, or WCAG numbers.
 Always return readable HTML with <pre><code> for code.
 `
           },
