@@ -59,8 +59,8 @@ ${ragContext}
 Include:
 - A short definition
 - WCAG 2.2 AA criteria with URLs
-- ARIA roles and states
-- Semantic HTML structure (with <pre><code>)
+- A list of ARIA roles and states with links to relevant MDN docs
+- Semantic HTML structure
 - Notes for web, iOS, Android
 - A checklist
 - A Sources section including all URLs
