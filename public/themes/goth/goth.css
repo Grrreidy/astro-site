@@ -1,7 +1,7 @@
 /* 
    GOTH THEME
    Fantasy goth / Geocities throwback
-   Loads only when fantasy goth mode is enabled
+   Loads when fantasy goth mode is enabled. I'm not sorry.
 =================================================== */
 
 
@@ -78,7 +78,7 @@ header {
 /* 
    HEADINGS
 =================================================== */
-/* Force Twilight font on all headings in goth mode */
+/*  Twilight font on all headings in goth mode */
 html h1, html h2, html h3, html h4, html h5, html h6,
 body h1, body h2, body h3, body h4, body h5, body h6,
 .container h1, .container h2, .container h3, .container h4, .container h5, .container h6,
@@ -623,9 +623,8 @@ footer img {
 }
 
 /* 
-   GOTH MODE FORM/GUIDANCE AND GENERATED CONTENT OVERRIDES
-   - Ensure help and error text are legible on dark theme
-   - Ensure generated content backgrounds are transparent
+    CONTENT OVERRIDES
+   - Ensures text is legible on dark theme
 =================================================== */
 .field-help {
   color: var(--goth-white);
@@ -642,7 +641,8 @@ footer img {
 }
 
 /* Generated content blocks (a11y docs output) */
-.a11y-result {
+.a11y-result,
+.status-message {
   color: var(--goth-white);
 }
 

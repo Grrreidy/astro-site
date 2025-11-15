@@ -27,6 +27,7 @@
     "GDS": "https://design-system.service.gov.uk/components/breadcrumbs/",
     "material3": "https://m3.material.io/components/breadcrumbs/overview",
     "hashi": "https://helios.hashicorp.design/components/breadcrumb?tab=accessibility",
+    "atomica11y": "https://www.atomica11y.com/accessible-web/breadcrumbs/",  
     "notes": "Breadcrumbs show users their location in a hierarchy; mark up as a nav region with aria-label='Breadcrumb'."
   },
   "button": {
@@ -71,6 +72,7 @@
     "GDS": "https://design-system.service.gov.uk/components/checkboxes/",
     "material3": "https://m3.material.io/components/checkbox/overview",
     "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-checkboxes",
+    "atomica11y": "https://www.atomica11y.com/accessible-web/checkbox/",  
     "hashi": "https://helios.hashicorp.design/components/form/checkbox?tab=accessibility",
     "notes": "Checkboxes allow one or more independent selections; ensure label association and clear state."
   },
@@ -89,6 +91,7 @@
     "material3": "https://m3.material.io/components/date-pickers/overview",
     "adrianRoselli": "https://adrianroselli.com/2019/07/maybe-you-dont-need-a-date-picker.html",
     "Duet": "https://www.duetds.com/components/date-picker/",
+    "atomica11y": "https://www.atomica11y.com/accessible-web/date-picker/",  
     "notes": "Date and Time Picker lets user pick a single date or a date range or time,"
   },
   "divider": {
@@ -153,7 +156,7 @@
     "GDS": "https://design-system.service.gov.uk/components/dialog/",
     "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/modality",
     "material3": "https://m3.material.io/components/dialogs/overview",
-    "atomica11yWeb": "https://www.atomica11y.com/accessible-web/dialog/",
+    "atomica11yWeb": "https://www.atomica11y.com/accessible-web/dialog-modal/",
     "hashi": "https://helios.hashicorp.design/components/modal?tab=accessibility",
     "notes": "Modals trap focus within their region and must be dismissible via keyboard and accessible controls."
   },
@@ -190,6 +193,7 @@
     "GDS": "https://design-system.service.gov.uk/components/radios/",
     "material3": "https://m3.material.io/components/radio-button/overview",
     "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-radio-buttons",
+    "atomica11y": "https://www.atomica11y.com/accessible-web/radio/",  
     "hashi": "https://helios.hashicorp.design/components/form/radio?tab=accessibility",
     "notes": "Radio buttons present mutually exclusive choices; use fieldset and legend for group labelling."
   },
@@ -235,11 +239,12 @@
     "GDS": "https://design-system.service.gov.uk/styles/typography/#quotes",
     "notes": "Blockquotes mark up quoted content; use <blockquote> and <cite> elements to identify sources."
   },
-  "text field": {
+  "text input": {
     "GDS": "https://design-system.service.gov.uk/components/text-input/",
     "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/text-fields",
     "material3": "https://m3.material.io/components/text-fields/overview",
     "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-textfields",
+    "atomica11y": "https://www.atomica11y.com/accessible-web/input-text/",  
     "hashi": "https://helios.hashicorp.design/components/form/text-input?tab=accessibility",
     "notes": "Text fields capture user input; provide clear labels, error messaging, and visible focus indicators."
   },
@@ -264,6 +269,7 @@
   },
   "toggle": {
     "SaraSoueidan": "https://www.sarasoueidan.com/blog/toggle-switch-design/",
+    "atomica11y": "https://www.atomica11y.com/accessible-web/toggle-switch/",  
     "notes": "Tooltips provide supplementary information on hover or focus; never rely on hover-only activation."
   },
   "unordered list": {
