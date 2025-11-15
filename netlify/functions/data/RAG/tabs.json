@@ -1,0 +1,10 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/tabs/",
+  "GDS": "https://design-system.service.gov.uk/components/tabs/",
+  "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/tab-views",
+  "material3": "https://m3.material.io/components/tabs/overview",
+  "atomica11yWeb": "https://www.atomica11y.com/accessible-web/tabs/",
+  "hashi": "https://helios.hashicorp.design/components/tabs?tab=accessibility",
+  "adrianRoselli": "https://adrianroselli.com/2013/02/aria-tabs.html",
+  "notes": "Tabs group content into sections; ensure correct tablist, tab, and tabpanel roles and keyboard handling."
+}

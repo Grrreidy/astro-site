@@ -1,0 +1,11 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/button/",
+  "GDS": "https://design-system.service.gov.uk/components/button/",
+  "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/buttons",
+  "material3": "https://m3.material.io/components/buttons/overview",
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-buttons",
+  "atomica11yWeb": "https://www.atomica11y.com/accessible-web/button/",
+  "hashi": "https://helios.hashicorp.design/components/button?tab=accessibility",
+  "saraSoueidan": "https://www.sarasoueidan.com/blog/accessible-icon-buttons/",
+  "notes": "Buttons trigger actions or events; provide visible and programmatic focus feedback."
+}

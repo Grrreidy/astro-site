@@ -1,0 +1,6 @@
+{
+  "GDS": "https://design-system.service.gov.uk/components/tag/",
+  "material3": "https://m3.material.io/components/chips/overview",
+  "hashi": "https://helios.hashicorp.design/components/tag?tab=accessibility",
+  "notes": "Tags or chips categorise content; ensure sufficient colour contrast and programmatic labelling."
+}

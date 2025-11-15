@@ -1,0 +1,6 @@
+{
+  "GDS": "https://design-system.service.gov.uk/styles/layout/",
+  "material3": "https://m3.material.io/foundations/layout/overview",
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-layout",
+  "notes": "Layout defines spacing and hierarchy; ensure consistent heading levels and avoid absolute positioning that disrupts flow."
+}

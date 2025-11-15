@@ -1,0 +1,9 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/",
+  "GDS": "https://design-system.service.gov.uk/components/checkboxes/",
+  "material3": "https://m3.material.io/components/checkbox/overview",
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-checkboxes",
+  "atomica11y": "https://www.atomica11y.com/accessible-web/checkbox/",
+  "hashi": "https://helios.hashicorp.design/components/form/checkbox?tab=accessibility",
+  "notes": "Checkboxes allow one or more independent selections; ensure label association and clear state."
+}

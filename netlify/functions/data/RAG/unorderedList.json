@@ -1,0 +1,5 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/list/",
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-unordered-list",
+  "notes": "Unordered lists (<ul>) group related items without implying sequence; maintain semantic list structure."
+}

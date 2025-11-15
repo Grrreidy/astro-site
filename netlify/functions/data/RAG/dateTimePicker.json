@@ -1,0 +1,9 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/datepicker/",
+  "GDS": "https://design-system.service.gov.uk/components/date-input/",
+  "material3": "https://m3.material.io/components/date-pickers/overview",
+  "adrianRoselli": "https://adrianroselli.com/2019/07/maybe-you-dont-need-a-date-picker.html",
+  "Duet": "https://www.duetds.com/components/date-picker/",
+  "atomica11y": "https://www.atomica11y.com/accessible-web/date-picker/",
+  "notes": "Date and Time Picker lets user pick a single date or a date range or time,"
+}

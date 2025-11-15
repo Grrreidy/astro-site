@@ -1,0 +1,9 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/pagination/",
+  "GDS": "https://design-system.service.gov.uk/components/pagination/",
+  "material3": "https://m3.material.io/components/pagination/overview",
+  "atomica11yWeb": "https://www.atomica11y.com/accessible-web/pagination/",
+  "hashi": "https://helios.hashicorp.design/components/pagination?tab=accessibility",
+  "adrianRoselli": "https://adrianroselli.com/2024/07/feedback-on-a-pagination-pattern.html",
+  "notes": "Pagination divides content across pages; use aria-current for the active page and disable inactive controls."
+}

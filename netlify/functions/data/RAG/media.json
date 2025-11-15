@@ -1,0 +1,6 @@
+{
+  "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/media-playback",
+  "material3": "https://m3.material.io/components/video/overview",
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-media.html",
+  "notes": "Media components like audio or video require captions, transcripts, and keyboard controls."
+}

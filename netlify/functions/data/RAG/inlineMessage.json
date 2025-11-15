@@ -1,0 +1,6 @@
+{
+  "GDS": "https://design-system.service.gov.uk/components/error-message/",
+  "material3": "https://m3.material.io/components/snackbar/overview",
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-feedback.html#kssref-feedback-inline",
+  "notes": "Inline messages communicate validation or status; associate them with the relevant form field via aria-describedby."
+}

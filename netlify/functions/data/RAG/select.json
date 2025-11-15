@@ -1,0 +1,7 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/listbox/",
+  "GDS": "https://design-system.service.gov.uk/components/select/",
+  "material3": "https://m3.material.io/components/menus/overview",
+  "hashi": "https://helios.hashicorp.design/components/form/select?tab=accessibility",
+  "notes": "Select elements expose a list of options; maintain keyboard navigation and visual focus state."
+}

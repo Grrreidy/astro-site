@@ -5,6 +5,7 @@ import path from "path";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
+// Timeout-safe fetch wrapper
 async function fetchWithTimeout(resource, options = {}, ms = 40000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), ms);
@@ -17,58 +18,98 @@ async function fetchWithTimeout(resource, options = {}, ms = 40000) {
 
 export async function handler(event) {
   try {
+    // Parse incoming request
     let body = {};
     try {
       body = JSON.parse(event.body || "{}");
     } catch {
-      console.error("Invalid JSON body received");
+      console.error("Invalid JSON in request body");
     }
 
-    const component = typeof body.component === "string" ? body.component.trim().toLowerCase() : "";
+    const rawComponent = typeof body.component === "string" ? body.component.trim() : "";
+    const component = rawComponent.toLowerCase();
     console.log("Incoming component:", component);
 
     if (!OPENAI_API_KEY) {
-      return { statusCode: 500, body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" }) };
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" })
+      };
     }
 
     if (!component) {
       return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
 
-    const knowledgePath = path.join(process.cwd(), "netlify/functions/data/a11y-knowledge.json");
-    let knowledgeData = {};
+    // ---------------------------------------------------------------------
+    // Load all JSON files from /data/RAG
+    // ---------------------------------------------------------------------
+    const ragDir = path.join(process.cwd(), "netlify/functions/data/RAG");
+    console.log("Loading RAG directory:", ragDir);
+
+    let ragData = {};
+
     try {
-      const raw = fs.readFileSync(knowledgePath, "utf8");
-      knowledgeData = JSON.parse(raw);
+      const files = fs.readdirSync(ragDir);
+
+      for (const file of files) {
+        if (file.endsWith(".json")) {
+          const raw = fs.readFileSync(path.join(ragDir, file), "utf8");
+          const json = JSON.parse(raw);
+
+          // normalise file name → key
+          const key = file.replace(".json", "").toLowerCase();
+          ragData[key] = json;
+        }
+      }
     } catch (err) {
-      console.error("Failed to load RAG data:", err);
+      console.error("Failed to load RAG files:", err);
     }
 
-    const componentData = knowledgeData[component];
+    // ---------------------------------------------------------------------
+    // Look up the component
+    // ---------------------------------------------------------------------
+    let match = ragData[component];
 
-    const ragContext = componentData
-      ? `Below is trusted RAG DATA for the "${component}" component.\n${JSON.stringify(componentData, null, 2)}`
-      : `No RAG data found for the component "${component}".`;
+    // Fuzzy fallback
+    if (!match) {
+      const keys = Object.keys(ragData);
+      const fuzzy = keys.find(k => k.includes(component));
+      if (fuzzy) {
+        match = ragData[fuzzy];
+        console.log(`Fuzzy match used: ${component} → ${fuzzy}`);
+      }
+    }
 
+    const ragContext = match
+      ? `Below is trusted RAG DATA for the "${component}" component:\n${JSON.stringify(match, null, 2)}`
+      : `No RAG data found for "${component}".`;
+
+    // ---------------------------------------------------------------------
+    // Build prompt
+    // ---------------------------------------------------------------------
     const userPrompt = `
 Write detailed, cross-platform accessibility documentation for the "${component}" component.
 
-Use the RAG data below as your primary reference set.
+Use the RAG data below as your primary reference set:
 ${ragContext}
 
 Include:
 - A short definition
 - WCAG 2.2 AA criteria with URLs
-- A list of ARIA roles and states with links to relevant MDN docs. A brief explanation of how ARIA roles and states are used in this component
+- ARIA roles and states with MDN URLs and simple explanations
 - Semantic HTML structure
-- Notes for web, iOS, Android
-- A checklist
-- A Sources section including all URLs
+- Notes for web, iOS and Android with official guideline links
+- A practical checklist
+- A Sources section with all URLs used
 
 Return valid HTML only.
 <h2> must contain exactly: ${component}.
 `;
 
+    // ---------------------------------------------------------------------
+    // Call OpenAI API
+    // ---------------------------------------------------------------------
     const resp = await fetchWithTimeout(OPENAI_URL, {
       method: "POST",
       headers: {
@@ -84,25 +125,14 @@ Return valid HTML only.
             role: "system",
             content: `
 You are an expert accessibility technical writer.
-Use only verified accessibility sources AND the RAG data.
+Use ONLY verified accessibility sources and the provided RAG data.
 
-Trusted sources include:
-- WCAG 2.2
-- ARIA Authoring Practices Guide (APG)
-- Apple Human Interface Guidelines
-- Material 3 Guidelines
-- GOV.UK Design System
-- WebAIM
-- Tetralogical
-- Deque
-- atomica11y
-- Popetech
-- Axesslab
-- A11y Style Guide
-- MDN (developer.mozilla.org) for ARIA roles, states, properties
+Trusted sources:
+WCAG 2.2, ARIA APG, MDN, Apple HIG, Material 3, GOV.UK Design System,
+WebAIM, TetraLogical, Deque, atomica11y, Popetech, Axesslab, A11y Style Guide.
 
-Never invent content, links, or WCAG numbers.
-Always return readable HTML with <pre><code> for code.
+Never invent WCAG numbers or URLs.
+Always output clean, semantic HTML.
 `
           },
           { role: "user", content: userPrompt }
@@ -113,14 +143,16 @@ Always return readable HTML with <pre><code> for code.
     const data = await resp.json();
 
     if (!resp.ok) {
+      console.error("OpenAI API error:", data);
       return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
     let html = (data.choices?.[0]?.message?.content || "").trim();
 
+    // Clean HTML
     html = html
-      .replace(/^```(?:html)?\s*/i, "")
-      .replace(/\s*```$/i, "")
+      .replace(/^```(?:html)?/i, "")
+      .replace(/```$/i, "")
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
 
     return {
@@ -128,7 +160,9 @@ Always return readable HTML with <pre><code> for code.
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ html })
     };
+
   } catch (err) {
+    console.error("Function error:", err);
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 }

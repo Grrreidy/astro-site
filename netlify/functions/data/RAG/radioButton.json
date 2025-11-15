@@ -1,0 +1,9 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/radio/",
+  "GDS": "https://design-system.service.gov.uk/components/radios/",
+  "material3": "https://m3.material.io/components/radio-button/overview",
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-radio-buttons",
+  "atomica11y": "https://www.atomica11y.com/accessible-web/radio/",
+  "hashi": "https://helios.hashicorp.design/components/form/radio?tab=accessibility",
+  "notes": "Radio buttons present mutually exclusive choices; use fieldset and legend for group labelling."
+}

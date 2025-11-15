@@ -1,0 +1,5 @@
+{
+  "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/navigation-bars",
+  "material3": "https://m3.material.io/components/top-app-bar/overview",
+  "notes": "Title bars or app bars display page or section titles; they provide navigation and actions at the top of the viewport."
+}

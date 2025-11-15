@@ -1,0 +1,9 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/link/",
+  "GDS": "https://design-system.service.gov.uk/styles/typography/#links",
+  "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/links",
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-links",
+  "hashi": "https://helios.hashicorp.design/components/link/inline?tab=accessibility",
+  "kittyGiraudel": "https://kittygiraudel.com/2020/12/10/accessible-icon-links/",
+  "notes": "Links navigate between pages or views; ensure descriptive link text and visible focus indicators."
+}
