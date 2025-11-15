@@ -10,55 +10,45 @@ const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 // ---------------------------------------------------------------------------
 const ALLOWED_COMPONENTS = [
   "accordion",
-  "alert",
-  "avatar",
-  "badge",
   "banner",
   "breadcrumbs",
   "button",
-  "calendar",
   "card",
   "carousel",
+  "caption",
+  "character count",
   "checkbox",
-  "chip",
-  "code",
-  "date picker",
-  "data table",
-  "dialog",
+  "cookiebanner",
+  "combobox",
+  "date time picker",
   "divider",
-  "drawer",
-  "empty state",
-  "floating action button",
   "form",
   "grid",
-  "icon",
-  "image",
-  "input",
+  "headline",
+  "inline message",
+  "layout",
   "link",
-  "list",
+  "media",
   "menu",
   "modal",
   "navigation",
+  "ordered list",
   "pagination",
-  "popover",
   "progress indicator",
   "radio button",
-  "search",
+  "scroll",
   "select",
-  "skeleton",
-  "slider",
-  "spinner",
-  "stat",
-  "switch",
-  "table",
+  "standfirst",
   "tabs",
   "tag",
-  "textarea",
-  "time picker",
+  "text block",
+  "text blockquote",
+  "text input",
+  "title bar",
   "toast",
   "tooltip",
-  "tree view"
-  "video"
+  "toggle",
+  "unordered list"
 ].map(c => c.toLowerCase());
 
 // ---------------------------------------------------------------------------
@@ -159,9 +149,7 @@ export async function handler(event) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          error: `"${component}" is not a recognised component. Allowed components: ${ALLOWED_COMPONENTS.join(
-            ", "
-          )}`
+          error: `"${component}" is not a recognised component. You're trying stupid words, aren't you?`
         })
       };
     }
@@ -169,7 +157,7 @@ export async function handler(event) {
     const canonicalComponentName = allowedMatch;
 
     // ---------------------------------------------------------------------
-    // STEP 2: Load RAG data for this valid component
+    // STEP 2: Load RAG data
     // ---------------------------------------------------------------------
     let match = RAG_CACHE[canonicalComponentName];
 
@@ -178,18 +166,12 @@ export async function handler(event) {
       const fuzzy = keys.find(k => k.includes(canonicalComponentName));
       if (fuzzy) {
         match = RAG_CACHE[fuzzy];
-        console.log(
-          `RAG fuzzy match: ${canonicalComponentName} → ${fuzzy}`
-        );
+        console.log(`RAG fuzzy match: ${canonicalComponentName} → ${fuzzy}`);
       }
     }
 
     const ragContext = match
-      ? `Below is trusted RAG DATA for "${canonicalComponentName}":\n${JSON.stringify(
-          match,
-          null,
-          2
-        )}`
+      ? `Below is trusted RAG DATA for "${canonicalComponentName}":\n${JSON.stringify(match, null, 2)}`
       : `No RAG data found for "${canonicalComponentName}". Use only trusted sources.`;
 
     // ---------------------------------------------------------------------
@@ -215,7 +197,7 @@ export async function handler(event) {
     `;
 
     // ---------------------------------------------------------------------
-    // OpenAI API request
+    // OpenAI API
     // ---------------------------------------------------------------------
     const resp = await fetchWithTimeout(OPENAI_URL, {
       method: "POST",
@@ -262,10 +244,7 @@ export async function handler(event) {
     html = html
       .replace(/^```(?:html)?/i, "")
       .replace(/```$/i, "")
-      .replace(
-        /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-        '<a href="$2">$1</a>'
-      );
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
 
     html = tidyHtml(html);
 
@@ -274,6 +253,7 @@ export async function handler(event) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ html })
     };
+
   } catch (err) {
     console.error("Function error:", err);
     return {
