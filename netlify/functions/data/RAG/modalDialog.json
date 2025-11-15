@@ -4,5 +4,5 @@
   "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/modality",
   "material3": "https://m3.material.io/components/dialogs/overview",
   "atomica11yWeb": "https://www.atomica11y.com/accessible-web/dialog-modal/",
-  "hashi": "https://helios.hashicorp.design/components/modal?tab=accessibility",
+  "hashi": "https://helios.hashicorp.design/components/modal?tab=accessibility"
 }

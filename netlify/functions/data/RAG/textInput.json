@@ -4,5 +4,5 @@
   "material3": "https://m3.material.io/components/text-fields/overview",
   "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-textfields",
   "atomica11y": "https://www.atomica11y.com/accessible-web/input-text/",
-  "hashi": "https://helios.hashicorp.design/components/form/text-input?tab=accessibility",
+  "hashi": "https://helios.hashicorp.design/components/form/text-input?tab=accessibility"
 }

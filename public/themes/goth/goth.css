@@ -87,8 +87,8 @@ article h1, article h2, article h3, article h4, article h5, article h6,
 .blog-content h1, .blog-content h2, .blog-content h3, .blog-content h4, .blog-content h5, .blog-content h6,
 .post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 {
   font-family: 'Twilight', "Times New Roman", "Baskerville", serif !important;
-  letter-spacing: 0.02em
-  color: var(--goth-purple) 
+  letter-spacing: 0.02em;
+  color: var(--goth-purple); 
   text-shadow: 1px 1px 2px var(--goth-black)
 }
 

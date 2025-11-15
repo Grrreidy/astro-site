@@ -2,5 +2,5 @@
   "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/navigation/",
   "GDS": "https://design-system.service.gov.uk/components/header/",
   "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/navigation",
-  "material3": "https://m3.material.io/components/navigation-bar/overview",
+  "material3": "https://m3.material.io/components/navigation-bar/overview"
 }
