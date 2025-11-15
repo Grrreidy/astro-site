@@ -6,14 +6,69 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
 // ---------------------------------------------------------------------------
-// Cache RAG data at cold start
+// Component whitelist
+// ---------------------------------------------------------------------------
+const ALLOWED_COMPONENTS = [
+  "accordion",
+  "alert",
+  "avatar",
+  "badge",
+  "banner",
+  "breadcrumbs",
+  "button",
+  "calendar",
+  "card",
+  "carousel",
+  "checkbox",
+  "chip",
+  "code",
+  "date picker",
+  "data table",
+  "dialog",
+  "divider",
+  "drawer",
+  "empty state",
+  "floating action button",
+  "form",
+  "grid",
+  "icon",
+  "image",
+  "input",
+  "link",
+  "list",
+  "menu",
+  "modal",
+  "navigation",
+  "pagination",
+  "popover",
+  "progress indicator",
+  "radio button",
+  "search",
+  "select",
+  "skeleton",
+  "slider",
+  "spinner",
+  "stat",
+  "switch",
+  "table",
+  "tabs",
+  "tag",
+  "textarea",
+  "time picker",
+  "toast",
+  "tooltip",
+  "tree view"
+  "video"
+].map(c => c.toLowerCase());
+
+// ---------------------------------------------------------------------------
+// Cache RAG data on cold start
 // ---------------------------------------------------------------------------
 const ragDir = path.join(process.cwd(), "netlify/functions/data/rag");
 let RAG_CACHE = {};
 
 try {
   const files = fs.readdirSync(ragDir);
-
   for (const file of files) {
     if (file.endsWith(".json")) {
       const key = file.replace(".json", "").toLowerCase();
@@ -21,7 +76,6 @@ try {
       RAG_CACHE[key] = JSON.parse(raw);
     }
   }
-
   console.log("RAG cache loaded:", Object.keys(RAG_CACHE).length, "files");
 } catch (err) {
   console.error("Failed to initialise RAG cache:", err);
@@ -42,7 +96,7 @@ async function fetchWithTimeout(resource, options = {}, ms = 40000) {
 }
 
 // ---------------------------------------------------------------------------
-// Lightweight HTML prettifier
+// Tidy HTML
 // ---------------------------------------------------------------------------
 function tidyHtml(html) {
   return html
@@ -50,6 +104,7 @@ function tidyHtml(html) {
     .replace(/\s+$/, "")
     .replace(/\n{3,}/g, "\n\n")
     .replace(/>\s+</g, ">\n<")
+    .replace(/ {3,}/g, "  ")
     .trim();
 }
 
@@ -58,15 +113,15 @@ function tidyHtml(html) {
 // ---------------------------------------------------------------------------
 export async function handler(event) {
   try {
-    // Parse incoming request
+    // Parse JSON
     let body = {};
-
     try {
       body = JSON.parse(event.body || "{}");
     } catch {
-      console.error("Invalid JSON in request");
+      console.error("Invalid request JSON");
     }
 
+    // Component normalisation
     const rawComponent =
       typeof body.component === "string" ? body.component.trim() : "";
     const component = rawComponent.toLowerCase();
@@ -88,73 +143,79 @@ export async function handler(event) {
     }
 
     // ---------------------------------------------------------------------
-    // Find RAG match (exact or fuzzy)
+    // STEP 1: Whitelist enforcement (no hallucinated components)
     // ---------------------------------------------------------------------
-    let match = RAG_CACHE[component];
+    let allowedMatch = ALLOWED_COMPONENTS.find(c => c === component);
 
-    if (!match) {
-      const keys = Object.keys(RAG_CACHE);
-      const fuzzy = keys.find((k) => k.includes(component));
-
+    if (!allowedMatch) {
+      const fuzzy = ALLOWED_COMPONENTS.find(c => c.includes(component));
       if (fuzzy) {
-        match = RAG_CACHE[fuzzy];
-        console.log(`Fuzzy match used: ${component} → ${fuzzy}`);
+        allowedMatch = fuzzy;
+        console.log(`Whitelist fuzzy match: ${component} → ${fuzzy}`);
       }
     }
 
-    const hasRag = Boolean(match);
+    if (!allowedMatch) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          error: `"${component}" is not a recognised component. Allowed components: ${ALLOWED_COMPONENTS.join(
+            ", "
+          )}`
+        })
+      };
+    }
+
+    const canonicalComponentName = allowedMatch;
 
     // ---------------------------------------------------------------------
-    // Build RAG context
+    // STEP 2: Load RAG data for this valid component
     // ---------------------------------------------------------------------
-    const ragContext = hasRag
-      ? `
-    Below is verified RAG DATA for the "${component}" component:
-    ${JSON.stringify(match, null, 2)}
-        `.trim()
-          : `
-    No verified RAG data exists for the component "${component}".
+    let match = RAG_CACHE[canonicalComponentName];
 
-    You MUST follow strict fallback rules:
-    • Provide ONLY generic, high-level accessibility considerations.
-    • Do NOT invent ARIA roles, states or properties.
-    • Do NOT invent WCAG success criteria or numbers.
-    • Do NOT invent or output any external URLs.
-    • Do NOT generate a Sources section.
-    • Provide conceptual guidance only (semantics, interaction, focus, inputs, timing, responsiveness).
-    `.trim();
+    if (!match) {
+      const keys = Object.keys(RAG_CACHE);
+      const fuzzy = keys.find(k => k.includes(canonicalComponentName));
+      if (fuzzy) {
+        match = RAG_CACHE[fuzzy];
+        console.log(
+          `RAG fuzzy match: ${canonicalComponentName} → ${fuzzy}`
+        );
+      }
+    }
+
+    const ragContext = match
+      ? `Below is trusted RAG DATA for "${canonicalComponentName}":\n${JSON.stringify(
+          match,
+          null,
+          2
+        )}`
+      : `No RAG data found for "${canonicalComponentName}". Use only trusted sources.`;
 
     // ---------------------------------------------------------------------
-    // Build user prompt
+    // Prompt
     // ---------------------------------------------------------------------
     const userPrompt = `
-    Write accessibility documentation for the "${component}" component.
+    Write detailed, cross-platform accessibility documentation for the "${canonicalComponentName}" component.
 
-    RAG context:
+    Use the RAG data below as the primary reference:
     ${ragContext}
 
-    If RAG data exists:
-    • Provide full component-specific guidance  
-    • Include WCAG 2.2 AA criteria with URLs  
-    • Include ARIA roles/states with MDN URLs  
-    • Include semantic HTML structure  
-    • Include notes for web, iOS and Android  
-    • Include a practical checklist  
-    • Include a "Sources" section listing ALL URLs from the RAG data  
+    Include:
+    • A short definition
+    • WCAG 2.2 AA criteria (with correct URLs)
+    • ARIA roles and states (with MDN URLs)
+    • Semantic HTML structure
+    • Implementation notes for web, iOS and Android
+    • A practical checklist
+    • A Sources section listing ALL URLs used
 
-    If NO RAG data exists:
-    • Provide ONLY general accessibility principles  
-    • Do NOT output *any* URLs  
-    • Do NOT output WCAG numbers  
-    • Do NOT output platform patterns  
-    • Do NOT output a "Sources" section  
-
-    Your first <h2> must contain exactly: ${component}.  
     Return valid semantic HTML only.
-    `.trim();
+    The <h2> must contain exactly: ${canonicalComponentName}.
+    `;
 
     // ---------------------------------------------------------------------
-    // Call OpenAI API
+    // OpenAI API request
     // ---------------------------------------------------------------------
     const resp = await fetchWithTimeout(OPENAI_URL, {
       method: "POST",
@@ -165,33 +226,21 @@ export async function handler(event) {
       body: JSON.stringify({
         model: "gpt-4.1-mini",
         temperature: 0,
-        max_tokens: 6500,
+        max_tokens: 6000,
         messages: [
           {
             role: "system",
             content: `
             You are an expert accessibility technical writer.
+            Use ONLY verified accessibility sources and the provided RAG data.
 
-            STRICT MODES:
+            Trusted sources:
+            WCAG 2.2, ARIA APG, MDN, Apple HIG, Material 3, GOV.UK Design System,
+            WebAIM, TetraLogical, Deque, atomica11y, Popetech, Axesslab, A11y Style Guide.
 
-            1) When RAG data exists:
-              • Use ONLY verified RAG data and trusted industry sources:
-                WCAG 2.2, ARIA APG, MDN, Apple HIG, Material 3,
-                GOV.UK Design System, WebAIM, TetraLogical, Deque,
-                atomica11y, Popetech, Axesslab, A11y Style Guide.
-              • Never invent URLs or WCAG numbers.
-              • Only use links found in the RAG file.
-              • Ensure ALL URLs appear in a "Sources" section.
-
-            2) When NO RAG data exists:
-              • Output ONLY generic accessibility principles.
-              • No URLs.
-              • No WCAG numbers.
-              • No Sources section.
-              • No ARIA specifics unless universally applicable.
-
-            Always output clean semantic HTML only.
-            `.trim()
+            Never invent URLs or WCAG numbers.
+            Always output clean, semantic HTML.
+            `
           },
           { role: "user", content: userPrompt }
         ]
@@ -208,16 +257,15 @@ export async function handler(event) {
       };
     }
 
-    // ---------------------------------------------------------------------
-    // Extract & tidy HTML
-    // ---------------------------------------------------------------------
-    let html = (data?.choices?.[0]?.message?.content || "").trim();
+    let html = (data.choices?.[0]?.message?.content || "").trim();
 
     html = html
       .replace(/^```(?:html)?/i, "")
       .replace(/```$/i, "")
-      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>')
-      .trim();
+      .replace(
+        /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+        '<a href="$2">$1</a>'
+      );
 
     html = tidyHtml(html);
 
@@ -228,7 +276,6 @@ export async function handler(event) {
     };
   } catch (err) {
     console.error("Function error:", err);
-
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message })
