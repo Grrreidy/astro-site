@@ -6,5 +6,4 @@
   "atomica11yWeb": "https://www.atomica11y.com/accessible-web/tabs/",
   "hashi": "https://helios.hashicorp.design/components/tabs?tab=accessibility",
   "adrianRoselli": "https://adrianroselli.com/2013/02/aria-tabs.html",
-  "notes": "Tabs group content into sections; ensure correct tablist, tab, and tabpanel roles and keyboard handling."
 }

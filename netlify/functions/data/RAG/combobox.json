@@ -1,5 +1,4 @@
 {
   "spectrum": "https://react-spectrum.adobe.com/blog/building-a-combobox.html",
   "popetech": "https://blog.pope.tech/2024/07/01/create-an-accessible-combobox-using-aria/",
-  "notes": "ComboBoxes combine a text entry with a picker menu, allowing users to filter longer lists to only the selections matching a query."
 }

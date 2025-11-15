@@ -2,5 +2,4 @@
   "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/separator/",
   "material3": "https://m3.material.io/components/divider/overview",
   "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-divider",
-  "notes": "Dividers visually separate content; use semantic <hr> elements and sufficient contrast."
 }

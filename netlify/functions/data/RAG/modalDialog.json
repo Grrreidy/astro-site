@@ -5,5 +5,4 @@
   "material3": "https://m3.material.io/components/dialogs/overview",
   "atomica11yWeb": "https://www.atomica11y.com/accessible-web/dialog-modal/",
   "hashi": "https://helios.hashicorp.design/components/modal?tab=accessibility",
-  "notes": "Modals trap focus within their region and must be dismissible via keyboard and accessible controls."
 }

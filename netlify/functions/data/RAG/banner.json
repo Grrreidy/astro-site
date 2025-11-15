@@ -2,5 +2,4 @@
   "GDS": "https://design-system.service.gov.uk/components/banner/",
   "material3": "https://m3.material.io/components/banner/overview",
   "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-feedback.html#kssref-feedback-banner",
-  "notes": "Banners communicate site-wide or high-level information; ensure they are dismissible and announced politely."
 }

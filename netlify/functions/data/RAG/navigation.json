@@ -3,5 +3,4 @@
   "GDS": "https://design-system.service.gov.uk/components/header/",
   "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/navigation",
   "material3": "https://m3.material.io/components/navigation-bar/overview",
-  "notes": "Navigation regions group links and menus; provide landmarks with aria-labels for quick screen reader navigation."
 }

@@ -3,5 +3,4 @@
   "GDS": "https://design-system.service.gov.uk/components/card/",
   "material3": "https://m3.material.io/components/cards/overview",
   "atomica11yWeb": "https://www.atomica11y.com/accessible-web/card/",
-  "notes": "Cards group related content and actions; preserve heading structure and logical reading order."
 }

@@ -6,6 +6,32 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
 // ---------------------------------------------------------------------------
+// RAG compression (lightweight, fast)
+// ---------------------------------------------------------------------------
+function compressRagEntry(entry) {
+  const out = {};
+  for (const key in entry) {
+    const val = entry[key];
+
+    // Keep URLs exactly as-is
+    if (typeof val === "string" && val.startsWith("http")) {
+      out[key] = val;
+      continue;
+    }
+
+    // Compress long text blocks
+    if (typeof val === "string" && val.length > 500) {
+      out[key] = val.slice(0, 500) + "…";
+      continue;
+    }
+
+    // Pass through short strings untouched
+    out[key] = val;
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
 // Cache RAG data
 // ---------------------------------------------------------------------------
 const ragDir = path.join(process.cwd(), "netlify/functions/data/rag");
@@ -17,9 +43,11 @@ try {
     if (file.endsWith(".json")) {
       const key = file.replace(".json", "").toLowerCase();
       const raw = fs.readFileSync(path.join(ragDir, file), "utf8");
-      RAG_CACHE[key] = JSON.parse(raw);
+      const json = JSON.parse(raw);
+      RAG_CACHE[key] = compressRagEntry(json);   // <<< compressed here
     }
   }
+
   console.log("RAG cache loaded:", Object.keys(RAG_CACHE).length, "files");
 } catch (err) {
   console.error("Failed to initialise RAG cache:", err);
@@ -39,15 +67,15 @@ async function fetchWithTimeout(resource, options = {}, ms = 40000) {
 }
 
 // ---------------------------------------------------------------------------
-// Tidy HTML for semantic structure section
+// Tidy HTML (lightweight prettifier)
 // ---------------------------------------------------------------------------
 function tidyHtml(html) {
   return html
-    .replace(/^\s+/, "")              // remove leading whitespace
-    .replace(/\s+$/, "")              // remove trailing whitespace
-    .replace(/\n{3,}/g, "\n\n")       // collapse big blank gaps
-    .replace(/>\s+</g, ">\n<")        // place tags on their own lines
-    .replace(/ {3,}/g, "  ")          // collapse excessive spaces
+    .replace(/^\s+/, "")
+    .replace(/\s+$/, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/>\s+</g, ">\n<")
+    .replace(/ {3,}/g, "  ")
     .trim();
 }
 
@@ -77,8 +105,9 @@ export async function handler(event) {
       return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
 
-    // RAG lookup
+    // RAG lookup with fallback
     let match = RAG_CACHE[component];
+
     if (!match) {
       const keys = Object.keys(RAG_CACHE);
       const fuzzy = keys.find(k => k.includes(component));
@@ -120,7 +149,7 @@ export async function handler(event) {
       body: JSON.stringify({
         model: "gpt-4.1-mini",
         temperature: 0,
-        max_tokens: 2200,
+        max_tokens: 6000,
         messages: [
           {
             role: "system",
@@ -150,13 +179,11 @@ export async function handler(event) {
 
     let html = (data.choices?.[0]?.message?.content || "").trim();
 
-    // Cleanup
     html = html
       .replace(/^```(?:html)?/i, "")
       .replace(/```$/i, "")
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
 
-    // Lightweight prettifier
     html = tidyHtml(html);
 
     return {

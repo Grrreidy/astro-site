@@ -2,5 +2,4 @@
   "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/menu/",
   "GDS": "https://design-system.service.gov.uk/components/header/",
   "material3": "https://m3.material.io/components/menus/overview",
-  "notes": "Menus present navigation options or commands; support arrow-key navigation and correct aria roles."
 }

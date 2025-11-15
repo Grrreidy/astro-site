@@ -5,5 +5,4 @@
   "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-textfields",
   "atomica11y": "https://www.atomica11y.com/accessible-web/input-text/",
   "hashi": "https://helios.hashicorp.design/components/form/text-input?tab=accessibility",
-  "notes": "Text fields capture user input; provide clear labels, error messaging, and visible focus indicators."
 }

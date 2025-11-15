@@ -5,5 +5,4 @@
   "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-form.html#kssref-form-checkboxes",
   "atomica11y": "https://www.atomica11y.com/accessible-web/checkbox/",
   "hashi": "https://helios.hashicorp.design/components/form/checkbox?tab=accessibility",
-  "notes": "Checkboxes allow one or more independent selections; ensure label association and clear state."
 }

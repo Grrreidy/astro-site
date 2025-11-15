@@ -5,5 +5,4 @@
   "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-links",
   "hashi": "https://helios.hashicorp.design/components/link/inline?tab=accessibility",
   "kittyGiraudel": "https://kittygiraudel.com/2020/12/10/accessible-icon-links/",
-  "notes": "Links navigate between pages or views; ensure descriptive link text and visible focus indicators."
 }

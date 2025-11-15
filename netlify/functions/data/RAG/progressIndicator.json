@@ -3,5 +3,4 @@
   "GDS": "https://design-system.service.gov.uk/components/progress-indicator/",
   "material3": "https://m3.material.io/components/progress-indicators/overview",
   "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-feedback.html#kssref-feedback-progress",
-  "notes": "Progress indicators convey ongoing processes; use aria-valuenow and aria-valuetext for updates."
 }

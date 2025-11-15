@@ -1,5 +1,4 @@
 {
   "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/scroll-views",
   "material3": "https://m3.material.io/foundations/layout/scrolling",
-  "notes": "Scrolling regions must not trap focus; ensure keyboard and touch users can reach all content."
 }

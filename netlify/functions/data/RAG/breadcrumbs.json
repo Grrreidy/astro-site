@@ -4,5 +4,4 @@
   "material3": "https://m3.material.io/components/breadcrumbs/overview",
   "hashi": "https://helios.hashicorp.design/components/breadcrumb?tab=accessibility",
   "atomica11y": "https://www.atomica11y.com/accessible-web/breadcrumbs/",
-  "notes": "Breadcrumbs show users their location in a hierarchy; mark up as a nav region with aria-label='Breadcrumb'."
 }
