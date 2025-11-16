@@ -94,12 +94,10 @@ h4, h5, h6 {
 h1 {
   font-family: var(--font-display);
   font-size: var(--font-3xl);
-  text-transform: lowercase;
 }
 
 .h1-small { 
   font-size: var(--font-2xl);
-  text-transform: none;
 }
 
 h2 {

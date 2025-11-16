@@ -12,12 +12,10 @@ import Footer from '../components/Footer.astro';
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <!-- Use the same structure as other pages -->
     <Header />
 
     <main id="main-content" class="container blog">
       <h1 class="h1-small">Generate accessibility guidance for a component</h1>
-      <p></p>
 
       <form id="a11y-form" class="a11y-form" novalidate>
         <div class="form-field">
@@ -35,14 +33,15 @@ import Footer from '../components/Footer.astro';
 
       <p id="status" class="status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
+      <!-- RESULT SECTION -->
       <section id="result" class="a11y-result blog-content" hidden aria-busy="false" aria-labelledby="result-heading">
         <h2 id="result-heading" class="sr-only">Generated results</h2>
         <div id="output" class="blog-content"></div>
       </section>
 
       <p class="field-help" style="margin-top: var(--space-xl);">
-        Made with an<a href="https://platform.openai.com/">OpenAI prompt</a>,  
-        <a href="https://docs.netlify.com/build/functions/overview/">Netlify functions</a> and <a href="https://en.wikipedia.org/wiki/Retrieval-augmented_generation">RAG</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
+        Made with <a href="https://platform.openai.com/">OpenAI</a>,  
+        <a href="https://docs.netlify.com/build/functions/overview/">Netlify</a> and <a href="https://en.wikipedia.org/wiki/Retrieval-augmented_generation">RAG</a>. This is an experiment. Generated content isn’t guaranteed to be accurate or complete. Please review and validate before use.
       </p>
     </main>
 
@@ -78,13 +77,20 @@ import Footer from '../components/Footer.astro';
         border: 0 !important;
       }
 
-      .a11y-result { margin-block-start: var(--space-l); }
       .a11y-result .blog-content {
-        background: var(--color-surface, var(--color-white, #ffffff));
-        padding: 1rem;
-        border-radius: 12px;
-        border: 2px dashed var(--color-blue, #0b5fff);
+        background: none;
+        padding: 0;
+        border: none;
+        border-radius: 0;
       }
+      #result {
+        margin-top: var(--space-xl);
+      }
+      #output.blog-content {
+        max-width: var(--measure-loose);
+        margin-inline: auto;
+      }
+
       #output ul, #output ol { margin: 0 0 var(--space-m) 1rem; }
       #output h2, #output h3 { margin-top: var(--space-m); }
       #output p + h2, #output ul + h2, #output ol + h2 { margin-top: var(--space-l); }
@@ -97,7 +103,7 @@ import Footer from '../components/Footer.astro';
 
       .field-error {
         font-size: inherit;
-        color: var(--color-red, #d00);
+        color: var(--color-red);
         display: inline-flex;
         align-items: center;
         gap: .4rem;
@@ -115,7 +121,7 @@ import Footer from '../components/Footer.astro';
         margin-left: 0.5em;
         width: 1em;
         height: 1em;
-        border: 0.2em solid var(--color-white, #fff);
+        border: 0.2em solid var(--color-white);
         border-top: 0.2em solid transparent;
         border-radius: 50%;
         vertical-align: middle;
@@ -126,11 +132,6 @@ import Footer from '../components/Footer.astro';
       .btn-spinner.active {
         opacity: 1;
         animation: spin 0.8s linear infinite;
-      }
-
-      .default-button:hover .btn-spinner.active {
-        border-color: var(--color-red, #d00);
-        border-top-color: transparent;
       }
 
       @keyframes spin { 100% { transform: rotate(360deg); } }
