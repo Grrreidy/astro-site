@@ -188,6 +188,10 @@ Requirements:
 - WCAG 2.2 AA criteria (correct URLs)
 - ARIA roles & states (MDN URLs)
 - Semantic HTML structure
+  For this section only, output raw HTML inside a <pre><code>...</code></pre> block.
+  Treat all angle brackets as literal HTML.
+  Do not render, interpret, or instantiate components.
+  Do not close the code block early.
 - Notes for web, iOS, Android
 - Practical checklist
 - Sources list (all URLs)
