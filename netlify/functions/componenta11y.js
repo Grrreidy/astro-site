@@ -187,10 +187,12 @@ Requirements:
 - Short definition
 - WCAG 2.2 AA criteria (correct URLs)
 - ARIA roles & states (MDN URLs)
-- Semantic HTML structure
-  For this section only, output raw HTML inside a <pre><code>...</code></pre> block.
-  Treat all angle brackets as literal HTML.
-  Do not render, interpret, or instantiate components.
+- Semantic HTML structure  
+  For this section only, output illustrative placeholder HTML inside a <pre><code>...</code></pre> block.  
+  Do NOT build or represent the actual component.  
+  The HTML must NOT resemble or function as the real component.  
+  The goal is to show structure, not implementation.  
+  Treat all angle brackets as literal characters.  
   Do not close the code block early.
 - Notes for web, iOS, Android
 - Practical checklist
