@@ -16,12 +16,11 @@ import Footer from '../components/Footer.astro';
 
     <main id="main-content" class="container blog">
       <h1 class="h1-small">Generate accessibility guidance for a component</h1>
-
       <form id="a11y-form" class="a11y-form" novalidate>
         <div class="form-field">
           <label for="component">Component</label>
           <input id="component" name="component" required aria-describedby="component-help component-error" />
-          <p id="component-help" class="field-help">Try: Accordion, Card, Button, Tooltip or Modal</p>
+          <p id="component-help" class="field-help">Try: Modal, Button, Tooltip or Pagination</p>
           <p id="component-error" class="field-error" hidden>Enter a component</p>
         </div>
 
@@ -163,7 +162,7 @@ import Footer from '../components/Footer.astro';
 
       function showLoading() {
         isLoading = true;
-        announce('This references A LOT of material so might take up to 90 seconds. Go make coffee.');
+        announce('This references A LOT of material so might take up to 90 seconds. Occasionally it times out and only outputs sadness.');
         btnSpinner.classList.add('active');
         btn.setAttribute('aria-disabled', 'true');
         form.setAttribute('aria-busy', 'true');

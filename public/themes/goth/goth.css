@@ -78,7 +78,6 @@ header {
 /* 
    HEADINGS
 =================================================== */
-/* Twilight font on all headings in goth mode */
 html h1, html h2, html h3, html h4, html h5, html h6,
 body h1, body h2, body h3, body h4, body h5, body h6,
 .container h1, .container h2, .container h3, .container h4, .container h5, .container h6,
@@ -122,7 +121,6 @@ a {
   outline: 0.125em solid var(--goth-white);
 }
 
-/* Heading links */
 ::where(h1, h2, h3, h4, h5, h6) a {
   color: var(--goth-purple);
   text-decoration: none;
@@ -133,12 +131,10 @@ a {
   text-decoration: underline wavy var(--goth-purple);
 }
 
-/* Heading links inside main content */
 .container :is(h1, h2, h3, h4, h5, h6) a {
   color: var(--goth-purple);
 }
 
-/* Blog list heading links */
 .post-item h2 a,
 .post-item h3 a,
 .post-title a {
@@ -158,8 +154,6 @@ a {
   background: transparent;
 }
 
-
-/* Footer links */
 footer a {
   color: var(--goth-text);
   text-decoration: underline;
@@ -464,16 +458,16 @@ code {
 @keyframes driftXY {
   0%   { transform: translate(0, 0) }
   25%  { transform: translate(var(--amp-x, 20px), var(--amp-y, -14px)) }
-  50%  { transform: translate(calc(var(--amp-x, 20px) * -0.6), calc(var(--amp-y, -14px) * -0.6)) }
-  75%  { transform: translate(calc(var(--amp-x, 20px) * 0.4),  calc(var(--amp-y, -14px) * 0.9)) }
+  50%  { transform: translate(calc(var(--amp-x, 20px)*-0.6), calc(var(--amp-y,-14px)*-0.6)) }
+  75%  { transform: translate(calc(var(--amp-x, 20px)*0.4), calc(var(--amp-y,-14px)*0.9)) }
   100% { transform: translate(0, 0) }
 }
 
 @keyframes orbit {
   0%   { transform: translate(var(--amp-x, 24px), 0) rotate(0deg) }
   25%  { transform: translate(0, var(--amp-y, 24px)) rotate(90deg) }
-  50%  { transform: translate(calc(var(--amp-x, 24px) * -1), 0) rotate(180deg) }
-  75%  { transform: translate(0, calc(var(--amp-y, 24px) * -1)) rotate(270deg) }
+  50%  { transform: translate(calc(var(--amp-x, 24px)*-1), 0) rotate(180deg) }
+  75%  { transform: translate(0, calc(var(--amp-y, 24px)*-1)) rotate(270deg) }
   100% { transform: translate(var(--amp-x, 24px), 0) rotate(360deg) }
 }
 
@@ -501,7 +495,6 @@ header, main, footer {
    CONTENT OVERRIDES (LEGIBILITY)
 =================================================== */
 
-/* Fix for generated output */
 #output,
 #output p,
 #output li,
@@ -510,29 +503,24 @@ header, main, footer {
   background: transparent;
 }
 
-/* Fix for miscellaneous result surfaces */
 .a11y-result,
 .status-message {
   color: var(--goth-white);
 }
 
-/* ⭐ FIX: make the status message override win against page-level CSS */
 .container .status-message {
   color: var(--goth-white);
 }
 
-/* code blocks */
 .a11y-result pre {
   background: transparent;
   color: var(--goth-white);
 }
 
-/* field-help hint text */
 .field-help {
   color: var(--goth-white);
 }
 
-/* Common error message hooks */
 .error,
 .error-message,
 .validation-error,
@@ -586,6 +574,15 @@ footer img {
   filter: none !important;
   box-shadow: none !important;
   outline: none !important;
+  transform: none !important;
+}
+
+/* ⭐ FIX: decorative gifs — stay true colour */
+.goth-decor img,
+.goth-decor .goth-gif {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
   transform: none !important;
 }
 
