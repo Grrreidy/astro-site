@@ -5,55 +5,59 @@ import path from "path";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
-// ---------------------------------------------------------------------------
-// Component whitelist
-// ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
+   Component whitelist (must match the RAG filenames)
+--------------------------------------------------------------------------- */
+
 const ALLOWED_COMPONENTS = [
   "accordion",
-  "banner",
+  "aria",
   "breadcrumbs",
   "button",
   "card",
   "carousel",
-  "caption",
   "character count",
   "checkbox",
-  "cookiebanner",
   "combobox",
+  "cookiebanner",
   "date time picker",
+  "disclosure",
   "divider",
-  "form",
+  "error message",
+  "file upload",
   "grid",
-  "headline",
-  "inline message",
-  "layout",
+  "landmarks",
   "link",
-  "media",
+  "list",
   "menu",
-  "modal",
+  "modal dialog",
   "navigation",
-  "ordered list",
+  "notification",
   "pagination",
+  "password",
   "progress indicator",
   "radio button",
   "scroll",
   "select",
-  "standfirst",
+  "skip link",
+  "slider",
+  "table",
   "tabs",
   "tag",
-  "text block",
-  "text blockquote",
+  "text area",
   "text input",
-  "title bar",
   "toast",
-  "tooltip",
   "toggle",
-  "unordered list"
+  "toolbars",
+  "tooltip",
+  "treeview",
+  "video"
 ].map(c => c.toLowerCase());
 
-// ---------------------------------------------------------------------------
-// Cache RAG data on cold start
-// ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
+   RAG cache
+--------------------------------------------------------------------------- */
+
 const ragDir = path.join(process.cwd(), "netlify/functions/data/rag");
 let RAG_CACHE = {};
 
@@ -71,9 +75,9 @@ try {
   console.error("Failed to initialise RAG cache:", err);
 }
 
-// ---------------------------------------------------------------------------
-// Timeout-safe fetch
-// ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
+   Timeout-safe fetch
+--------------------------------------------------------------------------- */
 async function fetchWithTimeout(resource, options = {}, ms = 40000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), ms);
@@ -85,9 +89,9 @@ async function fetchWithTimeout(resource, options = {}, ms = 40000) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Tidy HTML
-// ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
+   HTML cleanup
+--------------------------------------------------------------------------- */
 function tidyHtml(html) {
   return html
     .replace(/^\s+/, "")
@@ -98,47 +102,36 @@ function tidyHtml(html) {
     .trim();
 }
 
-// ---------------------------------------------------------------------------
-// Handler
-// ---------------------------------------------------------------------------
+/* ---------------------------------------------------------------------------
+   Handler
+--------------------------------------------------------------------------- */
 export async function handler(event) {
   try {
-    // Parse JSON
     let body = {};
     try {
       body = JSON.parse(event.body || "{}");
     } catch {
-      console.error("Invalid request JSON");
+      console.error("Invalid JSON in request");
     }
 
-    // Component normalisation
-    const rawComponent =
-      typeof body.component === "string" ? body.component.trim() : "";
+    const rawComponent = typeof body.component === "string" ? body.component.trim() : "";
     const component = rawComponent.toLowerCase();
 
     if (!OPENAI_API_KEY) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          error: "Missing OPENAI_API_KEY environment variable"
-        })
-      };
+      return { statusCode: 500, body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" }) };
     }
 
     if (!component) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Enter a component" })
-      };
+      return { statusCode: 400, body: JSON.stringify({ error: "Enter a component" }) };
     }
 
-    // ---------------------------------------------------------------------
-    // STEP 1: Whitelist enforcement (no hallucinated components)
-    // ---------------------------------------------------------------------
+    /* ---------------------------------------------------------------------
+       Whitelist validation
+    --------------------------------------------------------------------- */
     let allowedMatch = ALLOWED_COMPONENTS.find(c => c === component);
 
     if (!allowedMatch) {
-      const fuzzy = ALLOWED_COMPONENTS.find(c => c.includes(component));
+      const fuzzy = ALLOWED_COMPONENTS.find(c => c.includes(component) || component.includes(c));
       if (fuzzy) {
         allowedMatch = fuzzy;
         console.log(`Whitelist fuzzy match: ${component} → ${fuzzy}`);
@@ -149,21 +142,21 @@ export async function handler(event) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          error: `"${component}" is not a recognised component. You're trying stupid words, aren't you?`
+          error: `"${component}" is not a recognised component. You're trying to trick me with stupid words, aren't you?`
         })
       };
     }
 
     const canonicalComponentName = allowedMatch;
 
-    // ---------------------------------------------------------------------
-    // STEP 2: Load RAG data
-    // ---------------------------------------------------------------------
-    let match = RAG_CACHE[canonicalComponentName];
+    /* ---------------------------------------------------------------------
+       RAG lookup
+    --------------------------------------------------------------------- */
+    const ragKey = canonicalComponentName.replace(/ /g, "").toLowerCase();
+    let match = RAG_CACHE[ragKey];
 
     if (!match) {
-      const keys = Object.keys(RAG_CACHE);
-      const fuzzy = keys.find(k => k.includes(canonicalComponentName));
+      const fuzzy = Object.keys(RAG_CACHE).find(k => k.includes(ragKey));
       if (fuzzy) {
         match = RAG_CACHE[fuzzy];
         console.log(`RAG fuzzy match: ${canonicalComponentName} → ${fuzzy}`);
@@ -174,9 +167,9 @@ export async function handler(event) {
       ? `Below is trusted RAG DATA for "${canonicalComponentName}":\n${JSON.stringify(match, null, 2)}`
       : `No RAG data found for "${canonicalComponentName}". Use only trusted sources.`;
 
-    // ---------------------------------------------------------------------
-    // Prompt
-    // ---------------------------------------------------------------------
+    /* ---------------------------------------------------------------------
+       Prompt
+    --------------------------------------------------------------------- */
     const userPrompt = `
     Write detailed, cross-platform accessibility documentation for the "${canonicalComponentName}" component.
 
@@ -188,7 +181,7 @@ export async function handler(event) {
     • WCAG 2.2 AA criteria (with correct URLs)
     • ARIA roles and states (with MDN URLs)
     • Semantic HTML structure
-    • Implementation notes for web, iOS and Android
+    • Web, iOS and Android notes
     • A practical checklist
     • A Sources section listing ALL URLs used
 
@@ -196,9 +189,9 @@ export async function handler(event) {
     The <h2> must contain exactly: ${canonicalComponentName}.
     `;
 
-    // ---------------------------------------------------------------------
-    // OpenAI API
-    // ---------------------------------------------------------------------
+    /* ---------------------------------------------------------------------
+       OpenAI API
+    --------------------------------------------------------------------- */
     const resp = await fetchWithTimeout(OPENAI_URL, {
       method: "POST",
       headers: {
@@ -233,10 +226,7 @@ export async function handler(event) {
 
     if (!resp.ok) {
       console.error("OpenAI API error:", data);
-      return {
-        statusCode: resp.status,
-        body: JSON.stringify({ error: data })
-      };
+      return { statusCode: resp.status, body: JSON.stringify({ error: data }) };
     }
 
     let html = (data.choices?.[0]?.message?.content || "").trim();
@@ -256,9 +246,6 @@ export async function handler(event) {
 
   } catch (err) {
     console.error("Function error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 }

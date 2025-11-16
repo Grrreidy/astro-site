@@ -1,4 +1,6 @@
 {
-  "SaraSoueidan": "https://www.sarasoueidan.com/blog/toggle-switch-design/",
-  "atomica11y": "https://www.atomica11y.com/accessible-web/toggle-switch/"
+  "atomica11y": "https://www.atomica11y.com/accessible-web/toggle-switch/",
+  "hashi": "https://helios.hashicorp.design/components/form/toggle?tab=accessibility",
+  "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/toggles",
+  "material": "https://m3.material.io/components/switch/overview"
 }

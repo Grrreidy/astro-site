@@ -1,6 +1,5 @@
 {
-  "saraSoueidan": "https://www.sarasoueidan.com/blog/css-carousels-accessibility/",
-  "GDS": "https://design-system.service.gov.uk/components/card/",
-  "material3": "https://m3.material.io/components/cards/overview",
-  "atomica11yWeb": "https://www.atomica11y.com/accessible-web/card/"
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/carousel/",
+  "material3": "https://m3.material.io/components/carousel/accessibility",
+  "WAI": "https://www.w3.org/WAI/tutorials/carousels/"
 }

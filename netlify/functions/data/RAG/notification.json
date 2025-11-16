@@ -1,0 +1,6 @@
+{
+  "GDS": "https://design-system.service.gov.uk/components/notification-banner/",
+  "material3": "https://m3.material.io/components/snackbar/overview",
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/alert/",
+  "appleHig": "https://developer.apple.com/design/human-interface-guidelines/notifications"
+}

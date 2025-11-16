@@ -1,0 +1,5 @@
+{
+  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/table/",
+  "GDS": "https://design-system.service.gov.uk/components/table/",
+  "hashi": "https://helios.hashicorp.design/components/table/table?tab=accessibility"
+}

@@ -1,6 +1,6 @@
 {
-  "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/progressbar/",
-  "GDS": "https://design-system.service.gov.uk/components/progress-indicator/",
-  "material3": "https://m3.material.io/components/progress-indicators/overview",
-  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-feedback.html#kssref-feedback-progress"
+  "atomica11y": "https://www.atomica11y.com/accessible-web/progress/",  
+  "material3": "https://m3.material.io/components/progress-indicators/accessibility",
+  "hashi": "https://helios.hashicorp.design/components/stepper/indicator?tab=accessibility",
+  "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/progress-indicators"
 }

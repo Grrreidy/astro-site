@@ -1,5 +1,5 @@
 {
   "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/menu/",
-  "GDS": "https://design-system.service.gov.uk/components/header/",
-  "material3": "https://m3.material.io/components/menus/overview"
+  "material3": "https://m3.material.io/components/menus/accessibility",
+  "appleHIG": "https://developer.apple.com/design/human-interface-guidelines/menus"
 }

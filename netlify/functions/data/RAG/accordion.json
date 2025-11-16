@@ -1,9 +1,6 @@
 {
   "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/accordion/",
   "GDS": "https://design-system.service.gov.uk/components/accordion/",
-  "material3": "https://m3.material.io/components/expansion-panels/overview",
-  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-structure.html#kssref-structure-accordion",
-  "helios": "https://helios.hashicorp.design/components/accordion?tab=accessibility",
-  "saraSoueidan": "https://www.sarasoueidan.com/blog/accordion-markup/",
-  "adrianroselli": "https://adrianroselli.com/2023/08/progressively-enhanced-html-accordion.html"
+  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-navigation.html#kssref-navigation-accordion",
+  "helios": "https://helios.hashicorp.design/components/accordion?tab=accessibility"
 }

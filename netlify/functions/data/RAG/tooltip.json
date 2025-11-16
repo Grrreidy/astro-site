@@ -1,7 +1,5 @@
 {
   "ariaPatterns": "https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/",
-  "GDS": "https://design-system.service.gov.uk/components/tooltip/",
-  "material3": "https://m3.material.io/components/tooltips/overview",
-  "a11yStyleGuide": "https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-tooltips",
+  "material3": "https://m3.material.io/components/tooltips/accessibility",
   "hashi": "https://helios.hashicorp.design/components/tooltip?tab=accessibility"
 }
