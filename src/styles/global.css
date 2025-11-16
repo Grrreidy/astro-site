@@ -26,9 +26,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: inherit;
-  font-family: inherit;
 }
+
 
 html {
   font-size: clamp(1rem, 4vmin, 1.3rem);
@@ -718,7 +717,7 @@ article th {
 }
 
 .a11y-result pre {
-  background: #f6f6f6;
+  background: var(--color-blue);
   padding: 1rem;
   border-radius: 12px;
   white-space: pre-wrap;

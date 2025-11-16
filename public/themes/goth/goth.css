@@ -4,6 +4,11 @@
    Loads when fantasy goth mode is enabled. I'm not sorry.
 =================================================== */
 
+/* 
+   FONT
+=================================================== */
+@import url('https://fonts.cdnfonts.com/css/twilight.font');
+
 
 /* 
    THEME COLOR TOKENS
@@ -38,12 +43,6 @@
   --goth-black-60: rgba(0, 0, 0, 0.6);
   --goth-black-35: rgba(0, 0, 0, 0.35);
 }
-
-
-/* 
-   FONT
-=================================================== */
-@import url('https://fonts.cdnfonts.com/css/twilight.font');
 
 
 /* 
@@ -398,8 +397,9 @@ code {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  contain: layout paint;
+  contain: layout;
 }
+
 
 .goth-item {
   position: absolute;
@@ -583,7 +583,6 @@ footer img {
   filter: none !important;
   mix-blend-mode: normal !important;
   opacity: 1 !important;
-  transform: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
