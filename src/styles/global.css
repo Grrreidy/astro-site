@@ -710,7 +710,7 @@ article th {
 
 
 /* 
-   A11Y DOCS RESULTS
+   COMPONENTA11Y RESULTS
 =================================================== */
 .a11y-result {
   margin-block-start: var(--space-l); 
@@ -719,6 +719,7 @@ article th {
 .a11y-result pre {
   background: var(--color-blue);
   padding: 1rem;
+  margin-bottom: var(--space-m); 
   border-radius: 12px;
   white-space: pre-wrap;
 }
