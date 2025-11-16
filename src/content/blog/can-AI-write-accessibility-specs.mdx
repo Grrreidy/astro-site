@@ -1,0 +1,111 @@
+---
+title: "Can AI write accessibility specs?"
+description: "I wrote a prompt to help me write accessibility specs for components. Then had an existential crisis."
+pubDate: 2025-11-16
+image: "/images/open-graph.png"
+author: "Geri Reid"
+draft: true
+---
+
+# Can AI write accessibility specs?
+
+TLDR: I built a little RAG AI prompt that pulls together accessibility best practices for whatever component I'm advising teams on. 
+
+Then I had an existential crisis about using AI.
+
+☞ [Generate accessibility guidance](https://gerireid.com/componenta11y/)
+
+*Test it out and let me know if it's helpful, or if you just... hate me.*
+
+----
+
+Here's my job: 
+
+**Slack pings**: "Hey, quick question about accessibility for this modal..." 
+
+**Figma comment**: "What's the keyboard interaction for this accordion?" 
+
+**Zoom call**: "ARIA labels for this carousel?"
+
+There's usually some docs or a WCAG criterion that springs to mind, or if it's complex, I'll disappear down a research rabbit hole. 
+
+Last month, my brain went wandering into a dangerous place: what if I just... let AI do this? 🙈
+
+The process I go through to advise on a technical spec for a component build or implementation is pretty similar each time. I look at:
+
+- Semantic structure
+- ARIA
+- WCAG / technical guidance
+- Keyboard and focus order
+- Platform specific guidance for apps
+
+From here, I might write a checklist or set of acceptance criteria then jump on a call to share with a designer or engineer. I thought I'd have a pop at wanging all this into a prompt to see what happened.
+
+## 1: Set up an API request
+
+This was surprisingly straightforward, given I'm a designer and I'm not super technical. I wrote a JS function that calls the [OpenAI API](https://platform.openai.com/docs/overview) with my prompt. [Netlify runs the function](https://docs.netlify.com/build/functions/overview/) and stores the API key in environment variables.
+
+To appease my conscience, I went with the [PT-4o-mini model](https://platform.openai.com/docs/models/gpt-4o-mini) - which supposedly means lower electricity consumption and a smaller carbon footprint. At least that's what the guidance says. I mean, why would Sam Altman lie to us?
+
+## 2: Write a prompt that doesn't suck
+
+My initial prompts produced unreliable results. Eventually, I got ChatGPT to help me improve my prompt, thus demonstrating how the web is *SLOWLY EATING ITSELF*.
+
+Before I specified what a component was, the AI just made stupid shit up, hallucinating components based on their titles. Here are some of my favourite fabrications:
+
+![A screenshot of my favourite hallucinated components: the SickMonkey, Yaksmas, BossMan and NumberWang components](/images/hallucinated-components.png)
+<span class="figcaption">*My favourite hallucinated components*</span>
+
+The danger here is that everything is formatted neatly so it *looks* authoritative even if it's a load of old NumberWang.
+
+I also discovered you can set the model’s temperature to low. The model’s temperature controls how random its word choices are. Setting it to zero makes the output more precise and it's less likely to invent details. It doesn’t stop hallucinations entirely, but it makes the model far less prone to creative or speculative answers.
+
+
+## 3: Improve with RAG
+
+After poking the prompt for a bit, the results were mostly correct but the advice was pretty generic. Like WCAG criteria that could apply to anything, and links to general guidelines instead of specific component docs.
+
+Enter [Retrieval Augmented Generation](https://en.wikipedia.org/wiki/Retrieval-augmented_generation) (RAG). Instead of letting a model make educated guesses based on the murky depths of the internets, you give it verified information to base a response on. 
+
+I altered my script like this:
+
+1. **Retrieve**: My Netlify function looks up the component in a directory of local JSON files containing links to WCAG, ARIA Authoring Practices, MDN docs, Apple's HIG, Material, and design systems sites which I know offer sound advice. Basically, the same sources I'd check myself. These perform best with no more than 4 links per component. Any more, and it timed out or results got confused.
+
+2. **Augment**: The function builds a prompt that includes these verified sources, so the model knows exactly what it can reference.
+
+3. **Generate**: OpenAI API generates the guidance with a low temperature setting for factual accuracy.
+
+
+## Where I landed
+
+This is genuinely useful for quick aggregation. I'm not interested in LLMs creating new content for me, but in terms of pulling things together, this is a solid time-saver.
+
+But the risks are very real.
+
+Even with RAG and OpenAI API's temperature at the lowest setting, it still hallucinates. Hallucinations are paired with the overconfidence of a crypto influencer explaining NFTs to your Nan. Some of the code it prints in the semantic web section is startlingly wrong. But given the material LLMs are fed with is flawed, can we ever rely on them to be 100% correct? The [WebAim Million](https://webaim.org/projects/million/) still shows that 94% of the internet's top million homepages have WCAG fails, so I feel like we're asking the impossible.
+
+These tools work best handling the heavy lifting, maybe that first 60%, while you bring the human insight that understands actual users and real-world stakes. When someone's ability to access critical information hinges on detail in the technical build, there's no substitute for thoughtful human oversight. Also much of accessibilty advice is context dependent.
+
+What struck me most about this whole 'vibe coding' experiment is how much you can build without actually understanding what you're doing. It's genuinely unsettling. I don't know how the code works, or if it even works the way I think it does. I'm copying and pasting ChatGPT's suggestions, wrestling with Copilot until the compiler errors disappear, then poking it until something functional emerges. Seems harmless enough for a designer on a side-quest, but the thought that significant chunks of the web are now being built this way? 
+
+Absolutely bloody terrifying.
+
+## My existential AI crisis
+
+Here's the sticker: I actually *enjoy* researching and writing component accessibility guidance. That's how I learn stuff and verify accuracy.
+
+Beyond accuracy, I'm grappling with how to use AI responsibly as an accessibility practitioner. The [ethical](https://www.theatlantic.com/technology/archive/2025/03/libgen-meta-openai/682093/?gift=iWa_iB9lkw4UuiWbIbrWGYDRoX8kfg3ZQZL6J-W0kQE) and [environmental](https://wimvanderbauwhede.codeberg.page/articles/google-search-vs-chatgpt-emissions/) costs are serious. Powerful AI systems rest on the [invisible work of underpaid labour](https://www.noemamag.com/the-exploited-labor-behind-artificial-intelligence). Then there's the underlying sense of dread that when the [AI bubble bursts](https://www.wheresyoured.at/howmuchmoney/), lots of my friends will probably lose their jobs.
+
+Mostly, it feels dirty feeding expert-authored content into OpenAI's training machine, even if it's publicly available. Like I'm doing a disservice to the incredible people who created it. I added a sources section to the end of the prompt for transparency on where advice came from. And I didn't reference any personal blogs or sites because it felt wrong without permission.
+
+I worry that over-reliance on AI erodes critical thinking, turning me from a mildly engaging human into a zombified prompt engineer. I'm determined to keep writing blog posts from scratch so I don't lose my voice, like, even if Grammarly keeps trying to stop me from using unnecessary filler words mid-sentence.
+
+While writing this, I watched Mike Monteiro's talk [How to draw an orange](https://youtu.be/zH2dFXDMwe4?si=9l8aTgxjQ3mZsi8L). It's probably the best watch on the ethics of AI. Google's giant 'help me write' button is not really helping you to write. It's telling you that you're too dumb to write yourself and that your writing isn't good enough. AI can draw you a perfect orange, but you've learned nothing. That slaps hard.
+
+I have huge respect for anyone who swerves the AI hype wagon entirely. My brain swings from quietly excited to guilt-spiraling. My inner Geri, the one who rescues spiders from baths and feels bad for unused emojis, is horrified that I'm publicly admitting to even this level of moral compromise.
+
+----
+
+
+If you have opinions, hit me on [BlueSky](https://bsky.app/profile/gerireid.com)
+

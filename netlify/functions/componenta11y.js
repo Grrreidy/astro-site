@@ -155,7 +155,7 @@ export async function handler(event) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          error: `"${component}" is not a recognised component.`
+          error: `"${component}" is not a recognised component. Doh!`
         })
       };
     }
