@@ -69,7 +69,7 @@ Enter [Retrieval Augmented Generation](https://en.wikipedia.org/wiki/Retrieval-a
 
 I altered my script like this:
 
-1. **Retrieve**: My Netlify function looks up the component in a directory of local JSON files containing links to WCAG, ARIA Authoring Practices, MDN docs, Apple's HIG, Material, and design systems sites which I know offer sound advice. Basically, the same sources I'd check myself. These perform best with no more than 4 links per component. Any more, and it timed out or results got confused.
+1. **Retrieve**: My Netlify function looks up the component in a directory of local JSON files containing links to WCAG, ARIA Authoring Practices, MDN docs, Apple's HIG, Material, and design systems sites which I know offer sound advice. Basically, the same sources I'd check myself. I found these performed best with no more than 4-5 links per component. Any more, and it timed out or results got confused.
 
 2. **Augment**: The function builds a prompt that includes these verified sources, so the model knows exactly what it can reference.
 
@@ -78,29 +78,23 @@ I altered my script like this:
 
 ## Where I landed
 
-This is genuinely useful for quick aggregation. I'm not interested in LLMs creating new content for me, but in terms of pulling things together, this is a solid time-saver.
+This is useful for quick reference. But is the juice worth the squeeze?
 
-But the risks are very real.
+Even with RAG and OpenAI API's temperature at the lowest setting, it still hallucinates. Hallucinations are paired with the overconfidence of a crypto influencer explaining NFTs to your Nan. 
 
-Even with RAG and OpenAI API's temperature at the lowest setting, it still hallucinates. Hallucinations are paired with the overconfidence of a crypto influencer explaining NFTs to your Nan. Some of the code it prints in the semantic web section is startlingly wrong. But given the material LLMs are fed with is flawed, can we ever rely on them to be 100% correct? The [WebAIM Million](https://webaim.org/projects/million/) still shows that 94% of the internet's top million homepages have WCAG fails, so I feel like we're asking the impossible.
+Some of the code it prints in the semantic web section is startlingly wrong. But given the material LLMs are fed with is flawed, can we ever rely on them to be 100% correct? The [WebAIM Million](https://webaim.org/projects/million/) still shows that 94% of the internet's top million homepages have WCAG fails, so I feel like we're asking the impossible.
 
-These tools work best handling the heavy lifting, maybe that first 60%, while you bring the human insight that understands actual users and real-world stakes. When someone's ability to access critical information hinges on detail in the technical build, there's no substitute for thoughtful human oversight. Also much of accessibility advice is context dependent.
+If I can't guarantee it won't hallucinate, then what's the point? I might as well just have these sources bookmarked because I have to visit them to verify accuracy anyway. When someone's ability to access critical information hinges on detail in the technical build, there's no substitute for thoughtful human oversight. 
 
-What struck me most about this whole 'vibe coding' experiment is how much you can build without actually understanding what you're doing. It's genuinely unsettling. I don't know how the code works, or if it even works the way I think it does. I'm copying and pasting ChatGPT's suggestions, wrestling with Copilot until the compiler errors disappear, then poking it until something functional emerges. Seems harmless enough for a designer on a side-quest, but the thought that significant chunks of the web are now being built this way? 
+## Cue my existential AI crisis
 
-Absolutely bloody terrifying.
-
-## My existential AI crisis
-
-Here's the sticker: I actually *enjoy* researching and writing component accessibility guidance. That's how I learn stuff and verify accuracy.
+Here's the sticker: I actually *enjoy* researching and writing component accessibility guidance. That's how I learn stuff.
 
 Beyond accuracy, I'm grappling with how to use AI responsibly as an accessibility practitioner. The [ethical](https://www.theatlantic.com/technology/archive/2025/03/libgen-meta-openai/682093/?gift=iWa_iB9lkw4UuiWbIbrWGYDRoX8kfg3ZQZL6J-W0kQE) and [environmental](https://wimvanderbauwhede.codeberg.page/articles/google-search-vs-chatgpt-emissions/) costs are serious. Powerful AI systems rest on the [invisible work of underpaid labour](https://www.noemamag.com/the-exploited-labor-behind-artificial-intelligence). Then there's the underlying sense of dread that when the [AI bubble bursts](https://www.wheresyoured.at/howmuchmoney/), lots of my friends will probably lose their jobs.
 
 Mostly, it feels dirty feeding expert-authored content into OpenAI's training machine, even if it's publicly available. Like I'm doing a disservice to the incredible people who created it. I added a sources section to the end of the prompt for transparency on where advice came from. And I didn't reference any personal blogs or sites because it felt wrong without permission.
 
-I worry that over-reliance on AI erodes critical thinking, turning me from a mildly engaging human into a zombified prompt engineer. I'm determined to keep writing blog posts from scratch so I don't lose my voice, like, even if Grammarly keeps trying to stop me from using unnecessary filler words mid-sentence.
-
-While writing this, I watched Mike Monteiro's talk [How to draw an orange](https://youtu.be/zH2dFXDMwe4?si=9l8aTgxjQ3mZsi8L). It's probably the best watch on the ethics of AI. Google's giant 'help me write' button is not really helping you to write. It's telling you that you're too dumb to write yourself and that your writing isn't good enough. AI can draw you a perfect orange, but you've learned nothing. That slaps hard.
+While writing this, I watched Mike Monteiro's talk [How to draw an orange](https://youtu.be/zH2dFXDMwe4?si=9l8aTgxjQ3mZsi8L). It's probably the best thing I've watched on the ethics of AI. Mike points out that Google's giant 'help me write' button is not really helping you to write. It's telling you that you're too dumb to write yourself and that your writing isn't good enough. AI can draw you a perfect orange, but you've learned nothing. That slaps hard.
 
 I have huge respect for anyone who swerves the AI hype wagon entirely. My brain swings from quietly excited to guilt-spiraling. My inner Geri, the one who rescues spiders from baths and feels bad for unused emojis, is horrified that I'm publicly admitting to even this level of moral compromise.
 
