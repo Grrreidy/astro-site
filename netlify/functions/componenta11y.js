@@ -213,7 +213,7 @@ RAG data: ${ragComp}
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-5-mini",
+        model: "gpt-4o-mini",
         temperature: 0,
         max_tokens: 6000,
         response_format: { type: "text" },
