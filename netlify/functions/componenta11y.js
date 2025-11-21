@@ -1,4 +1,3 @@
-// netlify/functions/componenta11y.js
 import fs from "fs";
 import path from "path";
 
@@ -31,7 +30,6 @@ const ALLOWED_COMPONENTS = [
   "menu",
   "modaldialog",
   "navigation",
-  "notification",
   "pagination",
   "password",
   "progressindicator",
@@ -52,6 +50,21 @@ const ALLOWED_COMPONENTS = [
   "treeview",
   "video"
 ].map(c => c.toLowerCase());
+
+// ---------------------------------------------------------------------------
+// Aliases with multiple names
+// ---------------------------------------------------------------------------
+const ALIASES = {
+  chip: ["chip", "badge", "pill", "tag"],
+  notification: ["notification", "alert", "inline message", "banner"]
+};
+
+const CANONICAL_FROM_ALIAS = {};
+for (const [canonical, aliasList] of Object.entries(ALIASES)) {
+  for (const alias of aliasList) {
+    CANONICAL_FROM_ALIAS[alias.toLowerCase()] = canonical;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Cache RAG data on cold start
@@ -138,128 +151,133 @@ export async function handler(event) {
       };
     }
 
-    // ---------------------------------------------------------------------
-    // Whitelist validation
-    // ---------------------------------------------------------------------
-    let allowedMatch = ALLOWED_COMPONENTS.find(c => c === component);
+// ---------------------------------------------------------------------
+// Whitelist validation + alias resolution
+// ---------------------------------------------------------------------
+let allowedMatch = ALLOWED_COMPONENTS.find(c => c === component);
 
-    if (!allowedMatch) {
-      const fuzzy = ALLOWED_COMPONENTS.find(c => c.includes(component));
-      if (fuzzy) {
-        allowedMatch = fuzzy;
-        console.log(`Whitelist fuzzy match: ${component} → ${fuzzy}`);
-      }
-    }
+// Alias support
+if (!allowedMatch && CANONICAL_FROM_ALIAS[component]) {
+  allowedMatch = CANONICAL_FROM_ALIAS[component];
+}
 
-    if (!allowedMatch) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: `"${component}" is not a recognised component. Doh!`
-        })
-      };
-    }
-
-    const canonicalComponent = allowedMatch;
-
-    // ---------------------------------------------------------------------
-    // Load RAG
-    // ---------------------------------------------------------------------
-    let match = RAG_CACHE[canonicalComponent];
-    if (!match) {
-      const keys = Object.keys(RAG_CACHE);
-      const fuzzy = keys.find(k => k.includes(canonicalComponent));
-      if (fuzzy) {
-        match = RAG_CACHE[fuzzy];
-        console.log(`RAG fuzzy match: ${canonicalComponent} → ${fuzzy}`);
-      }
-    }
-
-    const ragComp = compressRag(match || {});
-
-    // ---------------------------------------------------------------------
-    // Prompt
-    // ---------------------------------------------------------------------
-    const userPrompt = `
-Write accessibility documentation for the "${canonicalComponent}" component.
-
-Requirements:
-- Short definition
-- WCAG 2.2 AA criteria (correct URLs)
-- ARIA roles & states (MDN URLs)
-- Semantic HTML structure  
-  For this section only, output illustrative placeholder HTML inside a <pre><code>...</code></pre> block.  
-  Do NOT build or represent the actual component.  
-  The HTML must NOT resemble or function as the real component.  
-  The goal is to show structure, not implementation.  
-  Treat all angle brackets as literal characters.  
-  Do not close the code block early.
-- Notes for web, iOS, Android
-- Practical checklist
-- Sources list (all URLs)
-- Output semantic HTML only
-- <h2> must contain exactly: ${canonicalComponent}
-
-RAG data: ${ragComp}
-`;
-
-    // ---------------------------------------------------------------------
-    // OpenAI API call (optimised)
-    // ---------------------------------------------------------------------
-    const resp = await fetchWithTimeout(OPENAI_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        temperature: 0,
-        max_tokens: 6000,
-        response_format: { type: "text" },
-        messages: [
-          {
-            role: "system",
-            content: `You write accurate accessibility documentation using WCAG, ARIA APG, MDN, Apple HIG, Material and GOV.UK guidelines. Use RAG data as your primary source. Do not invent URLs or WCAG criteria. Output clean semantic HTML only.`
-          },
-          {
-            role: "user",
-            content: userPrompt
-          }
-        ]
-      })
-    });
-
-    const data = await resp.json();
-
-    if (!resp.ok) {
-      console.error("OpenAI API error:", data);
-      return {
-        statusCode: resp.status,
-        body: JSON.stringify({ error: data })
-      };
-    }
-
-    let html = (data.choices?.[0]?.message?.content || "").trim();
-
-    html = html
-      .replace(/^```(?:html)?/i, "")
-      .replace(/```$/i, "")
-      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
-
-    html = tidyHtml(html);
-
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ html })
-    };
-
-  } catch (err) {
-    console.error("Function error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message })
-    };
+// Fuzzy fallback
+if (!allowedMatch) {
+  const fuzzy = ALLOWED_COMPONENTS.find(c => c.includes(component));
+  if (fuzzy) {
+    allowedMatch = fuzzy;
+    console.log(`Whitelist fuzzy match: ${component} → ${fuzzy}`);
   }
+}
+
+if (!allowedMatch) {
+  return {
+    statusCode: 400,
+    body: JSON.stringify({
+      error: `"${component}" is not a recognised component. Doh!`
+    })
+  };
+}
+
+const canonicalComponent = allowedMatch;
+
+// ---------------------------------------------------------------------
+// Load RAG
+// ---------------------------------------------------------------------
+let match = RAG_CACHE[canonicalComponent];
+if (!match) {
+  const keys = Object.keys(RAG_CACHE);
+  const fuzzy = keys.find(k => k.includes(canonicalComponent));
+  if (fuzzy) {
+    match = RAG_CACHE[fuzzy];
+    console.log(`RAG fuzzy match: ${canonicalComponent} → ${fuzzy}`);
+  }
+}
+
+const ragComp = compressRag(match || {});
+
+// ---------------------------------------------------------------------
+// Prompt
+// ---------------------------------------------------------------------
+const userPrompt = `
+  Write accessibility documentation for the "${canonicalComponent}" component.
+
+  Requirements:
+  - Short definition
+  - WCAG 2.2 AA criteria (correct URLs)
+  - ARIA roles & states (MDN URLs)
+  - Semantic HTML structure  
+    For this section only, output illustrative placeholder HTML inside a <pre><code>...</code></pre> block.  
+    Do NOT build or represent the actual component.  
+    The HTML must NOT resemble or function as the real component.  
+    Treat all angle brackets as literal characters.  
+    Do not close the code block early.
+  - Notes for web, iOS, Android
+  - Practical checklist
+  - Sources list (all URLs)
+  - Output semantic HTML only
+  - <h2> must contain exactly: ${canonicalComponent}
+
+  RAG data: ${ragComp}
+  `;
+
+// ---------------------------------------------------------------------
+// OpenAI API call
+// ---------------------------------------------------------------------
+const resp = await fetchWithTimeout(OPENAI_URL, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${OPENAI_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "gpt-4o-mini",
+    temperature: 0,
+    max_tokens: 6000,
+    response_format: { type: "text" },
+    messages: [
+      {
+        role: "system",
+        content: `You write accurate accessibility documentation using WCAG, ARIA APG, MDN, Apple HIG, Material and GOV.UK guidelines. Use RAG data as your primary source. Do not invent URLs or WCAG criteria. Output clean semantic HTML only.`
+      },
+      {
+        role: "user",
+        content: userPrompt
+      }
+    ]
+  })
+});
+
+const data = await resp.json();
+
+if (!resp.ok) {
+  console.error("OpenAI API error:", data);
+  return {
+    statusCode: resp.status,
+    body: JSON.stringify({ error: data })
+  };
+}
+
+let html = (data.choices?.[0]?.message?.content || "").trim();
+
+html = html
+  .replace(/^```(?:html)?/i, "")
+  .replace(/```$/i, "")
+  .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
+
+html = tidyHtml(html);
+
+return {
+  statusCode: 200,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ html })
+};
+
+} catch (err) {
+console.error("Function error:", err);
+return {
+  statusCode: 500,
+  body: JSON.stringify({ error: err.message })
+};
+}
 }
