@@ -16,9 +16,7 @@ const ALLOWED_COMPONENTS = [
   "carousel",
   "charactercount",
   "checkbox",
-  "combobox",
   "cookiebanner",
-  "datetimepicker",
   "disclosure",
   "divider",
   "errormessage",
@@ -28,24 +26,21 @@ const ALLOWED_COMPONENTS = [
   "link",
   "list",
   "menu",
-  "modaldialog",
   "navigation",
   "pagination",
   "password",
   "progressindicator",
-  "radiobutton",
   "scroll",
   "select",
   "skiplink",
   "slider",
   "table",
   "tabs",
-  "tag",
   "textarea",
   "textinput",
   "toast",
   "toggle",
-  "toolbars",
+  "toolbar",
   "tooltip",
   "treeview",
   "video"
@@ -55,8 +50,13 @@ const ALLOWED_COMPONENTS = [
 // Aliases with multiple names
 // ---------------------------------------------------------------------------
 const ALIASES = {
-  chip: ["chip", "badge", "pill", "tag"],
-  notification: ["notification", "alert", "inline message", "banner"]
+  calendar: ["calendar", "datetimepicker", "calendar picker", "date", "time"],
+  chip: ["chip", "chips", "badge", "pill"],
+  combobox: ["combobox", "autocomplete"],
+  notification: ["notification", "alert", "inline message", "banner", "feedback"],
+  modal: ["modal", "dialog", "dialogue", "modal dialog", "modal dialogue", "popup"],
+  radiobutton: ["radiobutton", "radio", "radios", "radio group"],
+  tag: ["tag", "tags", "label"]
 };
 
 const CANONICAL_FROM_ALIAS = {};

@@ -1,5 +1,4 @@
 {
   "GDS": "https://design-system.service.gov.uk/components/tag/",
-  "material3": "https://m3.material.io/components/chips/accessibility",
-  "hashi": "https://helios.hashicorp.design/components/tag?tab=accessibility"
+  "USWDS": "https://designsystem.digital.gov/components/tag/"
 }
