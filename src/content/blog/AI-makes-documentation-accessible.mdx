@@ -1,0 +1,83 @@
+---
+title: "AI is accidentally making documentation accessible"
+description: "Writing documentation for AI retrieval improves accessibility for humans too."
+pubDate: 2026-02-15
+image: "/images/open-graph.png"
+author: "Geri Reid"
+draft: false
+---
+
+# AI is accidentally making documentation accessible
+
+I was joking with a colleague that the most highly prized skill of a product designer might soon be writing a well-structured Markdown file. If you work in a large product org, you're watching agentic AI creep into every aspect of the product design process. Short of throwing my computer into the sea and taking up subsistence farming in the Outer Hebrides, there's not much I can do to avoid it.
+
+So I'm trying to find positives.
+
+We've been testing how machine-readable our design system documentation is. Turns out, AI agents and humans benefit from exactly the same qualities: structure, consistency, plain language, explicit boundaries, no ambiguity.
+
+In accessibility work, we already optimise for readers who might struggle to infer missing information. People with cognitive disabilities, autistic people, people with dyslexia, and people reading in a second language. Everyone benefits when headings describe content, definitions come before explanations, and rules are clear. AI retrieval systems need the same things.
+
+Huh.
+
+## A shared format for humans and machines
+
+Big tech orgs are busy building spec-driven development workflows, agent skills, RAG pipelines, and MCP servers. All of it depends on documentation in a format that machines can parse reliably.
+
+Markdown.
+
+I'm conflicted about AI, but I freakin' love Markdown ❤️. It's just text. No proprietary overhead. No software dependency. Works with Git. Survives tool churn. And if the underlying instructions are in a format both humans and machines can read, you're not locked into whatever flashy AI tool launches next week.
+
+Like all the good stuff on the internet, Markdown was created by an engineer to solve a practical problem and shared freely. It became ubiquitous through community adoption rather than formal standardisation or corporate backing. 
+
+Anil Dash just wrote an excellent piece on [Markdown's origin story](https://www.anildash.com/2026/01/09/how-markdown-took-over-the-world/) and how AI seems to be giving the format its renaissance moment.
+
+In this dumpster-fire of an industry that feels increasingly chaotic, there's something reassuring about clinging to this small pocket of vendor-neutral stability whilst we melt the ice caps to give users shinier buttons.
+
+## Documentation is written to be retrieved, not read
+
+When we write documentation, we often assume someone will read it top to bottom. Even when we skim, we start at the top, absorb context, build a mental model. And we infer stuff, like if you're reading design system docs, you probably already know what a design system is.
+
+AI agents don't work like this. They retrieve the most relevant chunk based on semantic similarity and generate a response from that slice. If the definition is three paragraphs in and the agent retrieves paragraph one, it fills in the gaps.
+
+That's where hallucination creeps in. **You're absolutely right!** Not because the model is careless, but because much of our documentation is structured for narrative flow, not retrieval. It was always fragile, humans were just good at compensating.
+
+Writing for machines accidentally makes documentation more accessible. A screen reader user navigating by headings needs the same explicitness an AI agent needs. A new team member needs definitions that don't assume prior knowledge. A developer working in a second language needs sentences that say exactly what they mean. Explicitness helps anyone who can't rely on context to fill gaps.
+
+Look at well-documented APIs. The ones that specify exactly what parameters do, what they return, what breaks. They're used more, trusted more, cause fewer support tickets. Explicitness scales.
+
+### Start with a structure
+
+Consistent structure gives AI systems predictable anchors for retrieval. It gives humans faster scan paths and clearer mental models. It helps when:
+
+- each page is structured consistently
+- headings describe content
+- sections are self-contained
+- content makes sense in any order 
+
+That structure probably exists already in your design system documentation - you just need to make sure it's consistent.
+
+### Reduce ambiguity
+
+Aim for declarative over descriptive writing. It helps when you:
+
+- lead with definitions and the most critical information
+- avoid hedging language (might, could, tends to)
+- use must and should deliberately
+- avoid metaphor where precision is required
+- never assume prior knowledge
+
+To a human reader, this sort of writing can feel abrupt. Less friendly. But for readers who need certainty, it's a relief. For machines, it's essential.
+
+## AI didn’t change the rules, it exposed them
+
+Predictable structure, clear definitions, plain language? Your accessibility team has been asking for this *for years*.
+
+The way we access documentation is changing, but the qualities that make it good are not. AI has not invented new rules for writing, it has made the cost of ignoring the old ones obvious.
+
+As organisations go all-in on AI, I'm quietly hoping the need for machine-readable docs improves the experience for human readers along the way. If the robots are coming for our jobs, the least they can do is leave us with documentation that doesn't suck.
+
+----
+
+
+If you have opinions, hit me on [Bluesky](https://bsky.app/profile/gerireid.com)
+
