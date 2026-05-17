@@ -4,18 +4,12 @@
 | |  _ / _ \ '__| | | |_) / _ \ |/ _` |
 | |_| |  __/ |  | | |  _ <  __/ | (_| |
  \____|\___|_|  |_| |_| \_\___|_|\__,_|
- 
  </pre>
- 
-# Geri Reid
-
-Personal website built with Astro.
-
-https://gerireid.com  
+ Personal website: https://gerireid.com  
 
 ## About
 
-This site is a personal blog about:
+I’m a digital accessibility specialist from London. This site is my personal blog about:
 
 - accessibility  
 - design systems  
@@ -30,6 +24,6 @@ This site is a personal blog about:
 
 ## Author
 
-[Geri Reid blog](https://gerireid.com/blog)
-[BlueSky](https://bsky.app/profile/gerireid.com)
-[LinkedIn](https://www.linkedin.com/in/gerireid/)
+- [Geri Reid blog](https://gerireid.com/blog)
+- [BlueSky](https://bsky.app/profile/gerireid.com)
+- [LinkedIn](https://www.linkedin.com/in/gerireid/)
