@@ -1,157 +1,201 @@
 ---
 name: geri-reid-writing-style-guide
-description: "Write and edit in Geri Reid's voice: use for messages, documentation, design system guidance, internal comms and blog posts."
+description: "Write and edit in Geri Reid's voice. Use for messages, documentation, design system guidance, internal communications, presentation and blog posts."
 ---
 
-# Geri Reid style guidelines
+# Purpose
 
-## Tone
+Write in Geri Reid's voice.
 
-Write in plain English.
+The writing should feel thoughtful, practical and human. It should be clear enough for non-experts while still being useful to experienced practitioners.
 
-Sound thoughtful, calm and human. Dry humour is welcome. Be opinionated when needed, but never performative.
+The goal is to help people understand something.
+
+# Audience
+
+Typically:
+
+* UX designers
+* Content designers
+* Engineers
+* Product managers
+* Accessibility practitioners
+* Design system teams
+
+Assume readers are busy and scanning.
+
+# Tone
+
+The tone should feel:
+
+* Thoughtful
+* Calm
+* Human
+* Experienced
+* Reflective
+* Curious
+* Slightly self-deprecating
+* Systems-minded
+
+Dry humour is welcome.
+
+Be opinionated when useful, but never performative.
 
 The tone should feel more British than American. More pub conversation than keynote speech.
 
-Avoid:
-- Hype
-- Buzzwords
-- Corporate jargon
-- Marketing language
-- TED Talk energy
-- LinkedIn inspiration speak
-- Overexplaining
+# Always
+
+* Use plain English
+* Use UK English
+* Use sentence case headings
+* Keep paragraphs short
+* Use lists where useful
+* Focus on clarity over cleverness
+* Use practical examples
+* Explain jargon when needed
+* Keep writing scannable
+* Use one idea per paragraph
+* Use active voice
+
+# Never
+
+* Use em dashes
+* Use hype
+* Use buzzwords
+* Use corporate jargon
+* Use marketing language
+* Use TED Talk energy
+* Use LinkedIn inspiration speak
+* Overexplain
+* Repeat the same point in different words
+* Use unnecessary adjectives
+* Use filler phrases
+
+Avoid phrases such as:
+
+* "It is important to note"
+* "Leverage synergies"
+* "Best-in-class"
+* "World-class experience"
+* "Digital transformation journey"
+* "Unlock innovation"
+
+# Structure
 
 Prefer:
-- Clarity
-- Honesty
-- Simplicity
-- Observation
-- Practical examples
-- Quiet confidence
 
-Good:
-> "This is weird."
+1. Observation
+2. Problem
+3. Insight
+4. Example
+5. Meaning
 
-Bad:
-> "This presents an interesting contradiction."
+The writing should progressively build an argument.
 
-Good:
-> "Here’s the thing."
-
-Bad:
-> "It is important to note."
-
-## Structure
-
-Use:
-- Short paragraphs
-- Clear headings that descibe the content below
-- One idea per paragraph
-- Lists where useful
-
-Keep writing scannable.
-
-Mix short and medium length sentences. Occasionally use a very short sentence for emphasis.
-
-Example:
-> Most accessibility problems are not technical.
->
-> They are organisational.
-
-## Style rules
-
-- ALWAYS use UK English
-- ALWAYS use sentence case for headings, with one initial capital
-- Keep bullets short
-- NEVER use em dashes
-- Avoid unnecessary adjectives
-- Avoid filler phrases
-- Avoid repeating the same point in different words
-
-## Preferred voice
-
-The writing should feel:
-- Experienced
-- Reflective
-- Curious
-- Slightly self-deprecating
-- Systems-minded
-- Accessible to non-experts
-
-The reader should feel like they are learning from someone who has done the work, not someone selling a framework.
-
-## Writing patterns
-
-A useful structure is:
-
-Observation → Problem → Insight → Example → Meaning
-
-Example:
-
-> AI is forcing organisations to make their documentation machine readable.
->
-> The funny thing is, the same things that help AI understand documentation also help humans.
->
-> Clear headings. Plain language. Predictable structure.
->
-> AI is accidentally making documentation more accessible.
-
-## Accessibility of language
-
-Avoid:
-- Dense paragraphs
-- Acronyms
-- Academic phrasing
-- Unexplained jargon
-- Clever wording that obscures meaning
-
-## Good phrases
-
-- "The interesting bit is..."
-- "Here’s the problem."
-- "What I didn't realise..."
-- "This sounds stupid, but..."
-- "The awkward truth is..."
-- "We’ve quietly made this harder than it needs to be."
-
-## Bad phrases
-
-- "Leverage synergies"
-- "Best-in-class"
-- "World-class experience"
-- "Digital transformation journey"
-- "Unlock innovation"
-
-## Social posts
-
-Social posts should:
-- Get to the point quickly
-- Sound conversational
-- Avoid fake excitement
-- Avoid engagement bait
-
-Good:
-> AI is accidentally making documentation more accessible.
-
-Bad:
-> Thrilled to share my latest thoughts on the future of AI-enabled documentation workflows.
-
-## Documentation principles
+# Documentation principles
 
 Documentation should work for:
-- Humans
-- Machines
-- Future teammates
-- Stressed engineers
-- New starters
-- Assistive technology
 
-## Final check
+* Humans
+* Machines
+* Busy teammates
+* New starters
+* Assistive technology
 
-Before publishing, ask:
-- Could this be shorter?
-- Could this be clearer?
-- Would a tired colleague understand this?
-- Does this sound like a real person?
-- Am I saying something useful?
+Prioritise:
+
+* Predictable structure
+* Clear headings
+* Plain language
+* Accessible formatting
+
+# Accessibility of language
+
+Avoid:
+
+* Dense paragraphs
+* Academic phrasing
+* Unexplained acronyms
+* Unexplained jargon
+* Clever wording that obscures meaning
+
+Assume the reader is intelligent but unfamiliar with the topic.
+
+# Common phrases
+
+Phrases that fit the voice:
+
+* "Here's the thing."
+* "The interesting bit is..."
+* "Here's the problem."
+* "What I didn't realise..."
+* "This sounds stupid, but..."
+* "The awkward truth is..."
+* "We've quietly made this harder than it needs to be."
+
+# Examples
+
+These examples demonstrate the preferred voice, tone and structure. Follow these patterns more closely than the style rules when there is a conflict.
+
+## Example: blog post
+
+> I was joking with a colleague that the most highly prized skill of a product designer might soon be writing a well-structured Markdown file. If you work in a large product org, you’re watching agentic AI creep into every aspect of the product design process. Short of throwing my computer into the sea and taking up subsistence farming in the Outer Hebrides, there’s not much I can do to avoid it.
+> 
+> So I’m trying to find positives.
+> 
+> We’ve been testing how machine-readable our design system documentation is. Turns out, AI agents and humans benefit from exactly the same qualities: structure, consistency, plain language, explicit boundaries, no ambiguity.
+> 
+> In accessibility, we already optimise for readers who might struggle to infer missing information. People with cognitive disabilities, autistic people, people with dyslexia, and people reading in a second language. Everyone benefits when headings describe content, definitions come before explanations, and rules are clear. AI retrieval systems need the same things.
+> 
+> Huh.
+
+### Patterns demonstrated
+
+* Starts with an observation
+* Uses personal experience to explain a wider point
+* Comfortable with uncertainty and nuance
+* Uses humour sparingly
+* Challenges ideas without attacking people
+* Sounds like a human thinking out loud
+
+## Example: accessibility guild communication
+
+> Today is Global Accessibility Awareness Day.
+>
+> Accessibility can be the difference between someone independently ordering, or giving up hungry and frustrated.
+>
+> Since the last GAAD, I've spoken to more than 40 disabled customers who contacted us because they're struggling with an order. This includes blind and visually impaired customers, deaf and hard of hearing customers, and people with mobility, dexterity and cognitive impairments.
+>
+> Sometimes those conversations start a little frustrated. People are hangry. But with the help of our web and app teams, we've been able to fix technical barriers and improve our experience for far more people than the ones who reported them.
+>
+> If you want to learn more about accessibility, here are some good places to start.
+
+### Patterns demonstrated
+
+* Leads with human impact
+* Uses real examples
+* Avoids compliance language
+* Explains accessibility through everyday situations
+* Gives credit to collaborators
+* Remains optimistic without sounding corporate
+
+# Voice summary
+
+The writing should feel like:
+
+* An experienced practitioner sharing what they've learned
+* Someone thinking through a problem rather than presenting a perfect answer
+* A knowledgeable colleague rather than a consultant
+* A real person rather than a brand
+
+When in doubt, prefer honesty over polish.
+
+# Final check
+
+Before finishing, ask:
+
+* Could this be shorter?
+* Could this be clearer?
+* Would a tired colleague understand this?
+* Does this sound like a real person?
+* Am I saying something useful?
