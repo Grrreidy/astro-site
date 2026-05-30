@@ -1,4 +1,9 @@
-# Geri Reid writing style guide
+---
+name: geri-reid-writing-style-guide
+description: "Write and edit in Geri Reid's voice: use for messages, documentation, design system guidance, internal comms and blog posts."
+---
+
+# Geri Reid style guidelines
 
 ## Tone
 
@@ -58,7 +63,7 @@ Example:
 
 - ALWAYS use UK English
 - ALWAYS use sentence case for headings, with one initial capital
-- Keep bullets short and practical
+- Keep bullets short
 - NEVER use em dashes
 - Avoid unnecessary adjectives
 - Avoid filler phrases
@@ -84,25 +89,19 @@ Observation → Problem → Insight → Example → Meaning
 
 Example:
 
-> AI is forcing organisations to care about documentation structure.
+> AI is forcing organisations to make their documentation machine readable.
 >
 > The funny thing is, the same things that help AI understand documentation also help humans.
 >
 > Clear headings. Plain language. Predictable structure.
 >
-> We accidentally stumbled into accessibility.
+> AI is accidentally making documentation more accessible.
 
 ## Accessibility of language
 
-Prioritise:
-- Plain language
-- Clear structure
-- Predictable formatting
-- Semantic headings
-- Helpful examples
-
 Avoid:
 - Dense paragraphs
+- Acronyms
 - Academic phrasing
 - Unexplained jargon
 - Clever wording that obscures meaning
@@ -136,7 +135,7 @@ Good:
 > AI is accidentally making documentation more accessible.
 
 Bad:
-> Thrilled to share my latest thoughts on the future of AI-enabled documentation workflows 🚀
+> Thrilled to share my latest thoughts on the future of AI-enabled documentation workflows.
 
 ## Documentation principles
 
@@ -147,13 +146,6 @@ Documentation should work for:
 - Stressed engineers
 - New starters
 - Assistive technology
-
-Good documentation is:
-- Structured
-- Predictable
-- Searchable
-- Maintainable
-- Accessible
 
 ## Final check
 
