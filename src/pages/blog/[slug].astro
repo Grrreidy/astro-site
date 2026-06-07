@@ -8,28 +8,54 @@ import FormattedDate from '../../components/FormattedDate.astro';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
 
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
+  if ((posts?.length ?? 0) > 0) {
+    return posts.map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+  }
+
+  // Fallback for local dev when content API returns no entries:
+  // expose each MDX file under src/content/blog as a route.
+  const modules = import.meta.glob('../../content/blog/*.mdx', { eager: true }) as Record<string, any>;
+  return Object.keys(modules).map((p) => {
+    const slug = p.split('/').pop()?.replace(/\.mdx?$/, '') ?? '';
+    return { params: { slug }, props: { slug } };
+  });
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+let Content;
+let data;
+
+if (post) {
+  const rendered = await render(post);
+  Content = rendered.Content;
+  data = post.data;
+} else {
+  // Fallback: load the MDX module for the slug and use its default export
+  const { slug } = Astro.props as any;
+  const modules = import.meta.glob('../../content/blog/*.mdx', { eager: true }) as Record<string, any>;
+  const entry = Object.entries(modules).find(([p]) => p.endsWith(`${slug}.mdx`));
+  const mod = entry?.[1];
+  Content = mod?.default ?? null;
+  data = mod?.frontmatter ?? mod?.metadata ?? {};
+}
+
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <BaseHead 
-      title={post.data.title} 
-      description={post.data.description || ''} 
+      <BaseHead 
+      title={data?.title ?? ''} 
+      description={data?.description || ''} 
     />
   </head>
   <body>
     <Header />
     <main id="main-content" class="container">
-      <p class="post-date"><FormattedDate date={post.data.pubDate} /></p>
+      <p class="post-date"><FormattedDate date={data?.pubDate ?? post?.data?.pubDate} /></p>
       <article class="blog-content">
         <Content />
       </article>

@@ -26,14 +26,50 @@ type BlogFrontmatter = {
 // Filter at source:
 // • In dev: include everything
 // • In prod: exclude draft:true and exclude future-dated posts
-const blogPosts = await getCollection(
+let blogPosts = await getCollection(
   'blog',
   ({ data }: { data: BlogFrontmatter }) =>
     import.meta.env.DEV ||
     (!data.draft && new Date(data.pubDate).valueOf() <= now.valueOf())
 );
 
-const externalPosts = await getCollection('external');
+// Fallback for local dev: if the content API returns nothing (migration issues),
+// load MDX files directly using import.meta.glob for preview without committing.
+if ((blogPosts?.length ?? 0) === 0) {
+  const modules = import.meta.glob('../../content/blog/*.mdx', { eager: true }) as Record<string, any>;
+  blogPosts = Object.entries(modules).map(([path, mod]) => {
+    const slug = path.split('/').pop()?.replace(/\.mdx?$/, '') ?? '';
+    return {
+      slug,
+      data: {
+        title: mod.frontmatter?.title ?? mod.metadata?.title ?? slug,
+        description: mod.frontmatter?.description ?? mod.metadata?.description ?? '',
+        pubDate: new Date(mod.frontmatter?.pubDate ?? mod.metadata?.pubDate ?? now),
+        draft: mod.frontmatter?.draft ?? false,
+        heroImage: mod.frontmatter?.image ? { src: mod.frontmatter.image } : undefined,
+      },
+    } as any;
+  }).filter((p) => p !== null);
+}
+
+let externalPosts = await getCollection('external');
+
+// Fallback for local dev: load external MDX files if the content API returns nothing
+if ((externalPosts?.length ?? 0) === 0) {
+  const modules = import.meta.glob('../../content/external/*.mdx', { eager: true }) as Record<string, any>;
+  externalPosts = Object.entries(modules).map(([path, mod]) => {
+    const slug = path.split('/').pop()?.replace(/\.mdx?$/, '') ?? '';
+    return {
+      slug,
+      data: {
+        title: mod.frontmatter?.title ?? mod.metadata?.title ?? slug,
+        description: mod.frontmatter?.description ?? mod.metadata?.description ?? '',
+        pubDate: new Date(mod.frontmatter?.pubDate ?? mod.metadata?.pubDate ?? now),
+        url: mod.frontmatter?.url ?? mod.metadata?.url ?? '',
+      },
+    } as any;
+  }).filter((p) => p !== null);
+}
 
 type PostListItem = {
   title: string;
@@ -77,6 +113,8 @@ const allPosts: PostListItem[] = [
         <p>Writing helps me untangle my thoughts.
         I&nbsp;write about accessibility, design systems, and user experience.</p>
         <p>If you use a feed reader, <a href="https://gerireid.com/rss.xml">here’s my RSS feed</a>.</p>
+        <!-- DEBUG: show counts -->
+        <p class="visually-hidden">Debug: blogPosts={blogPosts.length}, externalPosts={externalPosts.length}</p>
       </div>
       <section>
         <ul>

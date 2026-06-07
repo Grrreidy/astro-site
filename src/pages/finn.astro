@@ -1,0 +1,27 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main id="main-content" class="container blog">
+			<h1>Heading</h1>
+
+			<p>Some text here</p>
+
+			<img src="/images/finn.jpg" style="padding-top: 1.5rem" alt="Alt text here">
+			
+
+		</main>
+		<Footer />
+	</body>
+</html>

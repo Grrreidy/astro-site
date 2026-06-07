@@ -9,17 +9,17 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.0",
-    "@astrojs/sitemap": "^3.4.1",
-    "astro": "^5.11.0",
+    "@astrojs/mdx": "^6.0.2",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^6.4.4",
     "bluesky-likes": "^0.0.5",
     "markdown-it": "^14.1.0",
     "rehype-external-links": "^3.0.0",
     "sharp": "^0.34.2"
   },
   "devDependencies": {
-    "@astrojs/markdown-remark": "^6.3.6",
-    "@astrojs/rss": "^4.0.12",
+    "@astrojs/markdown-remark": "^7.2.0",
+    "@astrojs/rss": "^4.0.18",
     "@types/markdown-it": "^14.1.2"
   }
 }
