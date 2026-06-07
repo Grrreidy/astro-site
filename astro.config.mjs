@@ -7,6 +7,6 @@ export default defineConfig({
   trailingSlash: 'never',
   integrations: [mdx(), sitemap()],
   content: {
-    config: './src/content/config.ts',
+    config: './src/content.config.ts',
   },
 });
