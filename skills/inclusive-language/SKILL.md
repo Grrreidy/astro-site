@@ -19,44 +19,33 @@ Avoid language that implies suffering, victimhood or hopelessness. These words c
 
 ### Words to avoid and what to use instead
 
-Avoid | Use
-- | -
-(the) handicapped, (the) disabled | disabled people
-afflicted by, suffers from, victim of | has (condition or impairment)
-confined to a wheelchair, wheelchair-bound | wheelchair user
-mentally handicapped, mentally defective, retarded, subnormal | person with a learning disability or people with learning disabilities
-cripple, invalid | disabled person
-spastic | person with cerebral palsy
-able-bodied | non-disabled
-mental patient, insane, mad | person with a mental health condition
-deaf and dumb, deaf mute | deaf, person with a hearing impairment
-the blind | people with visual impairments, blind people, blind and partially sighted people
-an epileptic, diabetic, depressive | person with epilepsy, diabetes or depression
-dwarf, midget | person with restricted growth or short stature
-fits, spells, attacks | seizures
+| Avoid | Use | 
 
-## Everyday phrases
+| (the) handicapped, (the) disabled | disabled people | 
+| afflicted by, suffers from, victim of | has (condition or impairment) | 
+| confined to a wheelchair, wheelchair-bound | wheelchair user | 
+| mentally handicapped, mentally defective, retarded, subnormal | person with a learning disability or people with learning disabilities | 
+| cripple, invalid | disabled person | 
+| spastic | person with cerebral palsy | 
+| able-bodied | non-disabled | 
+| mental patient, insane, mad | person with a mental health condition | 
+| deaf and dumb, deaf mute | deaf, person with a hearing impairment | 
+| the blind | people with visual impairments, blind people, blind and partially sighted people | 
+| an epileptic, diabetic, depressive | person with epilepsy, diabetes or depression | 
+dwarf, midget | person with restricted growth or short stature | 
+| fits, spells, attacks | seizures | 
 
-Disabled people do ordinary things in their own ways. A wheelchair user can go for a walk. Someone with a visual impairment can be pleased or not to see you. Don't create barriers in your language that don't exist in reality.
 
 Avoid using disability as metaphor or negative comparison:
 - Don't use 'turned a deaf ear' or 'blind drunk'
 - Avoid phrases that treat disability as a flaw or something to overcome
-- Don't infantilise or romanticise disability
+
 
 ## Practical guidance for writing
 
-1. Use active, respectful language. Disabled people are active individuals with control over their own lives.
-
-2. Only mention disability or impairment when it's relevant. Do not mention a person's disability if it is not relevant.
-
-3. Use a normal tone. Don't be patronising or talk down to people.
-
-4. Be direct. Address disabled people in the same way you'd address anyone else.
-
-5. Don't assume capacity. Never finish sentences or make assumptions about what someone needs.
-
-6. Check your work. Look for words in the avoid column and replace them. Look for disability used as a metaphor.
+- Use active, respectful language. 
+- Only mention disability or impairment when it's relevant. Do not mention a person's disability if it is not relevant.
+- Check your work. Look for words in the avoid column and replace them. Look for disability used as a metaphor.
 
 ## When to apply this skill
 
