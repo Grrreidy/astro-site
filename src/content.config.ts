@@ -1,7 +1,13 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import * as z from 'zod';
+import { glob } from 'astro/loaders';
 
 const blog = defineCollection({
-  type: 'content',
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/blog',
+    generateId: ({ entry }: { entry: string }) => entry.replace(/\.mdx?$/, ''),
+  }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -14,7 +20,7 @@ const blog = defineCollection({
 });
 
 const external = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/external' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),

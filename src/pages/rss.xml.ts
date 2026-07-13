@@ -22,7 +22,7 @@ export async function GET({ site }: APIContext) {
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
     .map((p) => {
       // render Markdown to HTML
-      const html: string = md.render(p.body);
+      const html: string = p.body ? md.render(p.body) : '';
 
       // make relative URLs absolute for feed readers
       const base = new URL('/', site!);
@@ -34,7 +34,7 @@ export async function GET({ site }: APIContext) {
         title: p.data.title,
         description: p.data.description,
         pubDate: p.data.pubDate,
-        link: new URL(`/blog/${p.slug}`, site!).toString(),
+        link: new URL(`/blog/${p.id}`, site!).toString(),
         content: absolutised,
       };
     });
