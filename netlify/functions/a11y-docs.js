@@ -101,11 +101,6 @@ export async function handler(event) {
       "- Designers and engineers who need concise, practical guidance.",
 
       "",
-      "Guardrail",
-      `- If "${component}" is not a recognisable UI component, return exactly:`,
-      invalidComponentMsgMd,
-      "...and nothing else.",
-      `Here is a list of recognised UI components: ${recognisedComponentsURL}`,
 
       "",
       "Output format",
