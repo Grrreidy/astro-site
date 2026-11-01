@@ -77,7 +77,6 @@ type PostListItem = {
   pubDate: Date;
   slug: string;
   external: boolean;
-  image?: string;
 };
 
 const allPosts: PostListItem[] = [
@@ -87,7 +86,6 @@ const allPosts: PostListItem[] = [
     pubDate: post.data.pubDate,
     slug: `/blog/${(post as any).slug ?? (post as any).id ?? ''}`,
     external: false,
-    image: (post.data as any).heroImage?.src ?? (post.data as any).image ?? undefined,
   })),
   ...externalPosts.map((post) => ({
     title: post.data.title,
@@ -95,7 +93,6 @@ const allPosts: PostListItem[] = [
     pubDate: post.data.pubDate,
     slug: post.data.url,
     external: true,
-    image: undefined,
   })),
 ].sort((a, b) => new Date(b.pubDate).valueOf() - new Date(a.pubDate).valueOf());
 ---
@@ -140,15 +137,6 @@ const allPosts: PostListItem[] = [
                   </a>
                 </h2>
                 <p>{post.description}</p>
-                {post.image && (
-                  <img
-                    src={post.image}
-                    alt=""
-                    class="post-thumb"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                )}
                 {import.meta.env.DEV && (post as any).draft && (
                   <p class="visually-hidden">Draft</p>
                 )}
